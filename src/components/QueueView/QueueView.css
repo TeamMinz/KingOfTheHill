@@ -1,0 +1,16 @@
+.QueueView {
+    font-size: 500%;
+}
+
+.Queue {
+    overflow: scroll;
+    height: 80%;
+}
+
+.Champion {
+    height: 10%;
+}
+
+.Join {
+    height: 10%;
+}
