@@ -2,7 +2,7 @@ import React from 'react';
 import '../App/App.css';
 import './QueueView.css'
 
-export default class App extends React.Component {
+export default class QueueView extends React.Component {
   constructor(props) {
     super(props);
   }
