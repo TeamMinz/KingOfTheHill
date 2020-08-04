@@ -33,6 +33,7 @@ const verboseLog = verboseLogging ? console.log.bind(console) : () => { };
 
 // Service state variables
 const initialColor = color('#6441A4');      // super important; bleedPurple, etc.
+const initialQueue = {};
 const serverTokenDurationSec = 30;          // our tokens for pubsub expire after 30 seconds
 const userCooldownMs = 1000;                // maximum input rate per user to prevent bot abuse
 const userCooldownClearIntervalMs = 60000;  // interval to reset our tracking object
@@ -40,6 +41,7 @@ const channelCooldownMs = 1000;             // maximum broadcast rate per channe
 const bearerPrefix = 'Bearer ';             // HTTP authorization headers have this prefix
 const colorWheelRotation = 30;
 const channelColors = {};
+const channelQueues = {};                   // queue for channels using extension
 const channelCooldowns = {};                // rate limit compliance
 let userCooldowns = {};                     // spam prevention
 
@@ -54,7 +56,9 @@ const STRINGS = {
   messageSendError: 'Error sending message to channel %s: %s',
   pubsubResponse: 'Message to c:%s returned %s',
   cyclingColor: 'Cycling color for c:%s on behalf of u:%s',
+  enqueueingUser: 'Adding user u:%s to queue for c:%s',
   colorBroadcast: 'Broadcasting color %s for c:%s',
+  queueBroadcast: 'Broadcasting queue %s for c:%s',
   sendColor: 'Sending color %s to c:%s',
   cooldown: 'Please wait before clicking again',
   invalidAuthHeader: 'Invalid authorization header',
@@ -104,6 +108,12 @@ const server = new Hapi.Server(serverOptions);
     method: 'GET',
     path: '/color/query',
     handler: colorQueryHandler,
+  });
+
+  server.route({
+    method: 'POST',
+    path: '/queue/join',
+    handler: joinQueueHandler,
   });
 
   // Start the server.
@@ -191,6 +201,36 @@ function colorQueryHandler(req) {
   return currentColor;
 }
 
+function joinQueueHandler(req) {
+  // Verify all requests.
+  const payload = verifyAndDecode(req.headers.authorization);
+  const { channel_id: channelId, opaque_user_id: opaqueUserId } = payload;
+
+  // Store the queue for the channel.
+  let currentQueue = channelQueues[channelId] || initialQueue;
+
+  // Bot abuse prevention:  don't allow a user to spam the button.
+  if (userIsInCooldown(opaqueUserId)) {
+    throw Boom.tooManyRequests(STRINGS.cooldown);
+  }
+
+  // Add the user to the back of the queue.
+  verboseLog(STRINGS.enqueueingUser, channelId, opaqueUserId);
+  currentQueue.push(opaqueUserId);
+
+  // Save the new color for the channel.
+  channelQueues[channelId] = currentQueue;
+
+
+
+  // Broadcast the color change to all other extension instances on this channel.
+  attemptQueueBroadcast(channelId);
+
+  return currentQueue;
+}
+
+
+
 function attemptColorBroadcast(channelId) {
   // Check the cool-down to determine if it's okay to send now.
   const now = Date.now();
@@ -202,6 +242,20 @@ function attemptColorBroadcast(channelId) {
   } else if (!cooldown.trigger) {
     // It isn't; schedule a delayed broadcast if we haven't already done so.
     cooldown.trigger = setTimeout(sendColorBroadcast, now - cooldown.time, channelId);
+  }
+}
+
+function attemptQueueBroadcast(channelId) {
+  // Check the cool-down to determine if it's okay to send now.
+  const now = Date.now();
+  const cooldown = channelCooldowns[channelId];
+  if (!cooldown || cooldown.time < now) {
+    // It is.
+    sendQueueBroadcast(channelId);
+    channelCooldowns[channelId] = { time: now + channelCooldownMs };
+  } else if (!cooldown.trigger) {
+    // It isn't; schedule a delayed broadcast if we haven't already done so.
+    cooldown.trigger = setTimeout(sendQueueBroadcast, now - cooldown.time, channelId);
   }
 }
 
@@ -223,6 +277,40 @@ function sendColorBroadcast(channelId) {
 
   // Send the broadcast request to the Twitch API.
   verboseLog(STRINGS.colorBroadcast, currentColor, channelId);
+  request(
+    `https://api.twitch.tv/extensions/message/${channelId}`,
+    {
+      method: 'POST',
+      headers,
+      body,
+    }
+    , (err, res) => {
+      if (err) {
+        console.log(STRINGS.messageSendError, channelId, err);
+      } else {
+        verboseLog(STRINGS.pubsubResponse, channelId, res.statusCode);
+      }
+    });
+}
+
+function sendQueueBroadcast(channelId) {
+  // Set the HTTP headers required by the Twitch API.
+  const headers = {
+    'Client-ID': clientId,
+    'Content-Type': 'application/json',
+    'Authorization': bearerPrefix + makeServerToken(channelId),
+  };
+
+  // Create the POST body for the Twitch API request.
+  const currentQueue = channelQueues[channelId] || initialQueue;
+  const body = JSON.stringify({
+    content_type: 'application/json',
+    message: currentQueue,
+    targets: ['broadcast'],
+  });
+
+  // Send the broadcast request to the Twitch API.
+  verboseLog(STRINGS.queueBroadcast, currentQueue, channelId);
   request(
     `https://api.twitch.tv/extensions/message/${channelId}`,
     {
