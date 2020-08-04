@@ -40,47 +40,47 @@
       "viewerType": "Broadcaster"
     },
     {
-      "channelId": "26898606",
-      "configurationAnchor": "panel",
-      "displayChannelName": "tminz",
-      "features": {
-        "isBitsEnabled": false,
-        "isChatEnabled": false,
-        "isSubscriptionStatusAvailable": false
-      },
-      "frameSize": {
-        "width": 1600,
-        "height": 900
-      },
-      "id": "2",
-      "isPopout": false,
-      "label": "me large",
-      "linked": false,
-      "linkedUserId": "",
-      "orientation": "Portrait",
-      "type": "component",
-      "viewerType": "Broadcaster"
-    },
-    {
-      "channelId": "26898606",
-      "configurationAnchor": "panel",
-      "displayChannelName": "tminz",
+      "channelId": "265737932",
+      "configurationAnchor": "component",
+      "displayChannelName": "atlasmakesstuff",
       "features": {
         "isBitsEnabled": true,
         "isChatEnabled": false,
         "isSubscriptionStatusAvailable": false
       },
       "frameSize": {
-        "width": 1600,
-        "height": 900
+        "width": 1280,
+        "height": 720
+      },
+      "id": "2",
+      "isPopout": false,
+      "label": "",
+      "linked": true,
+      "linkedUserId": "265737932",
+      "orientation": "Portrait",
+      "type": "config",
+      "viewerType": "Broadcaster"
+    },
+    {
+      "channelId": "265737932",
+      "configurationAnchor": "panel",
+      "displayChannelName": "atlasmakesstuff",
+      "features": {
+        "isBitsEnabled": true,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "frameSize": {
+        "width": 1280,
+        "height": 720
       },
       "id": "3",
       "isPopout": false,
       "label": "",
-      "linked": false,
-      "linkedUserId": "",
+      "linked": true,
+      "linkedUserId": "265737932",
       "orientation": "Portrait",
-      "type": "component",
+      "type": "dashboard",
       "viewerType": "Broadcaster"
     }
   ],
@@ -99,7 +99,7 @@
     "iconUrls": {},
     "id": "1c9f0t0nfj9vhwpcvkpsn36khpm6zw",
     "installationCount": -42,
-    "liveConfigUrl": "",
+    "liveConfigUrl": "https://localhost:8080/live_config.html",
     "name": "Smash Queue",
     "panelHeight": 300,
     "privacyPolicyUrl": "",
@@ -146,13 +146,17 @@
       "config": {
         "viewerUrl": "https://localhost:8080/config.html",
         "canLinkExternalContent": false
+      },
+      "liveConfig": {
+        "viewerUrl": "https://localhost:8080/live_config.html",
+        "canLinkExternalContent": false
       }
     },
     "whitelistedConfigUrls": [],
     "whitelistedPanelUrls": []
   },
   "frontendCommand": "npm run start",
-  "frontendFolderName": "C:\\Users\\jbass\\Documents\\SmashQueue",
+  "frontendFolderName": "C:\\Users\\jbass\\Documents\\QueueExtension",
   "name": "Smash Queue",
   "version": 2
 }
