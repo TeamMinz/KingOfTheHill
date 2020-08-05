@@ -70,8 +70,6 @@ module.exports = function (ownerId, secret, clientId) {
             return;
         }
 
-        console.log(currentQueue);
-
         if (!currentQueue.includes(opaqueUserId)) {
             res.status(500).send({
                 message: "You cannot leave a queue you're not in."
@@ -83,7 +81,7 @@ module.exports = function (ownerId, secret, clientId) {
             return qmember != opaqueUserId;
         });
 
-        pubsub.broadcast(channelId, currentQueue);
+        pubsub.broadcast(channelId, channelQueues[channelId]);
         res.send({
             message: "You have been removed from the queue."
         });
