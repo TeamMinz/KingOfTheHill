@@ -4,9 +4,8 @@ const router = express.Router();
 
 module.exports = function (ownerId, secret, clientId) {
     const pubsub = require('../util/pubsub.js')(ownerId, secret, clientId);
+
     
-    const channelCooldownMs = 1000;
-    const channelCooldowns = {};
     const channelQueues = {};
 
     router.get('/get', function (req, res) {
