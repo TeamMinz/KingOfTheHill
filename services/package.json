@@ -1,21 +1,18 @@
 {
   "name": "services",
   "version": "1.0.0",
-  "description": "",
-  "main": "backend.js",
+  "description": "The Extension Backend Service (EBS) for the SmashQueue app.",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC",
+  "license": "SEE LICENSE IN ../LICENSE",
+  "devDependencies": {
+    "cross-env": "^7.0.2"
+  },
   "dependencies": {
-    "boom": "^7.2.0",
-    "color": "^3.0.0",
-    "commander": "^2.15.0",
-    "hapi": "^17.8.4",
-    "inert": "^5.1.0",
-    "jsonwebtoken": "^8.2.0",
-    "request": "^2.85.0",
-    "selfsigned": "^1.10.2"
+    "cors": "^2.8.5",
+    "yargs": "^15.4.1"
   }
 }
