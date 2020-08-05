@@ -1,7 +1,7 @@
 import React from 'react';
 import Authentication from '../../util/Authentication/Authentication';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import QueueTest from '../QueueTest/QueueTest';
+import QueueView from '../QueueView/QueueView';
 import './App.css';
 
 export default class App extends React.Component {
@@ -43,11 +43,6 @@ export default class App extends React.Component {
         if (!this.state.finishedLoading) {
           // if the component hasn't finished loading (as in we've not set up after getting a token), let's set it up now.
 
-          
-
-          //Make a call to our test endpoint.
-          this.Authentication.makeCall("https://localhost:8081/test", "GET");
-
           // now we've done the setup for the component, let's set the state to true to force a rerender with the correct data.
           this.setState(() => {
             return { finishedLoading: true };
@@ -85,7 +80,22 @@ export default class App extends React.Component {
   render() {
     if (this.state.finishedLoading && this.state.isVisible) {
       return (
-        <QueueTest />
+        <div className='App'>
+          <div
+            className={this.state.theme === 'light' ? 'App-light' : 'App-dark'}
+          >
+            <Tabs>
+              <TabList>
+                <Tab>Queue</Tab>
+                <Tab>Leaderboard</Tab>
+              </TabList>
+              <TabPanel className='queue'>
+                <QueueView />
+              </TabPanel>
+              <TabPanel></TabPanel>
+            </Tabs>
+          </div>
+        </div>
       );
     } else {
       return <div className='App'></div>;
