@@ -1,7 +1,7 @@
 import React from 'react';
 import Authentication from '../../util/Authentication/Authentication';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import QueueView from '../QueueView/QueueView';
+import QueueTest from '../QueueTest/QueueTest';
 import './App.css';
 
 export default class App extends React.Component {
@@ -85,22 +85,7 @@ export default class App extends React.Component {
   render() {
     if (this.state.finishedLoading && this.state.isVisible) {
       return (
-        <div className='App'>
-          <div
-            className={this.state.theme === 'light' ? 'App-light' : 'App-dark'}
-          >
-            <Tabs>
-              <TabList>
-                <Tab>Queue</Tab>
-                <Tab>Leaderboard</Tab>
-              </TabList>
-              <TabPanel>
-                <QueueView />
-              </TabPanel>
-              <TabPanel></TabPanel>
-            </Tabs>
-          </div>
-        </div>
+        <QueueTest />
       );
     } else {
       return <div className='App'></div>;
