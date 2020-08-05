@@ -35,6 +35,8 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
+
+
     if (this.twitch) {
       this.twitch.onAuthorized((auth) => {
         this.Authentication.setToken(auth.token, auth.userId);
@@ -76,7 +78,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    if (/*this.state.finishedLoading && */ this.state.isVisible) {
+    if (this.state.finishedLoading && this.state.isVisible) {
       return (
         <div className='App'>
           <div
@@ -87,16 +89,11 @@ export default class App extends React.Component {
                 <Tab>Queue</Tab>
                 <Tab>Leaderboard</Tab>
               </TabList>
-              <TabPanel>
+              <TabPanel className='queue'>
                 <QueueView />
               </TabPanel>
               <TabPanel></TabPanel>
             </Tabs>
-            {/* <p>Hello world!</p>
-                        <p>My token is: {this.Authentication.state.token}</p>
-                        <p>My opaque ID is {this.Authentication.getOpaqueId()}.</p>
-                        <div>{this.Authentication.isModerator() ? <p>I am currently a mod, and here's a special mod button <input value='mod button' type='button'/></p>  : 'I am currently not a mod.'}</div>
-                        <p>I have {this.Authentication.hasSharedId() ? `shared my ID, and my user_id is ${this.Authentication.getUserId()}` : 'not shared my ID'}.</p> */}
           </div>
         </div>
       );

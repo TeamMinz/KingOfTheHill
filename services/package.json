@@ -1,0 +1,18 @@
+{
+  "name": "services",
+  "version": "1.0.0",
+  "description": "The Extension Backend Service (EBS) for the SmashQueue app.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "SEE LICENSE IN ../LICENSE",
+  "devDependencies": {
+    "cross-env": "^7.0.2"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "yargs": "^15.4.1"
+  }
+}
