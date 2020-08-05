@@ -1,13 +1,18 @@
 const jwt = require('jsonwebtoken');
+const superagent = require('superagent');
 
 module.exports = function (ownerId, secret, clientId) {
     
+    const channelCooldowns = {};
+    const channelCooldownMs = 1000;
+    const serverTokenDurationSec = 30;
+
     function buildChannelAuth(channelId) {
         const payload = {
             exp: Math.floor(Date.now() / 1000) + serverTokenDurationSec,
             channel_id: channelId,
-            user_id: ownerId, 
-            roles: 'external',
+            user_id: ownerId.toString(), 
+            role: 'external',
             pubsub_perms: {
                 send: ['*'],
             },
@@ -19,10 +24,9 @@ module.exports = function (ownerId, secret, clientId) {
     function broadcastMessage(channelId, message) {
         const body = {
             content_type: 'application/json',
-            message,
+            message: JSON.stringify(message),
             targets: ['broadcast']
         };
-
 
         superagent.post(`https://api.twitch.tv/extensions/message/${channelId}`)
                   .set('Client-ID', clientId)
@@ -34,7 +38,7 @@ module.exports = function (ownerId, secret, clientId) {
                   })
                   .catch(function (err) {
                     console.log("Error publishing broadcast for channel: " + channelId);
-                    console.log(err);
+                    console.log(err.response.text);
                   });
     }
     
