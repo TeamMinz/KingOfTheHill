@@ -3,6 +3,8 @@ const superagent = require('superagent');
 const router = express.Router();
 
 module.exports = function (ownerId, secret, clientId) {
+    const pubsub = require('../util/pubsub.js')(ownerId, secret, clientId);
+    
     const channelCooldownMs = 1000;
     const channelCooldowns = {};
     const channelQueues = {};
@@ -20,8 +22,20 @@ module.exports = function (ownerId, secret, clientId) {
             res.status(401).send({
                 message: "You must sign in to join the queue."
             });
+            return;
         }
 
+        if (currentQueue.includes(opaqueUserId)) {
+            
+            res.status(500).send({
+                message: "You are already in the queue."
+            });
+            return;
+        }
+
+        currentQueue.push(opaqueUserId);
+
+        channelQueues[channelId] = currentQueue;
         pubsub.broadcast(channelId, currentQueue);
 
         res.send({
@@ -44,12 +58,20 @@ module.exports = function (ownerId, secret, clientId) {
             return;
         }
 
-        currentQueue.filter(function (qmember) {
+        console.log(currentQueue);
+
+        if (!currentQueue.includes(opaqueUserId)) {
+            res.status(500).send({
+                message: "You cannot leave a queue you're not in."
+            });
+            return;
+        }
+
+         channelQueues[channelId] = currentQueue.filter(function (qmember) {
             return qmember != opaqueUserId;
         });
 
         pubsub.broadcast(channelId, currentQueue);
-
         res.send({
             message: "You have been removed from the queue."
         });
