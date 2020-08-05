@@ -9,6 +9,19 @@ module.exports = function (ownerId, secret, clientId) {
     const channelCooldowns = {};
     const channelQueues = {};
 
+    router.get('/get', function (req, res) {
+
+        const {
+            channel_id: channelId,
+            opaque_user_id: opaqueUserId
+        } = req.twitch;
+
+        const currentQueue = channelQueues[channelId] || [];
+
+        res.send({queue: currentQueue})
+
+    })
+
     router.post('/join', function (req, res) { //Handles joining the queue.
         const {
             channel_id: channelId,
