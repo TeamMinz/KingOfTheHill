@@ -2,24 +2,30 @@ import React from "react";
 import "../App/App.css";
 import "./QueueView.css";
 
-const JoinQueue = () => {
-  setButtonAction(LeaveQueue);
-  setButtonText("Leave the Queue");
-
-}
-
-const LeaveQueue = () => {
-  setButtonAction(JoinQueue);
-  setButtonText("Join the Queue");
-  
-}
-
-const [ButtonText, setButtonText] = useState("Join the Queue");
-const [ButtonAction, setButtonAction] = useState(JoinQueue);
-
 export default class App extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {};
+    this.state.button = {text: "Join the Queue", handler: this.joinQueue.bind(this)};
+  }
+
+  joinQueue() {
+    //TODO: actually join the queue.
+
+    this.setState({button: {
+      text: "Leave the Queue",
+      handler: this.leaveQueue
+    }});
+  }
+
+  leaveQueue() {
+    //TODO: actually join the queue.
+
+    this.setState({button: {
+      text: "Join the Queue",
+      handler: this.joinQueue
+    }});
   }
 
   render() {
@@ -46,7 +52,7 @@ export default class App extends React.Component {
         </div>
         <hr/>
         <div className="Join">
-          <button className="QueueButton" onclick={JoinQueue}>Join the Queue</button>
+          <button className="QueueButton" onClick={this.state.button.handler.bind(this)}>{this.state.button.text}</button>
         </div>
       </div>
     );

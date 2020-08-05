@@ -1,7 +1,7 @@
 {
   "allowHttpBackend": false,
-  "backendCommand": "",
-  "backendFolderName": "",
+  "backendCommand": "node index.js",
+  "backendFolderName": "services",
   "certificateExceptions": [
     {
       "isAllowed": true,
@@ -40,53 +40,9 @@
       "viewerType": "Broadcaster"
     },
     {
-      "channelId": "26898606",
-      "configurationAnchor": "panel",
-      "displayChannelName": "tminz",
-      "features": {
-        "isBitsEnabled": false,
-        "isChatEnabled": false,
-        "isSubscriptionStatusAvailable": false
-      },
-      "frameSize": {
-        "width": 1600,
-        "height": 900
-      },
-      "id": "2",
-      "isPopout": false,
-      "label": "me large",
-      "linked": false,
-      "linkedUserId": "",
-      "orientation": "Portrait",
-      "type": "component",
-      "viewerType": "Broadcaster"
-    },
-    {
-      "channelId": "26898606",
-      "configurationAnchor": "panel",
-      "displayChannelName": "tminz",
-      "features": {
-        "isBitsEnabled": true,
-        "isChatEnabled": false,
-        "isSubscriptionStatusAvailable": false
-      },
-      "frameSize": {
-        "width": 1600,
-        "height": 900
-      },
-      "id": "3",
-      "isPopout": false,
-      "label": "",
-      "linked": false,
-      "linkedUserId": "",
-      "orientation": "Portrait",
-      "type": "component",
-      "viewerType": "Broadcaster"
-    },
-    {
-      "channelId": "26898606",
-      "configurationAnchor": "panel",
-      "displayChannelName": "tminz",
+      "channelId": "265737932",
+      "configurationAnchor": "component",
+      "displayChannelName": "atlasmakesstuff",
       "features": {
         "isBitsEnabled": true,
         "isChatEnabled": false,
@@ -96,13 +52,35 @@
         "width": 1280,
         "height": 720
       },
-      "id": "4",
+      "id": "2",
       "isPopout": false,
-      "label": "1280",
-      "linked": false,
-      "linkedUserId": "",
+      "label": "",
+      "linked": true,
+      "linkedUserId": "265737932",
       "orientation": "Portrait",
-      "type": "component",
+      "type": "config",
+      "viewerType": "Broadcaster"
+    },
+    {
+      "channelId": "265737932",
+      "configurationAnchor": "panel",
+      "displayChannelName": "atlasmakesstuff",
+      "features": {
+        "isBitsEnabled": true,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "frameSize": {
+        "width": 1280,
+        "height": 720
+      },
+      "id": "3",
+      "isPopout": false,
+      "label": "",
+      "linked": true,
+      "linkedUserId": "265737932",
+      "orientation": "Portrait",
+      "type": "dashboard",
       "viewerType": "Broadcaster"
     }
   ],
@@ -178,7 +156,7 @@
     "whitelistedPanelUrls": []
   },
   "frontendCommand": "npm run start",
-  "frontendFolderName": "D:\\Documents\\QueueExtension",
+  "frontendFolderName": ".",
   "name": "Smash Queue",
   "version": 2
 }
