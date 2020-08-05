@@ -1,16 +1,23 @@
 .QueueView {
-    font-size: 500%;
+    display: flex;
+    flex-direction: column;
+    flex-flow: column;
 }
 
 .Queue {
-    overflow: scroll;
-    height: 80%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    display: flex;
+    height: 70vh;
+    padding-left: 1.1em;
 }
 
 .Champion {
-    height: 10%;
+    height: 10vh;
+    display: inline-block;
 }
 
 .Join {
-    height: 10%;
+    height: 10vh;
+    display: inline-block;
 }

@@ -82,6 +82,28 @@
       "orientation": "Portrait",
       "type": "component",
       "viewerType": "Broadcaster"
+    },
+    {
+      "channelId": "26898606",
+      "configurationAnchor": "panel",
+      "displayChannelName": "tminz",
+      "features": {
+        "isBitsEnabled": true,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "frameSize": {
+        "width": 1280,
+        "height": 720
+      },
+      "id": "4",
+      "isPopout": false,
+      "label": "1280",
+      "linked": false,
+      "linkedUserId": "",
+      "orientation": "Portrait",
+      "type": "component",
+      "viewerType": "Broadcaster"
     }
   ],
   "manifest": {
@@ -99,7 +121,7 @@
     "iconUrls": {},
     "id": "1c9f0t0nfj9vhwpcvkpsn36khpm6zw",
     "installationCount": -42,
-    "liveConfigUrl": "",
+    "liveConfigUrl": "https://localhost:8080/live_config.html",
     "name": "Smash Queue",
     "panelHeight": 300,
     "privacyPolicyUrl": "",
@@ -146,13 +168,17 @@
       "config": {
         "viewerUrl": "https://localhost:8080/config.html",
         "canLinkExternalContent": false
+      },
+      "liveConfig": {
+        "viewerUrl": "https://localhost:8080/live_config.html",
+        "canLinkExternalContent": false
       }
     },
     "whitelistedConfigUrls": [],
     "whitelistedPanelUrls": []
   },
   "frontendCommand": "npm run start",
-  "frontendFolderName": "C:\\Users\\jbass\\Documents\\SmashQueue",
+  "frontendFolderName": "D:\\Documents\\QueueExtension",
   "name": "Smash Queue",
   "version": 2
 }

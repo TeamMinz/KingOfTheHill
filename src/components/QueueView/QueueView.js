@@ -13,7 +13,6 @@ export default class App extends React.Component {
       <div className="Champion">
       👑 TMinz - 27 wins
       </div>
-      <hr/>
       <div className="Queue">
         <ol>
           <li>Test1</li>
@@ -31,7 +30,6 @@ export default class App extends React.Component {
           <li>Test4</li>
         </ol>
       </div>
-      <hr/>
       <div className='Join'>
 
       </div>

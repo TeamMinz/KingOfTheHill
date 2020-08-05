@@ -76,7 +76,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    if (/*this.state.finishedLoading && */ this.state.isVisible) {
+    if (this.state.finishedLoading && this.state.isVisible) {
       return (
         <div className='App'>
           <div
@@ -87,7 +87,7 @@ export default class App extends React.Component {
                 <Tab>Queue</Tab>
                 <Tab>Leaderboard</Tab>
               </TabList>
-              <TabPanel>
+              <TabPanel className='queue'>
                 <QueueView />
               </TabPanel>
               <TabPanel></TabPanel>
