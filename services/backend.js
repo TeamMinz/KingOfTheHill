@@ -87,6 +87,8 @@ const app = express();
 app.use(cors());
 app.use(authorizeHeader);
 
+app.use('/queue', require('./routes/queue.js')(OWNER_ID, SECRET, CLIENT_ID));
+
 app.get('/test', function (req, res) {
     console.log("Got a fully authenticated test from " + JSON.stringify(req.twitch));
 });
