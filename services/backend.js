@@ -3,6 +3,7 @@ const https = require('https');
 const express = require('express');
 const yargs = require('yargs');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 
 
 if (process.env.NODE_ENV == 'development') {
@@ -34,7 +35,7 @@ function getOption(option) {
 }
 
 const OWNER_ID = getOption('EXT_OWNER_ID');
-const SECRET =  getOption('EXT_SECRET');
+const SECRET =  Buffer.from(getOption('EXT_SECRET'), 'base64');
 const CLIENT_ID = getOption('EXT_CLIENT_ID');
 
 //Load our TLS cert and key.
@@ -50,7 +51,34 @@ const TLS = {
 //Create some middleware to help authorize the requests.
 
 function authorizeHeader(req, res, next) {
-    console.log("Got a header to authorize");
+    if (!req.headers.authorization) {
+        //TODO sent appropriate response code.
+        return;
+    }
+
+    const authstr = req.headers.authorization;
+    const bearerPrefix = 'Bearer ';
+
+
+    if (authstr.startsWith(bearerPrefix)) {
+        const token = authstr.substring(bearerPrefix.length);
+
+        jwt.verify(token, SECRET, function (err, payload) {
+            if (err) {
+                console.log(err);
+                res.status(401).send('Failed to authorize JWT token.');
+                return;
+            }
+
+            req.twitch = payload;
+
+            next();
+        });
+
+    } else {
+        res.status(401).send('Failed to authorize JWT token.');
+        return;
+    }
 }
 
 
@@ -60,7 +88,7 @@ app.use(cors());
 app.use(authorizeHeader);
 
 app.get('/test', function (req, res) {
-    console.log("Got a request on the handler for the test route.");
+    console.log("Got a fully authenticated test from " + JSON.stringify(req.twitch));
 });
 
 https.createServer(TLS, app).listen(8081, () => {
