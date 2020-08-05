@@ -1,12 +1,14 @@
-.App {
+:root {
   font-family: Arial, Helvetica, sans-serif;
+  font-weight: 500;
+  font-size: 5rem;
 }
 
 :root .App-light {
   --text-color: #000000;
   --border-color: #5a5a5a;
   --background-color: #e5e3e8;
-  --selected-color: #c5c4c5;
+  --not-selected-color: #c5c4c5;
   background-color: var(--background-color);
   border-color: var(--border-color);
   color: var(--text-color);
@@ -16,7 +18,7 @@
   --text-color: #e5e3e8;
   --border-color: #9b9a9a;
   --background-color: #232127;
-  --selected-color: #3b383f;
+  --not-selected-color: #3b383f;
   background-color: var(--background-color);
   border-color: var(--border-color);
   color: var(--text-color);
@@ -24,6 +26,7 @@
 
 .react-tabs {
   -webkit-tap-highlight-color: transparent;
+  height: 100vh;
 }
 
 .react-tabs__tab-list {
@@ -42,11 +45,11 @@
   padding: 6px 12px;
   cursor: pointer;
   width: 47%;
-  font-size: 500%;
+  background: var(--not-selected-color);
 }
 
 .react-tabs__tab--selected {
-  background: var(--selected-color);
+  background: var(--background-color);
   border-color: var(--border-color);
   color: var(--text-color);
   border-radius: 5px 5px 0 0;
@@ -79,4 +82,8 @@
 
 .react-tabs__tab-panel--selected {
   display: block;
+}
+
+.queue {
+  height: 100%
 }
