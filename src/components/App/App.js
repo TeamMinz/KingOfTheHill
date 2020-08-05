@@ -1,8 +1,8 @@
-import React from 'react';
-import Authentication from '../../util/Authentication/Authentication';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import QueueView from '../QueueView/QueueView';
-import './App.css';
+import React from "react";
+import Authentication from "../../util/Authentication/Authentication";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import QueueView from "../QueueView/QueueView";
+import "./App.css";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -13,13 +13,13 @@ export default class App extends React.Component {
     this.twitch = window.Twitch ? window.Twitch.ext : null;
     this.state = {
       finishedLoading: false,
-      theme: 'dark',
+      theme: "dark",
       isVisible: true,
     };
   }
 
   contextUpdate(context, delta) {
-    if (delta.includes('theme')) {
+    if (delta.includes("theme")) {
       this.setState(() => {
         return { theme: context.theme };
       });
@@ -48,7 +48,7 @@ export default class App extends React.Component {
         }
       });
 
-      this.twitch.listen('broadcast', (target, contentType, body) => {
+      this.twitch.listen("broadcast", (target, contentType, body) => {
         this.twitch.rig.log(
           `New PubSub message!\n${target}\n${contentType}\n${body}`
         );
@@ -69,8 +69,8 @@ export default class App extends React.Component {
 
   componentWillUnmount() {
     if (this.twitch) {
-      this.twitch.unlisten('broadcast', () =>
-        console.log('successfully unlistened')
+      this.twitch.unlisten("broadcast", () =>
+        console.log("successfully unlistened")
       );
     }
   }
@@ -78,16 +78,16 @@ export default class App extends React.Component {
   render() {
     if (true) {
       return (
-        <div className='App'>
+        <div className="App">
           <div
-            className={this.state.theme === 'light' ? 'App-light' : 'App-dark'}
+            className={this.state.theme === "light" ? "App-light" : "App-dark"}
           >
             <Tabs>
               <TabList>
                 <Tab>Queue</Tab>
                 <Tab>Leaderboard</Tab>
               </TabList>
-              <TabPanel className='queue'>
+              <TabPanel className="queue">
                 <QueueView />
               </TabPanel>
               <TabPanel></TabPanel>
@@ -96,7 +96,7 @@ export default class App extends React.Component {
         </div>
       );
     } else {
-      return <div className='App'></div>;
+      return <div className="App"></div>;
     }
   }
 }
