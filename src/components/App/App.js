@@ -1,8 +1,8 @@
-import React from 'react';
-import Authentication from '../../util/Authentication/Authentication';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import QueueView from '../QueueView/QueueView';
-import './App.css';
+import React from "react";
+import Authentication from "../../util/Authentication/Authentication";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import QueueView from "../QueueView/QueueView";
+import "./App.css";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -13,13 +13,13 @@ export default class App extends React.Component {
     this.twitch = window.Twitch ? window.Twitch.ext : null;
     this.state = {
       finishedLoading: false,
-      theme: 'dark',
+      theme: "dark",
       isVisible: true,
     };
   }
 
   contextUpdate(context, delta) {
-    if (delta.includes('theme')) {
+    if (delta.includes("theme")) {
       this.setState(() => {
         return { theme: context.theme };
       });
@@ -48,7 +48,7 @@ export default class App extends React.Component {
         }
       });
 
-      this.twitch.listen('broadcast', (target, contentType, body) => {
+      this.twitch.listen("broadcast", (target, contentType, body) => {
         this.twitch.rig.log(
           `New PubSub message!\n${target}\n${contentType}\n${body}`
         );
@@ -69,8 +69,8 @@ export default class App extends React.Component {
 
   componentWillUnmount() {
     if (this.twitch) {
-      this.twitch.unlisten('broadcast', () =>
-        console.log('successfully unlistened')
+      this.twitch.unlisten("broadcast", () =>
+        console.log("successfully unlistened")
       );
     }
   }
@@ -78,30 +78,25 @@ export default class App extends React.Component {
   render() {
     if (this.state.finishedLoading && this.state.isVisible) {
       return (
-        <div className='App'>
+        <div className="App">
           <div
-            className={this.state.theme === 'light' ? 'App-light' : 'App-dark'}
+            className={this.state.theme === "light" ? "App-light" : "App-dark"}
           >
             <Tabs>
               <TabList>
                 <Tab>Queue</Tab>
                 <Tab>Leaderboard</Tab>
               </TabList>
-              <TabPanel className='queue'>
+              <TabPanel className="queue">
                 <QueueView />
               </TabPanel>
               <TabPanel></TabPanel>
             </Tabs>
-            {/* <p>Hello world!</p>
-                        <p>My token is: {this.Authentication.state.token}</p>
-                        <p>My opaque ID is {this.Authentication.getOpaqueId()}.</p>
-                        <div>{this.Authentication.isModerator() ? <p>I am currently a mod, and here's a special mod button <input value='mod button' type='button'/></p>  : 'I am currently not a mod.'}</div>
-                        <p>I have {this.Authentication.hasSharedId() ? `shared my ID, and my user_id is ${this.Authentication.getUserId()}` : 'not shared my ID'}.</p> */}
           </div>
         </div>
       );
     } else {
-      return <div className='App'></div>;
+      return <div className="App"></div>;
     }
   }
 }
