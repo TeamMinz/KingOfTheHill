@@ -35,6 +35,8 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
+
+
     if (this.twitch) {
       this.twitch.onAuthorized((auth) => {
         this.Authentication.setToken(auth.token, auth.userId);
