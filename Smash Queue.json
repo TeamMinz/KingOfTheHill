@@ -1,6 +1,6 @@
 {
   "allowHttpBackend": false,
-  "backendCommand": "node index.js ",
+  "backendCommand": "node backend.js",
   "backendFolderName": "services",
   "certificateExceptions": [
     {
