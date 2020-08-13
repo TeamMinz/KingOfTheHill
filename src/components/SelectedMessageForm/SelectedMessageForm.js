@@ -1,77 +1,77 @@
-import React from 'react'
+import React from 'react';
 
-import './SelectedMessageForm.css'
+import './SelectedMessageForm.css';
 
 function ErrorMessage({showError}) {
-
   window.Twitch.ext.rig.log(showError);
 
   if (showError) {
-    return (<p>An error has occoured trying to set the message. Please try again later.</p>);
+    return (
+      <p>
+        An error has occoured trying to set the message. Please try again later.
+      </p>
+    );
   } else {
     return null;
   }
 }
 
 export default class SelectedMessageForm extends React.Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = {
-          selectionMessage: "You're up! Join arena (ARENA CODE) with password (PASSWORD).",
-          showError: false
-        };
-    }
+    this.state = {
+      selectionMessage:
+        'You\'re up! Join arena (ARENA CODE) with password (PASSWORD).',
+      showError: false,
+    };
+  }
 
-    showErrorMessage() {
-      this.setState(
-        {
-          selectionMessage: this.state.selectionMessage,
-          showError: true,
-        }
-      )
-    }
+  showErrorMessage() {
+    this.setState({
+      selectionMessage: this.state.selectionMessage,
+      showError: true,
+    });
+  }
 
-    updateSelectionMessage(event) {
-      event.preventDefault();
+  updateSelectionMessage(event) {
+    event.preventDefault();
 
-      let formData = new FormData(event.target);
+    const formData = new FormData(event.target);
 
-      fetch('/updatemessage', {
-        method: 'POST',
-        body: formData
-      }).then(resp => {
-
-        if (resp.ok) {
-          this.setState({
-            selectionMessage: resp.selectionMessage,
-            showError: false,
-          });
-        } else {
+    fetch('/updatemessage', {
+      method: 'POST',
+      body: formData,
+    }).then(
+        (resp) => {
+          if (resp.ok) {
+            this.setState({
+              selectionMessage: resp.selectionMessage,
+              showError: false,
+            });
+          } else {
+            this.showErrorMessage();
+          }
+        },
+        (err) => {
           this.showErrorMessage();
-        }        
-      }, err => {
-        this.showErrorMessage();
-      });
-    }
+        },
+    );
+  }
 
+  render() {
+    return (
+      <form method="POST" onSubmit={this.updateSelectionMessage}>
+        <ErrorMessage showError={this.state.showError} />
 
-    render() {
-        return (
-        <form method="POST" onSubmit={this.updateSelectionMessage}>
+        <label htmlFor="message">Set your selection message:</label>
 
-          <ErrorMessage showError={this.state.showError}/>
-
-          <label for="message">
-            Set your selection message:
-          </label>
-
-          <textarea type="text" name="message">
+        <textarea type="text" name="message">
           {this.state.selectionMessage}
-          </textarea>
-          <br />
-          <input type="submit" value="Update Message"></input>
-        </form>
-        );
-    }
+        </textarea>
+        <br />
+        <input type="submit" value="Update Message"></input>
+      </form>
+    );
+  }
 }

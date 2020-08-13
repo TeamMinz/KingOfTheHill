@@ -1,0 +1,17 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es2020": true
+  },
+  "extends": ["google", "plugin:node/recommended", "plugin:jsdoc/recommended"],
+  "parserOptions": {
+    "ecmaVersion": 11
+  },
+  "plugins": ["jsdoc", "node"],
+  "rules": {
+    "require-jsdoc": "off",
+    "valid-jsdoc": "off"
+  }
+}
