@@ -7,7 +7,8 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 
 if (process.env.NODE_ENV == 'development') {
-  // We will be using self signed certs in development. We need to make sure that we specifically allow that.
+  // We will be using self signed certs in development.
+  // We need to make sure that we specifically allow that.
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 }
 
@@ -25,7 +26,7 @@ const argv = yargs
 /**
  * @param option
  */
-function getOption(option) {
+const getOption = (option) => {
   if (argv[option]) {
     return argv[option];
   } else if (process.env[option]) {
@@ -34,7 +35,7 @@ function getOption(option) {
   // Panic
   console.error(`Missing required "${option}" environment variable.`);
   process.exit(1);
-}
+};
 
 const OWNER_ID = getOption('EXT_OWNER_ID');
 const SECRET = Buffer.from(getOption('EXT_SECRET'), 'base64');

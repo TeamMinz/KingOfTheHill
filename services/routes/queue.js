@@ -6,12 +6,17 @@ module.exports = function(ownerId, secret, clientId) {
 
   const channelQueues = {};
 
+  const getQueuePosition = (currentQueue, opaqueUserId) => {
+    return currentQueue.indexOf(opaqueUserId);
+  };
+
   router.get('/get', function(req, res) {
     const {channel_id: channelId, opaque_user_id: opaqueUserId} = req.twitch;
 
     const currentQueue = channelQueues[channelId] || [];
+    const currentPosition = getQueuePosition(currentQueue, opaqueUserId);
 
-    res.send({queue: currentQueue});
+    res.send({queue: currentQueue, position: currentPosition});
   });
 
   router.post('/join', function(req, res) {

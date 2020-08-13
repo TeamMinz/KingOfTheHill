@@ -51,6 +51,30 @@ module.exports = function(ownerId, secret, clientId) {
         });
   }
 
+  function broadcastUserSpecific(channelId, opaqueUserId, message) {
+    const body = {
+      content_type: 'application/json',
+      message: JSON.stringify(message),
+      targets: [`broadcast-${opaqueUserId}`],
+    };
+
+    superagent
+        .post(`https://api.twitch.tv/extensions/message/${channelId}`)
+        .set('Client-ID', clientId)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + buildChannelAuth(channelId))
+        .send(JSON.stringify(body))
+        .then(function(response) {
+          console.log(
+              'Successfully published broadcast for channel: ' + channelId,
+          );
+        })
+        .catch(function(err) {
+          console.log('Error publishing broadcast for channel: ' + channelId);
+          console.log(err.response.text);
+        });
+  }
+
   // if this piece of code gets too many request, it will stack broadcast requests on the next timeslot, causing us to be rate limited.
   /**
    * @param channelId
