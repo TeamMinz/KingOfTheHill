@@ -1,10 +1,7 @@
-import React from 'react';
-
+import React, {useState} from 'react';
 import './SelectedMessageForm.css';
 
-function ErrorMessage({showError}) {
-  window.Twitch.ext.rig.log(showError);
-
+const ErrorMessage = ({showError}) => {
   if (showError) {
     return (
       <p>
@@ -14,27 +11,15 @@ function ErrorMessage({showError}) {
   } else {
     return null;
   }
-}
+};
 
-export default class SelectedMessageForm extends React.Component {
-  constructor(props) {
-    super(props);
+const SelectedMessageForm = (props) => {
+  // State stuff.
+  const [ShowError, setShowError] = useState(false);
+  const [SelectionMessage, setSelectionMessage] =
+    useState('You\'re up! Join arena (ARENA CODE) with password (PASSWORD).');
 
-    this.state = {
-      selectionMessage:
-        'You\'re up! Join arena (ARENA CODE) with password (PASSWORD).',
-      showError: false,
-    };
-  }
-
-  showErrorMessage() {
-    this.setState({
-      selectionMessage: this.state.selectionMessage,
-      showError: true,
-    });
-  }
-
-  updateSelectionMessage(event) {
+  const updateSelectionMessage = (event) => {
     event.preventDefault();
 
     const formData = new FormData(event.target);
@@ -45,33 +30,30 @@ export default class SelectedMessageForm extends React.Component {
     }).then(
         (resp) => {
           if (resp.ok) {
-            this.setState({
-              selectionMessage: resp.selectionMessage,
-              showError: false,
-            });
+            setSelectionMessage(resp.selectionMessage);
           } else {
-            this.showErrorMessage();
+            setShowError(true);
           }
         },
         (err) => {
-          this.showErrorMessage();
+          setShowError(true);
         },
     );
-  }
+  };
 
-  render() {
-    return (
-      <form method="POST" onSubmit={this.updateSelectionMessage}>
-        <ErrorMessage showError={this.state.showError} />
+  return (
+    <form method="POST" onSubmit={updateSelectionMessage}>
+      <ErrorMessage showError={ShowError}/>
 
-        <label htmlFor="message">Set your selection message:</label>
+      <label htmlFor="message">Set your selection message:</label>
 
-        <textarea type="text" name="message">
-          {this.state.selectionMessage}
-        </textarea>
-        <br />
-        <input type="submit" value="Update Message"></input>
-      </form>
-    );
-  }
-}
+      <textarea type="text" name="message">
+        {SelectionMessage}
+      </textarea>
+      <br />
+      <input type="submit" value="Update Message"></input>
+    </form>
+  );
+};
+
+export default SelectedMessageForm;
