@@ -1,6 +1,6 @@
 {
   "allowHttpBackend": false,
-  "backendCommand": "node index.js",
+  "backendCommand": "node index.js ",
   "backendFolderName": "services",
   "certificateExceptions": [
     {
@@ -14,6 +14,12 @@
       "isEphemeral": false,
       "isOrigin": true,
       "value": "wss://localhost:8080"
+    },
+    {
+      "isAllowed": true,
+      "isEphemeral": false,
+      "isOrigin": true,
+      "value": "https://localhost:8081"
     }
   ],
   "extensionViews": [
@@ -97,7 +103,7 @@
     "hasChatSupport": false,
     "iconUrl": "",
     "iconUrls": {},
-    "id": "1c9f0t0nfj9vhwpcvkpsn36khpm6zw",
+    "id": "z1eskwyierovbt4gz8zbq1r45tne31",
     "installationCount": -42,
     "liveConfigUrl": "https://localhost:8080/live_config.html",
     "name": "Smash Queue",
@@ -157,6 +163,6 @@
   },
   "frontendCommand": "npm run start",
   "frontendFolderName": ".",
-  "name": "Smash Queue",
+  "name": "QueuePlaceholderName",
   "version": 2
 }
