@@ -1,7 +1,7 @@
 {
   "allowHttpBackend": false,
-  "backendCommand": "",
-  "backendFolderName": "",
+  "backendCommand": "node index.js",
+  "backendFolderName": "services",
   "certificateExceptions": [
     {
       "isAllowed": true,
@@ -156,7 +156,7 @@
     "whitelistedPanelUrls": []
   },
   "frontendCommand": "npm run start",
-  "frontendFolderName": "C:\\Users\\jbass\\Documents\\QueueExtension",
+  "frontendFolderName": ".",
   "name": "Smash Queue",
   "version": 2
 }
