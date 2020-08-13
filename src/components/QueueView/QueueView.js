@@ -11,8 +11,8 @@ const QueueView = (props) => {
     authentication
         .makeCall('https://localhost:8081/queue/join', 'POST')
         .then((resp) => {
-          resp.json().then((body_data) => {
-            twitch.rig.log(body_data);
+          resp.json().then((bodyData) => {
+            twitch.rig.log(bodyData);
 
             if (resp.ok) {
               setButtonText('Leave the Queue');
@@ -26,8 +26,8 @@ const QueueView = (props) => {
     authentication
         .makeCall('https://localhost:8081/queue/leave', 'POST')
         .then((resp) => {
-          resp.json().then((body_data) => {
-            twitch.rig.log(body_data);
+          resp.json().then((bodyData) => {
+            twitch.rig.log(bodyData);
 
             if (resp.ok) {
               setButtonAction(() => JoinQueue);
@@ -59,8 +59,8 @@ const QueueView = (props) => {
               .makeCall('https://localhost:8081/queue/get', 'GET')
               .then((resp) => {
                 if (resp.ok) {
-                  resp.json().then((body_data) => {
-                    const queue = body_data.queue;
+                  resp.json().then((bodyData) => {
+                    const queue = bodyData.queue;
 
                     if (queue.includes(authentication.getOpaqueId())) {
                       setButtonText('Leave the Queue');
