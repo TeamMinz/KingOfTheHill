@@ -4,10 +4,22 @@ const router = express.Router();
 
 module.exports = function (ownerId, secret, clientId) {
     const pubsub = require('../util/pubsub.js')(ownerId, secret, clientId);
+
     
-    const channelCooldownMs = 1000;
-    const channelCooldowns = {};
     const channelQueues = {};
+
+    router.get('/get', function (req, res) {
+
+        const {
+            channel_id: channelId,
+            opaque_user_id: opaqueUserId
+        } = req.twitch;
+
+        const currentQueue = channelQueues[channelId] || [];
+
+        res.send({queue: currentQueue})
+
+    })
 
     router.post('/join', function (req, res) { //Handles joining the queue.
         const {
@@ -58,8 +70,6 @@ module.exports = function (ownerId, secret, clientId) {
             return;
         }
 
-        console.log(currentQueue);
-
         if (!currentQueue.includes(opaqueUserId)) {
             res.status(500).send({
                 message: "You cannot leave a queue you're not in."
@@ -71,7 +81,7 @@ module.exports = function (ownerId, secret, clientId) {
             return qmember != opaqueUserId;
         });
 
-        pubsub.broadcast(channelId, currentQueue);
+        pubsub.broadcast(channelId, channelQueues[channelId]);
         res.send({
             message: "You have been removed from the queue."
         });
