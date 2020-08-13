@@ -1,5 +1,6 @@
 import React from 'react'
 import Authentication from '../../util/Authentication/Authentication'
+import SelectedMessageForm from '../SelectedMessageForm/SelectedMessageForm.js'
 
 import './LiveConfigPage.css'
 
@@ -61,11 +62,8 @@ export default class LiveConfigPage extends React.Component{
     render(){
         if(this.state.finishedLoading){
             return (
-                <div className="LiveConfigPage">
-                    <div className={this.state.theme === 'light' ? 'LiveConfigPage-light' : 'LiveConfigPage-dark'} >
-                        <p>Hello world!</p>
-                        <p>This is the live config page! </p>
-                    </div>
+                <div className={this.state.theme === 'light' ? 'LiveConfigPage-light' : 'LiveConfigPage-dark'} >
+                        <SelectedMessageForm />
                 </div>
             )
         }else{
