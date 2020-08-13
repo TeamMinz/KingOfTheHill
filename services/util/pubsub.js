@@ -7,7 +7,8 @@ module.exports = function(ownerId, secret, clientId) {
   const serverTokenDurationSec = 30;
 
   /**
-   * @param channelId
+   * @param {string} channelId
+   * @returns {object} a signed authentication token.
    */
   function buildChannelAuth(channelId) {
     const payload = {
@@ -51,7 +52,8 @@ module.exports = function(ownerId, secret, clientId) {
         });
   }
 
-  // if this piece of code gets too many request, it will stack broadcast requests on the next timeslot, causing us to be rate limited.
+  // if we get too many requests, we will stack broadcast requests
+  // this will cause us to be rate limited.
   /**
    * @param channelId
    * @param message
