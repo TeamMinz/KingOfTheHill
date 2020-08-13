@@ -1,0 +1,19 @@
+{
+  "env": {
+    "browser": true,
+    "es2020": true
+  },
+  "extends": ["plugin:react/recommended", "plugin:jsdoc/recommended", "google"],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 11,
+    "sourceType": "module"
+  },
+  "plugins": ["react", "jsdoc"],
+  "rules": {
+    "require-jsdoc": "off",
+    "valid-jsdoc": "off"
+  }
+}
