@@ -1,7 +1,7 @@
 const express = require('express');
-const router = express.Router();
+const router = new express.Router();
 
-module.exports = function(ownerId, secret, clientId) {
+module.exports = (ownerId, secret, clientId) => {
   const pubsub = require('../util/pubsub.js')(ownerId, secret, clientId);
 
   const channelQueues = {};
