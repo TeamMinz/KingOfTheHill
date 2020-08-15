@@ -42,12 +42,17 @@ const SelectedMessageForm = (props) => {
   };
 
   return (
-    <form method="POST" onSubmit={updateSelectionMessage}>
+    <form method="POST"
+      className="SelectedMessageForm"
+      onSubmit={updateSelectionMessage}
+    >
       <ErrorMessage showError={ShowError}/>
 
-      <label htmlFor="message">Set your selection message:</label>
+      <label htmlFor="message">
+        Set your selection message:
+      </label>
 
-      <textarea type="text" name="message">
+      <textarea type="text" name="message" rows="5" cols="30">
         {SelectionMessage}
       </textarea>
       <br />
