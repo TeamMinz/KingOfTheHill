@@ -97,12 +97,6 @@ app.use(authorizeHeader);
 
 app.use('/queue', require('./routes/queue.js')(OWNER_ID, SECRET, CLIENT_ID));
 
-app.get('/test', function(req, res) {
-  console.log(
-      'Got a fully authenticated test from ' + JSON.stringify(req.twitch),
-  );
-});
-
 https.createServer(TLS, app).listen(8081, () => {
   console.log('EBS now listening.');
 });
