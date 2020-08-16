@@ -5,6 +5,7 @@ const express = require('express');
 const yargs = require('yargs');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
+const bodyParser = require('body-parser');
 
 if (process.env.NODE_ENV == 'development') {
   // We will be using self signed certs in development.
@@ -93,9 +94,13 @@ function authorizeHeader(req, res, next) {
 const app = express();
 
 app.use(cors());
+app.use(bodyParser.json());
 app.use(authorizeHeader);
 
 app.use('/queue', require('./routes/queue.js')(OWNER_ID, SECRET, CLIENT_ID));
+app.use('/matchup',
+    require('./routes/matchup.js')(OWNER_ID, SECRET, CLIENT_ID));
+
 
 https.createServer(TLS, app).listen(8081, () => {
   console.log('EBS now listening.');
