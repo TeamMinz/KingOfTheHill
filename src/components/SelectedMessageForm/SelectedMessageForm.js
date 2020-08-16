@@ -16,8 +16,9 @@ const ErrorMessage = ({showError}) => {
 const SelectedMessageForm = (props) => {
   // State stuff.
   const [ShowError, setShowError] = useState(false);
-  const [SelectionMessage, setSelectionMessage] =
-    useState('You\'re up! Join arena (ARENA CODE) with password (PASSWORD).');
+  const [SelectionMessage, setSelectionMessage] = useState(
+      'You\'re up! Join arena (ARENA CODE) with password (PASSWORD).',
+  );
 
   const updateSelectionMessage = (event) => {
     event.preventDefault();
@@ -42,19 +43,22 @@ const SelectedMessageForm = (props) => {
   };
 
   return (
-    <form method="POST"
+    <form
+      method="POST"
       className="SelectedMessageForm"
       onSubmit={updateSelectionMessage}
     >
-      <ErrorMessage showError={ShowError}/>
+      <ErrorMessage showError={ShowError} />
 
-      <label htmlFor="message">
-        Set your selection message:
-      </label>
+      <label htmlFor="message">Set your selection message:</label>
 
-      <textarea type="text" name="message" rows="5" cols="30">
-        {SelectionMessage}
-      </textarea>
+      <textarea
+        type="text"
+        name="message"
+        rows="5"
+        cols="30"
+        defaultValue={SelectionMessage}
+      />
       <br />
       <input type="submit" value="Update Message"></input>
     </form>
