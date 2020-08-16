@@ -1,8 +1,10 @@
 const jwt = require('jsonwebtoken');
 
 /**
- * Helper class for authentication against an EBS service. Allows the storage of a token to be accessed across componenents.
- * This is not meant to be a source of truth. Use only for presentational purposes.
+ * Helper class for authentication against an EBS service.
+ * Allows the storage of a token to be accessed across componenents.
+ * This is not meant to be a source of truth.
+ * Use only for presentational purposes.
  */
 export default class Authentication {
   constructor(token, opaque_id) {
@@ -85,7 +87,7 @@ export default class Authentication {
    *
    */
 
-  makeCall(url, method = 'GET') {
+  makeCall(url, method = 'GET', body = null) {
     return new Promise((resolve, reject) => {
       if (this.isAuthenticated()) {
         const headers = {
@@ -93,9 +95,16 @@ export default class Authentication {
           'Authorization': `Bearer ${this.state.token}`,
         };
 
+        let bodyContent = null;
+
+        if (method != 'GET' && body != null) {
+          bodyContent = JSON.stringify(body);
+        }
+
         fetch(url, {
           method,
           headers,
+          body: bodyContent,
         })
             .then((response) => resolve(response))
             .catch((e) => reject(e));
