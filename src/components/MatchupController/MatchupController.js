@@ -24,7 +24,7 @@ const MatchupController = (props) => {
               });
             } else {
               console.log('Error starting matchup.');
-              // Display error
+            // Display error
             }
           });
     }
@@ -32,7 +32,9 @@ const MatchupController = (props) => {
 
   const declareWinner = (winner) => {
     authentication
-        .makeCall('https://localhost:8081/matchup/current/report', 'POST', {winner})
+        .makeCall('https://localhost:8081/matchup/current/report', 'POST', {
+          winner,
+        })
         .then((resp) => {
           if (resp.ok) {
             setCurrentMatchup(null);
