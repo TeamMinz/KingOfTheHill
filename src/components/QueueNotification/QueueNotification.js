@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 
 const QueueNotification = (props) => {
   const [IsVisible, setVisible] = useState(false);
-  const [DisplayMessage, setMessage] = useState("");
-  
+  const [DisplayMessage, setMessage] = useState('');
+
   useEffect(() => {
     if (twitch) {
       twitch.onAuthorized((auth) => {
@@ -12,24 +12,21 @@ const QueueNotification = (props) => {
           twitch.listen('broadcast', (target, contentType, body) => {
             const message = JSON.parse(body);
 
-            if (message.messageType == "MESSAGE_YOUREUP") {
+            if (message.messageType == 'MESSAGE_YOUREUP') {
               setMessage(message.message);
               setVisible(true);
             }
           });
+        }
+      });
+
+      if (IsVisible) {
+        return <div>{DisplayMessage}</div>;
+      } else {
+        return;
+      }
     }
   });
-
-  if (IsVisible) {
-    return 
-    (<div>
-      {DisplayMessage}
-    </div>);
-  } else {
-    return null;
-  }
-
-  
 };
 
-export default class QueueNotification;
+export default QueueNotification;
