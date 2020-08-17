@@ -49,6 +49,16 @@ const MatchupController = (props) => {
       twitch.onAuthorized((auth) => {
         authentication.setToken(auth.token, auth.userId);
         if (!FinishedLoading) {
+          authentication
+              .makeCall('https://localhost:8081/matchup/current/get')
+              .then((resp) => {
+                if (resp.ok) {
+                  resp.json().then((resp) => {
+                    setCurrentMatchup(resp.matchup);
+                  });
+                }
+              });
+
           setFinishedLoading(true);
         }
       });
