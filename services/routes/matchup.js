@@ -27,10 +27,10 @@ module.exports = (ownerId, secret, clientId) => {
           .status(500)
           .json({error: true, message: 'There is already a match in progress'});
     } else {
-      currentMatchup = {playerOne: 'tminz', playerTwo: 'pycses'};
+      currentMatchup = {champion: 'tminz', challenger: 'pycses'};
       console.log(
           // eslint-disable-next-line max-len
-          `Starting match between ${currentMatchup.playerOne} and ${currentMatchup.playerTwo}`,
+          `Starting match between ${currentMatchup.champion} and ${currentMatchup.challenger}`,
       );
       res.json({matchup: currentMatchup});
     }

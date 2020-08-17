@@ -42,6 +42,7 @@ const QueueView = (props) => {
   const [ButtonAction, setButtonAction] = useState(() => JoinQueue);
   const [FinishedLoading, setFinishedLoading] = useState(false);
   const [Queue, setQueue] = useState([]);
+  const [CurrentMatchup, setCurrentMatchup] = useState(null);
 
   // make sure we authorize when the page loads.
   useEffect(() => {
@@ -72,6 +73,16 @@ const QueueView = (props) => {
                 }
               });
 
+          authentication
+              .makeCall('https://localhost:8081/matchup/current/get')
+              .then((resp) => {
+                if (resp.ok) {
+                  resp.json().then((resp) => {
+                    setCurrentMatchup(resp.matchup);
+                  });
+                }
+              });
+
           setFinishedLoading(true);
         }
       });
@@ -82,9 +93,22 @@ const QueueView = (props) => {
     return <li key={index}>{opaqueId}</li>;
   });
 
+  let headerDiv = null;
+
+  if (CurrentMatchup) {
+    headerDiv = (
+      <div className="Champion">
+        Now Playing: 👑 {CurrentMatchup.champion} (27) v{' '}
+        {CurrentMatchup.challenger}
+      </div>
+    );
+  } else {
+    headerDiv = <div className="Champion">👑 TMinz - 27 wins</div>;
+  }
+
   return (
     <div className="QueueView">
-      <div className="Champion">👑 TMinz - 27 wins</div>
+      {headerDiv}
       <hr />
       <div className="Queue">
         <ol>{queueEntries}</ol>
