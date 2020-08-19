@@ -1,12 +1,10 @@
-require('dotenv').config();
 const fs = require('fs');
 const https = require('https');
-const path = require('path');
 const express = require('express');
-const yargs = require('yargs');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const routes = require('./routes');
+const {SECRET} = require('./util/options');
 
 if (process.env.NODE_ENV == 'development') {
   // We will be using self signed certs in development.
@@ -14,54 +12,16 @@ if (process.env.NODE_ENV == 'development') {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 }
 
-// Process command line arguments
-const argv = yargs
-    .describe('ownerid', 'The extension\'s owner id')
-    .alias('o', 'ownerid')
-    .describe('secret', 'The extension\'s secret')
-    .alias('s', 'secret')
-    .describe('clientid', 'The extension\'s clientId')
-    .alias('c', 'clientid').argv;
-
-// Fetch some environment variables that we will need.
-
-/**
- * @param {string} option
- *  The name of the option to get from the command line args.
- * @param {string} envOption
- *  The environment variable to fetch if there is no cli flag.
- * @returns {object} The specified option / environment variable if it exists.
- */
-function getOption(option, envOption) {
-  if (argv[option]) {
-    return argv[option];
-  } else if (process.env[envOption]) {
-    return process.env[envOption];
-  }
-  // Panic
-  throw new Error(`Missing required "${option}" environment variable.`);
-}
-
-const OWNER_ID = getOption('ownerid', 'EXT_OWNER_ID');
-const SECRET = Buffer.from(getOption('secret', 'EXT_SECRET'), 'base64');
-const CLIENT_ID = getOption('clientid', 'EXT_CLIENT_ID');
-
 // Load our TLS cert and key.
-// const TLS_CERT_PATH = '../conf/.crt';
-// const TLS_KEY_PATH = '../conf/.key';
 
-let TLS;
-const serverPathRoot = path.resolve(__dirname, '..', 'conf', 'server');
-if (
-  fs.existsSync(serverPathRoot + '.crt') &&
-  fs.existsSync(serverPathRoot + '.key')
-) {
-  TLS = {
-    // If you need a certificate, execute "npm run cert".
-    cert: fs.readFileSync(serverPathRoot + '.crt'),
-    key: fs.readFileSync(serverPathRoot + '.key'),
-  };
-}
+const TLS_CERT_PATH = '../conf/.crt';
+const TLS_KEY_PATH = '../conf/.key';
+
+const TLS = {
+  // If you need a certificate, execute "npm run cert".
+  cert: fs.readFileSync(TLS_CERT_PATH),
+  key: fs.readFileSync(TLS_KEY_PATH),
+};
 
 // Create some middleware to help authorize the requests.
 
@@ -110,9 +70,3 @@ app.use('/', routes);
 https.createServer(TLS, app).listen(8081, () => {
   console.log('EBS now listening.');
 });
-
-module.exports = {
-  OWNER_ID,
-  CLIENT_ID,
-  SECRET,
-};
