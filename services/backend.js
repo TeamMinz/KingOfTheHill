@@ -1,6 +1,7 @@
 require('dotenv').config();
 const fs = require('fs');
 const https = require('https');
+const path = require('path');
 const express = require('express');
 const yargs = require('yargs');
 const cors = require('cors');
@@ -46,14 +47,21 @@ const SECRET = Buffer.from(getOption('secret', 'EXT_SECRET'), 'base64');
 const CLIENT_ID = getOption('clientid', 'EXT_CLIENT_ID');
 
 // Load our TLS cert and key.
+// const TLS_CERT_PATH = '../conf/.crt';
+// const TLS_KEY_PATH = '../conf/.key';
 
-const TLS_CERT_PATH = '../conf/.crt';
-const TLS_KEY_PATH = '../conf/.key';
-
-const TLS = {
-  key: fs.readFileSync(TLS_KEY_PATH),
-  cert: fs.readFileSync(TLS_CERT_PATH),
-};
+let TLS;
+const serverPathRoot = path.resolve(__dirname, '..', 'conf', 'server');
+if (
+  fs.existsSync(serverPathRoot + '.crt') &&
+  fs.existsSync(serverPathRoot + '.key')
+) {
+  TLS = {
+    // If you need a certificate, execute "npm run cert".
+    cert: fs.readFileSync(serverPathRoot + '.crt'),
+    key: fs.readFileSync(serverPathRoot + '.key'),
+  };
+}
 
 // Create some middleware to help authorize the requests.
 
@@ -108,4 +116,3 @@ module.exports = {
   CLIENT_ID,
   SECRET,
 };
-

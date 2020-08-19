@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 const QueueNotification = (props) => {
   const [IsVisible, setVisible] = useState(false);
@@ -23,9 +23,10 @@ const QueueNotification = (props) => {
       if (IsVisible) {
         return <div>{DisplayMessage}</div>;
       } else {
-        return;
+        return null;
       }
     }
+    return null;
   });
 };
 
