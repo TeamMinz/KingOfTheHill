@@ -1,5 +1,6 @@
-const queue = require('express').Router;
-const pubsub = require('../util/pubsub.js')(ownerId, secret, clientId);
+// eslint-disable-next-line new-cap
+const queue = require('express').Router();
+const {broadcast} = require('../util/pubsub.js');
 
 const channelQueues = {};
 
@@ -40,7 +41,7 @@ queue.post('/join', function(req, res) {
   currentQueue.push(opaqueUserId);
 
   channelQueues[channelId] = currentQueue;
-  pubsub.broadcast(channelId, currentQueue);
+  broadcast(channelId, currentQueue);
 
   res.send({
     message: `You are now #${currentQueue.length} in the queue.`,
@@ -71,7 +72,7 @@ queue.post('/leave', function(req, res) {
     return qmember != opaqueUserId;
   });
 
-  pubsub.broadcast(channelId, channelQueues[channelId]);
+  broadcast(channelId, channelQueues[channelId]);
   res.send({
     message: 'You have been removed from the queue.',
   });

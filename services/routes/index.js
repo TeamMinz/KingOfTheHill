@@ -1,4 +1,5 @@
-const router = require('express').Router;
+// eslint-disable-next-line new-cap
+const router = require('express').Router();
 const queue = require('./queue');
 const matchup = require('./matchup');
 

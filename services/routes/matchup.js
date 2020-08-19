@@ -1,4 +1,5 @@
-const matchup = require('express').Router;
+// eslint-disable-next-line new-cap
+const matchup = require('express').Router();
 
 let currentMatchup = null;
 
@@ -34,6 +35,4 @@ matchup.post('/start', (req, res) => {
   }
 });
 
-module.exports = {
-  matchup,
-};
+module.exports = matchup;
