@@ -3,10 +3,48 @@ import '../App/App.css';
 import './QueueView.css';
 import Authentication from '../../util/Authentication/Authentication';
 
-const QueueView = (props) => {
+const QueueView = (_props) => {
   const twitch = window.Twitch ? window.Twitch.ext : null;
   const authentication = new Authentication();
 
+  // state stuff
+  const [ButtonText, setButtonText] = useState('Loading...');
+  const [ButtonAction, setButtonAction] = useState(() => {});
+  const [FinishedLoading, setFinishedLoading] = useState(false);
+  const [Queue, setQueue] = useState([]);
+  const [CurrentMatchup, setCurrentMatchup] = useState(null);
+
+  // helper functions
+  function fetchQueue() {
+    authentication
+        .makeCall('https://localhost:8081/queue/get', 'GET')
+        .then((resp) => {
+          if (resp.ok) {
+            resp.json().then((bodyData) => {
+              const queue = bodyData.queue;
+
+              if (queue.includes(authentication.getOpaqueId())) {
+                setButtonText('Leave the Queue');
+                setButtonAction(() => LeaveQueue);
+              }
+
+              setQueue(queue);
+            });
+          }
+        });
+  };
+
+  function fetchMatchup() {
+    authentication
+        .makeCall('https://localhost:8081/matchup/current/get')
+        .then((resp) => {
+          if (resp.ok) {
+            resp.json().then((resp) => {
+              setCurrentMatchup(resp.matchup);
+            });
+          }
+        });
+  };
   const JoinQueue = () => {
     authentication
         .makeCall('https://localhost:8081/queue/join', 'POST')
@@ -37,57 +75,77 @@ const QueueView = (props) => {
         });
   };
 
-  // state stuff
-  const [ButtonText, setButtonText] = useState('Join the Queue');
-  const [ButtonAction, setButtonAction] = useState(() => JoinQueue);
-  const [FinishedLoading, setFinishedLoading] = useState(false);
-  const [Queue, setQueue] = useState([]);
-  const [CurrentMatchup, setCurrentMatchup] = useState(null);
+  const QueueEffect = () => {
+    function handleMessage(_target, _contentType, body) {
+      const message = JSON.parse(body);
+      if (message.type == 'updateQueue') {
+        setQueue(message.message);
+      }
+    };
 
-  // make sure we authorize when the page loads.
-  useEffect(() => {
-    if (twitch) {
-      twitch.onAuthorized((auth) => {
-        authentication.setToken(auth.token, auth.userId);
-        if (!FinishedLoading) {
-          twitch.listen('broadcast', (target, contentType, body) => {
-            const queue = JSON.parse(body);
+    function handleAuthentication(auth) {
+      authentication.setToken(auth.token, auth.userId);
 
-            setQueue(queue);
-          });
-
-          authentication
-              .makeCall('https://localhost:8081/queue/get', 'GET')
-              .then((resp) => {
-                if (resp.ok) {
-                  resp.json().then((bodyData) => {
-                    const queue = bodyData.queue;
-
-                    if (queue.includes(authentication.getOpaqueId())) {
-                      setButtonText('Leave the Queue');
-                      setButtonAction(() => LeaveQueue);
-                    }
-
-                    setQueue(queue);
-                  });
-                }
-              });
-
-          authentication
-              .makeCall('https://localhost:8081/matchup/current/get')
-              .then((resp) => {
-                if (resp.ok) {
-                  resp.json().then((resp) => {
-                    setCurrentMatchup(resp.matchup);
-                  });
-                }
-              });
-
-          setFinishedLoading(true);
-        }
-      });
+      if (!FinishedLoading) {
+        firstTimeSetup();
+        setFinishedLoading(true);
+      }
     }
-  });
+
+    function firstTimeSetup() {
+      fetchQueue();
+      fetchMatchup();
+      setButtonText('Join the queue!');
+      setButtonAction(() => JoinQueue);
+    }
+
+    if (twitch) {
+      twitch.onAuthorized(handleAuthentication);
+    }
+
+    if (FinishedLoading) {
+      twitch.listen('broadcast', handleMessage);
+
+      return function cleanup() {
+        console.log('unlistening...');
+        twitch.unlisten('broadcast', handleMessage);
+      };
+    }
+  };
+
+  const MatchupEffect = () => {
+    function handleMessage(_target, _contentType, body) {
+      const message = JSON.parse(body);
+      if (message.type == 'updateQueue') {
+        setQueue(message.message);
+      }
+    };
+
+    /* function handleAuthentication(auth) {
+      authentication.setToken(auth.token, auth.userId);
+
+      if (!FinishedLoading) {
+        setFinishedLoading(true);
+      }
+    }
+
+
+    if (twitch) {
+      twitch.onAuthorized(handleAuthentication);
+    } */ // this is all stuff that we will need when we move this code file
+
+    if (FinishedLoading) {
+      twitch.listen('broadcast', handleMessage);
+
+      return function cleanup() {
+        console.log('unlistening...');
+        twitch.unlisten('broadcast', handleMessage);
+      };
+    }
+  };
+
+  // called when the component mounts.
+  useEffect(QueueEffect, [Queue, FinishedLoading]);
 
   const queueEntries = Queue.map(function(opaqueId, index) {
     return <li key={index}>{opaqueId}</li>;
@@ -95,6 +153,7 @@ const QueueView = (props) => {
 
   let headerDiv = null;
 
+  // TODO: we should move this current matchup stuff out of this file.
   if (CurrentMatchup) {
     headerDiv = (
       <div className="Champion">
