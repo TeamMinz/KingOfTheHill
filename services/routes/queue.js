@@ -2,7 +2,9 @@
 const queue = require('express').Router();
 const {broadcast} = require('../util/pubsub.js');
 
+const queueUpdateIntervalMs = 1000;
 const channelQueues = {};
+const updatedQueues = {}; // true if we need to publish an update to pubsub
 
 const getQueuePosition = (currentQueue, opaqueUserId) => {
   return currentQueue.indexOf(opaqueUserId);
@@ -40,8 +42,9 @@ queue.post('/join', function(req, res) {
 
   currentQueue.push(opaqueUserId);
 
+  // Update the queue, then mark that queue as updated, so we know to publish
   channelQueues[channelId] = currentQueue;
-  broadcast(channelId, currentQueue);
+  updatedQueues[channelId] = true;
 
   res.send({
     message: `You are now #${currentQueue.length} in the queue.`,
@@ -68,14 +71,32 @@ queue.post('/leave', function(req, res) {
     return;
   }
 
-  channelQueues[channelId] = currentQueue.filter(function(qmember) {
-    return qmember != opaqueUserId;
-  });
+  // Update the queue, then mark that queue as updated, so we know to publish.
+  channelQueues[channelId] =
+    currentQueue.filter((qmember) => (qmember != opaqueUserId));
+  updatedQueues[channelId] = true;
 
-  broadcast(channelId, channelQueues[channelId]);
   res.send({
     message: 'You have been removed from the queue.',
   });
 });
 
 module.exports = queue;
+
+// Check if each queue has changed, then if it has publish it.
+setInterval(function() {
+  for (const channelId in channelQueues) {
+    if (channelQueues.hasOwnProperty(channelId) && updatedQueues[channelId]) {
+      const queue = channelQueues[channelId];
+
+      const message = {
+        type: 'updateQueue',
+        message: queue,
+      };
+
+      broadcast(channelId, message);
+
+      updatedQueues[channelId] = false; // mark this so we don't update again
+    }
+  }
+}, queueUpdateIntervalMs);
