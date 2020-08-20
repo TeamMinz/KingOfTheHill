@@ -16,10 +16,8 @@ const MatchupController = (props) => {
           .makeCall('https://localhost:8081/matchup/start', 'POST')
           .then((resp) => {
             if (resp.ok) {
-              console.log(resp);
-
               resp.json().then((resp) => {
-                console.log('started a matchup: ' + resp);
+                // console.log('started a matchup: ' + resp);
                 setCurrentMatchup(resp.matchup);
               });
             } else {
@@ -38,7 +36,7 @@ const MatchupController = (props) => {
         .then((resp) => {
           if (resp.ok) {
             setCurrentMatchup(null);
-            console.log(`${winner} has been declared the winner.`);
+            // console.log(`${winner} has been declared the winner.`);
           } else {
             console.log('there was an error processing the request.');
           }
