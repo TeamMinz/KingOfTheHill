@@ -45,6 +45,7 @@ const QueueView = (_props) => {
           }
         });
   };
+
   const JoinQueue = () => {
     authentication
         .makeCall('https://localhost:8081/queue/join', 'POST')
@@ -107,7 +108,6 @@ const QueueView = (_props) => {
       twitch.listen('broadcast', handleMessage);
 
       return function cleanup() {
-        console.log('unlistening...');
         twitch.unlisten('broadcast', handleMessage);
       };
     }
@@ -116,8 +116,8 @@ const QueueView = (_props) => {
   const MatchupEffect = () => {
     function handleMessage(_target, _contentType, body) {
       const message = JSON.parse(body);
-      if (message.type == 'updateQueue') {
-        setQueue(message.message);
+      if (message.type == 'updateMatchup') {
+        setCurrentMatchup(message.message);
       }
     };
 
@@ -138,7 +138,6 @@ const QueueView = (_props) => {
       twitch.listen('broadcast', handleMessage);
 
       return function cleanup() {
-        console.log('unlistening...');
         twitch.unlisten('broadcast', handleMessage);
       };
     }
@@ -146,10 +145,12 @@ const QueueView = (_props) => {
 
   // called when the component mounts.
   useEffect(QueueEffect, [Queue, FinishedLoading]);
+  useEffect(MatchupEffect, [CurrentMatchup, FinishedLoading]);
 
-  const queueEntries = Queue.map(function(opaqueId, index) {
-    return <li key={index}>{opaqueId}</li>;
-  });
+
+  const queueEntries = Queue?
+    Queue.map((opaqueId, index) => (<li key={index}>{opaqueId}</li>)):
+    [];
 
   let headerDiv = null;
 
