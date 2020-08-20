@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const superagent = require('superagent');
 const {OWNER_ID, SECRET, CLIENT_ID} = require('./options');
 
+const messageQueues = {};
 const channelCooldowns = {};
 const channelCooldownMs = 1000;
 const serverTokenDurationSec = 30;
@@ -29,6 +30,10 @@ function buildChannelAuth(channelId) {
  * @param {object} message the message to broadcast
  */
 function broadcastMessage(channelId, message) {
+  if (message == null) {
+    return;
+  }
+
   const body = {
     content_type: 'application/json',
     message: JSON.stringify(message),
@@ -42,6 +47,7 @@ function broadcastMessage(channelId, message) {
       .set('Authorization', 'Bearer ' + buildChannelAuth(channelId))
       .send(JSON.stringify(body))
       .then(function(response) {
+        // eslint-disable-next-line max-len
         console.log('Successfully published broadcast for channel: ' + channelId);
       })
       .catch(function(err) {
@@ -71,6 +77,7 @@ function broadcastUserSpecific(channelId, opaqueUserId, message) {
       .set('Authorization', 'Bearer ' + buildChannelAuth(channelId))
       .send(JSON.stringify(body))
       .then(function(response) {
+        // eslint-disable-next-line max-len
         console.log('Successfully published broadcast for channel: ' + channelId);
       })
       .catch(function(err) {
@@ -79,35 +86,7 @@ function broadcastUserSpecific(channelId, opaqueUserId, message) {
       });
 }
 
-// if we get too many requests, we will stack broadcast requests
-// this will cause us to be rate limited.
-/**
- * Broadcast a message to the viewers in a specific channel
- *
- * @param {object} channelId the channel to send the broadcast in.
- * @param {object} message the message to broadcast.
- */
-function scheduleBroadcast(channelId, message) {
-  const now = Date.now();
-  const cooldown = channelCooldowns[channelId];
-  if (!cooldown || cooldown.time < now) {
-    // It is.
-
-    broadcastMessage(channelId, message);
-
-    channelCooldowns[channelId] = {
-      time: now + channelCooldownMs,
-    };
-  } else if (!cooldown.trigger) {
-    // It isn't; schedule a delayed broadcast if we haven't already done so.
-    cooldown.trigger = setTimeout(
-        broadcastMessage,
-        now - cooldown.time,
-        channelId,
-    );
-  }
-}
-
 module.exports = {
-  broadcast: scheduleBroadcast,
+  broadcast: broadcastMessage,
+  broadcastSpecific: broadcastUserSpecific,
 };
