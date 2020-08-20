@@ -15,6 +15,9 @@ const QueueView = (_props) => {
   const [CurrentMatchup, setCurrentMatchup] = useState(null);
 
   // helper functions
+  /**
+   *
+   */
   function fetchQueue() {
     authentication
         .makeCall('https://localhost:8081/queue/get', 'GET')
@@ -32,8 +35,11 @@ const QueueView = (_props) => {
             });
           }
         });
-  };
+  }
 
+  /**
+   *
+   */
   function fetchMatchup() {
     authentication
         .makeCall('https://localhost:8081/matchup/current/get')
@@ -44,7 +50,7 @@ const QueueView = (_props) => {
             });
           }
         });
-  };
+  }
 
   const JoinQueue = () => {
     authentication
@@ -77,13 +83,21 @@ const QueueView = (_props) => {
   };
 
   const QueueEffect = () => {
+    /**
+     * @param _target
+     * @param _contentType
+     * @param body
+     */
     function handleMessage(_target, _contentType, body) {
       const message = JSON.parse(body);
       if (message.type == 'updateQueue') {
         setQueue(message.message);
       }
-    };
+    }
 
+    /**
+     * @param auth
+     */
     function handleAuthentication(auth) {
       authentication.setToken(auth.token, auth.userId);
 
@@ -93,11 +107,12 @@ const QueueView = (_props) => {
       }
     }
 
+    /**
+     *
+     */
     function firstTimeSetup() {
       fetchQueue();
       fetchMatchup();
-      setButtonText('Join the queue!');
-      setButtonAction(() => JoinQueue);
     }
 
     if (twitch) {
@@ -114,12 +129,17 @@ const QueueView = (_props) => {
   };
 
   const MatchupEffect = () => {
+    /**
+     * @param _target
+     * @param _contentType
+     * @param body
+     */
     function handleMessage(_target, _contentType, body) {
       const message = JSON.parse(body);
       if (message.type == 'updateMatchup') {
         setCurrentMatchup(message.message);
       }
-    };
+    } // this is all stuff that we will need when we move this code file
 
     /* function handleAuthentication(auth) {
       authentication.setToken(auth.token, auth.userId);
@@ -132,9 +152,9 @@ const QueueView = (_props) => {
 
     if (twitch) {
       twitch.onAuthorized(handleAuthentication);
-    } */ // this is all stuff that we will need when we move this code file
-
-    if (FinishedLoading) {
+    } */ if (
+      FinishedLoading
+    ) {
       twitch.listen('broadcast', handleMessage);
 
       return function cleanup() {
@@ -147,9 +167,27 @@ const QueueView = (_props) => {
   useEffect(QueueEffect, [Queue, FinishedLoading]);
   useEffect(MatchupEffect, [CurrentMatchup, FinishedLoading]);
 
+  // Controls the join / leave button
+  useEffect(() => {
+    if (FinishedLoading) {
+      if (
+        Queue.findIndex((challenger) => (
+          challenger.opaqueUserId == authentication.getOpaqueId()
+        )) == -1
+      ) {
+        setButtonAction(() => JoinQueue);
+        setButtonText('Join the Queue');
+      } else {
+        setButtonAction(() => LeaveQueue);
+        setButtonText('Leave the Queue');
+      }
+    }
+  }, [Queue]);
 
-  const queueEntries = Queue?
-    Queue.map((opaqueId, index) => (<li key={index}>{opaqueId}</li>)):
+  const queueEntries = Queue ?
+    Queue.map((challenger, index) => (
+      <li key={index}>{challenger.opaqueUserId}</li>
+    )) :
     [];
 
   let headerDiv = null;

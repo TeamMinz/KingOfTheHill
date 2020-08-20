@@ -23,7 +23,12 @@ const updatedQueues = {}; // true if we need to publish an update to pubsub
  */
 function getQueuePosition(channelId, opaqueUserId) {
   if (channelQueues[channelId]) {
-    return channelQueues[channelId].findIndex({opaqueId: opaqueUserId});
+    return channelQueues[channelId].findIndex((challenger) => {
+      //console.log(opaqueUserId);
+      //console.log(challenger.opaqueUserId);
+      //return challenger.opaqueUserId == opaqueUserId;
+      return true;
+    });
   } else {
     return -1;
   }
@@ -33,6 +38,7 @@ function getQueuePosition(channelId, opaqueUserId) {
  * Adds a challenger to the back of the specifed queue.
  * @param {*} channelId The channel who's queue to add to.
  * @param {Challenger} challenger The challenger to add to the queue.
+ * @returns The position of the element inserted into the queue.
  */
 function enqueueChallenger(channelId, challenger) {
   const queue = channelQueues[channelId] || [];
@@ -40,6 +46,8 @@ function enqueueChallenger(channelId, challenger) {
 
   channelQueues[channelId] = queue;
   updatedQueues[channelId] = true;
+
+  return queue.length;
 }
 
 /**
@@ -58,7 +66,19 @@ function dequeueChallenger(channelId) {
  * @returns {object} The challenger that was removed.
  */
 function removeChallenger(channelId, opaqueUserId) {
-  return null;
+  let challenger = null;
+  const queue = channelQueues[channelId] || [];
+
+  channelQueues[channelId] = queue.filter((c) => {
+    if (c.opaqueUserId == opaqueUserId) {
+      challenger = c;
+      return false;
+    }
+
+    return true;
+  });
+  updatedQueues[channelId] = true;
+  return challenger;
 }
 
 /**
@@ -110,10 +130,10 @@ queue.post('/join', function(req, res) {
 
   console.log(req.twitch);
 
-  enqueueChallenger(channelId, challenger);
+  const queuePosition = enqueueChallenger(channelId, challenger);
 
   res.send({
-    message: `You are now #${currentQueue.length} in the queue.`,
+    message: `You are now #${queuePosition} in the queue.`,
   }); // All done.
 });
 
@@ -121,26 +141,20 @@ queue.post('/leave', function(req, res) {
   // Handles leaving the queue.
   const {channel_id: channelId, opaque_user_id: opaqueUserId} = req.twitch;
 
-  const currentQueue = channelQueues[channelId];
+  // Lets do some checks to make sure were not doing anything bad.
 
-  if (!currentQueue) {
-    res.status(500).send({
-      message: 'Something went wrong. Please try again later.',
-    });
-    return;
-  }
-
-  if (!currentQueue.includes(opaqueUserId)) {
+  // Make sure this person is actually in this queue.
+  if (getQueuePosition(channelId, opaqueUserId) == -1) {
     res.status(500).send({
       message: 'You cannot leave a queue you\'re not in.',
     });
     return;
   }
 
-  // Update the queue, then mark that queue as updated, so we know to publish.
-  channelQueues[channelId] =
-    currentQueue.filter((qmember) => (qmember != opaqueUserId));
-  updatedQueues[channelId] = true;
+  // Okay. lets remove them from the queue.
+  removeChallenger(channelId, opaqueUserId);
+
+  console.log(channelQueues[channelId]);
 
   res.send({
     message: 'You have been removed from the queue.',
