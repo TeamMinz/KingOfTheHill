@@ -22,11 +22,12 @@ queue.post('/join', function(req, res) {
     user_id: userId,
   } = req.twitch;
 
-  if (!userId) {
+  /* if (!userId) {
     res.status(401).send({
       message: 'You must share your identity to enter the queue.',
     });
-  }
+    return;
+  }*/
 
   // Some checks to make sure we're not doing anything bad ...
   // If the user is not signed into twitch, they cannot join the queue.
