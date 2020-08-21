@@ -24,18 +24,16 @@ const updatedQueues = {}; // true if we need to publish an update to pubsub
 function getQueuePosition(channelId, opaqueUserId) {
   if (channelQueues[channelId]) {
     return channelQueues[channelId].findIndex((challenger) => {
-      //console.log(opaqueUserId);
-      //console.log(challenger.opaqueUserId);
-      //return challenger.opaqueUserId == opaqueUserId;
-      return true;
+      return challenger.opaqueUserId == opaqueUserId;
     });
   } else {
     return -1;
   }
-};
+}
 
 /**
  * Adds a challenger to the back of the specifed queue.
+ *
  * @param {*} channelId The channel who's queue to add to.
  * @param {Challenger} challenger The challenger to add to the queue.
  * @returns The position of the element inserted into the queue.
@@ -52,6 +50,7 @@ function enqueueChallenger(channelId, challenger) {
 
 /**
  * Removes the top challenger from the queue.
+ *
  * @param {*} channelId the channel whos queue to pull from.
  * @returns {Challenger} The challenger pulled from the queue.
  */
@@ -61,6 +60,7 @@ function dequeueChallenger(channelId) {
 
 /**
  * Removes the specified challenger from the queue.
+ *
  * @param {*} channelId The channel whos queue to remove from.
  * @param {*} opaqueUserId The user to remove from the queue.
  * @returns {object} The challenger that was removed.
@@ -84,13 +84,12 @@ function removeChallenger(channelId, opaqueUserId) {
 /**
  * Inserts a challenger at the specieifed position in the queue.
  * 0 being the the first slot in the queue.
+ *
  * @param {*} channelId The channel whos queue to insert into.
  * @param {*} challenger The challenger to insert into the queue.
  * @param {*} position The position to insert the challenger into.
  */
-function insertChallenger(channelId, challenger, position) {
-
-}
+function insertChallenger(channelId, challenger, position) {}
 
 queue.get('/get', function(req, res) {
   const {channel_id: channelId, opaque_user_id: opaqueUserId} = req.twitch;
@@ -103,7 +102,17 @@ queue.get('/get', function(req, res) {
 
 queue.post('/join', function(req, res) {
   // Handles joining the queue.
-  const {channel_id: channelId, opaque_user_id: opaqueUserId} = req.twitch;
+  const {
+    channel_id: channelId,
+    opaque_user_id: opaqueUserId,
+    user_id: userId,
+  } = req.twitch;
+
+  if (!userId) {
+    res.status(401).send({
+      message: 'You must share your identity to enter the queue.',
+    });
+  }
 
   // Some checks to make sure we're not doing anything bad ...
   // If the user is not signed into twitch, they cannot join the queue.
@@ -126,6 +135,7 @@ queue.post('/join', function(req, res) {
 
   const challenger = {
     opaqueUserId,
+    userId,
   };
 
   console.log(req.twitch);
