@@ -68,9 +68,9 @@
       "viewerType": "Broadcaster"
     },
     {
-      "channelId": "265737932",
+      "channelId": "26898606",
       "configurationAnchor": "panel",
-      "displayChannelName": "atlasmakesstuff",
+      "displayChannelName": "tminz",
       "features": {
         "isBitsEnabled": true,
         "isChatEnabled": false,
@@ -80,7 +80,7 @@
         "width": 1280,
         "height": 720
       },
-      "id": "3",
+      "id": "5",
       "isPopout": false,
       "label": "",
       "linked": true,
@@ -102,11 +102,11 @@
         "width": 1280,
         "height": 720
       },
-      "id": "4",
+      "id": "6",
       "isPopout": false,
-      "label": "User2",
-      "linked": true,
-      "linkedUserId": "265737932",
+      "label": "",
+      "linked": false,
+      "linkedUserId": "",
       "orientation": "Portrait",
       "type": "component",
       "viewerType": "Logged-In Viewer"

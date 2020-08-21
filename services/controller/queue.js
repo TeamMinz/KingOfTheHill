@@ -43,7 +43,9 @@ class Queue {
    * @returns {Challenger} The challenger pulled from the queue.
    */
   dequeue() {
-    return null;
+    const challenger = this._queue.shift();
+    this.hasUpdated = true;
+    return challenger;
   }
   /**
    * Removes the specified challenger from the queue.
@@ -72,6 +74,14 @@ class Queue {
    */
   getAsArray() {
     return this._queue;
+  }
+  /**
+   * Get the number of people currently in this queue.
+   *
+   * @returns the number of people in the queue.
+   */
+  getSize() {
+    return this._queue.length;
   }
 }
 
