@@ -1,10 +1,12 @@
 // eslint-disable-next-line new-cap
 const queue = require('express').Router();
 const {broadcast} = require('../util/pubsub');
+const {resolveDisplayName} = require('../util/twitch');
 const {getQueue, getAllQueues} = require('../controller/queue');
 
 const queueUpdateIntervalMs = 1000;
 
+// Set up our routes.
 queue.get('/get', function(req, res) {
   const {channel_id: channelId, opaque_user_id: opaqueUserId} = req.twitch;
 
@@ -14,7 +16,7 @@ queue.get('/get', function(req, res) {
   res.send({queue: currentQueue.getAsArray(), position: currentPosition});
 });
 
-queue.post('/join', function(req, res) {
+queue.post('/join', async (req, res) => {
   // Handles joining the queue.
   const {
     channel_id: channelId,
@@ -48,14 +50,15 @@ queue.post('/join', function(req, res) {
     return;
   }
 
+  // Lets grab this person's display name from twitch.
+  const displayName = await resolveDisplayName(userId);
+
   // Okay time to actually put the user in the queue.
 
   const challenger = {
     opaqueUserId,
-    userId,
+    displayName,
   };
-
-  console.log(req.twitch);
 
   const queuePosition = currentQueue.enqueue(challenger);
 
