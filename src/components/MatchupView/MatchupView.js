@@ -58,8 +58,8 @@ const MatchupView = (_props) => {
     <div className="Champion">
       {!CurrentMatchup && '👑 No Champion Yet!'}
       {CurrentMatchup &&
-        `Now Playing: 👑 ${CurrentMatchup.champion.opaqueUserId} (27) v
-        ${CurrentMatchup.challenger.opaqueUserId}`}
+        `Now Playing: 👑 ${CurrentMatchup.champion.displayName} (0) v
+        ${CurrentMatchup.challenger.displayName}`}
     </div>
   );
 };

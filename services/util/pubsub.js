@@ -1,10 +1,10 @@
-const jwt = require('jsonwebtoken');
 const superagent = require('superagent');
+const jwt = require('jsonwebtoken');
 const {OWNER_ID, SECRET, CLIENT_ID} = require('./options');
 
-const messageQueues = {};
-const channelCooldowns = {};
-const channelCooldownMs = 1000;
+// const messageQueues = {};
+// const channelCooldowns = {};
+// const channelCooldownMs = 1000;
 const serverTokenDurationSec = 30;
 
 /**

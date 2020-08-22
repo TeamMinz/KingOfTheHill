@@ -15,7 +15,7 @@ const QueueView = (_props) => {
 
   // helper functions
   /**
-   *
+   * Fethches the current queue from the backend.
    */
   function fetchQueue() {
     authentication
@@ -41,8 +41,6 @@ const QueueView = (_props) => {
         .makeCall('https://localhost:8081/queue/join', 'POST')
         .then((resp) => {
           resp.json().then((bodyData) => {
-            twitch.rig.log(bodyData);
-
             if (resp.ok) {
               setButtonText('Leave the Queue');
               setButtonAction(() => LeaveQueue);
@@ -56,8 +54,6 @@ const QueueView = (_props) => {
         .makeCall('https://localhost:8081/queue/leave', 'POST')
         .then((resp) => {
           resp.json().then((bodyData) => {
-            twitch.rig.log(bodyData);
-
             if (resp.ok) {
               setButtonAction(() => JoinQueue);
               setButtonText('Join the Queue');
@@ -118,9 +114,10 @@ const QueueView = (_props) => {
   useEffect(() => {
     if (FinishedLoading) {
       if (
-        Queue.findIndex((challenger) => (
-          challenger.opaqueUserId == authentication.getOpaqueId()
-        )) == -1
+        Queue.findIndex(
+            (challenger) =>
+              challenger.opaqueUserId == authentication.getOpaqueId(),
+        ) == -1
       ) {
         setButtonAction(() => JoinQueue);
         setButtonText('Join the Queue');
@@ -133,7 +130,7 @@ const QueueView = (_props) => {
 
   const queueEntries = Queue ?
     Queue.map((challenger, index) => (
-      <li key={index}>{challenger.opaqueUserId}</li>
+      <li key={index}>{challenger.displayName}</li>
     )) :
     [];
 
