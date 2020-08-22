@@ -1,12 +1,56 @@
 // eslint-disable-next-line new-cap
-const matchup = require('express').Router();
+const express = require('express');
+// eslint-disable-next-line new-cap
+const matchup = express.Router();
 const {broadcast} = require('../util/pubsub');
 const {getQueue} = require('../controller/queue');
 
+const DEFAULT_MESSAGE = 'You\'re up! Connect to the match now!';
+
 const channelMatchups = {};
+const channelMessages = {};
 
 /**
- * @param channelId
+ * @param {express.Request} req request object
+ * @param {express.Response} res response object
+ * @param {Function} next next handler
+ */
+function isBroadcaster(req, res, next) {
+  if (req.twitch.role == 'broadcaster') {
+    next();
+  } else {
+    res.sendStatus(401);
+  }
+}
+
+/**
+ * 
+ * 
+ * @param {express.Request} req request object
+ * @param {express.Response} res response object
+ * @param {Function} next next handler
+ */
+function canGetMessage(req, res, next) {
+  const {channel_id: channelId, opaque_user_id: opaqueUserId} = req.twitch;
+
+  if (req.twitch.role == 'broadcaster') {
+    next();
+  } else {
+    const {challenger, champion} = channelMatchups[channelId];
+
+    if (
+      challenger.opaqueUserId == opaqueUserId ||
+      champion.opaqueUserId == opaqueUserId
+    ) {
+      next();
+    } else {
+      res.sendStatus(401);
+    }
+  }
+}
+
+/**
+ * @param channelId the id of the channel who's matchup to broadcast.
  */
 function broadcastMatchup(channelId) {
   const message = {
@@ -16,6 +60,20 @@ function broadcastMatchup(channelId) {
 
   broadcast(channelId, message);
 }
+
+matchup.get('/message/get', canGetMessage, (req, res) => {
+  const {channel_id: channelId} = req.twitch;
+
+  res.json({message: channelMessages[channelId] || DEFAULT_MESSAGE});
+});
+
+matchup.post('/message/set', isBroadcaster, (req, res) => {
+  const {channel_id: channelId} = req.twitch;
+  const {message} = req.body;
+  console.log(req.body);
+  channelMessages[channelId] = message;
+  res.json({message});
+});
 
 // Route for getting the current matchup
 matchup.get('/current/get', (req, res) => {
@@ -29,7 +87,7 @@ matchup.get('/current/get', (req, res) => {
 });
 
 // Route for reporting the winner of the current mathcup
-matchup.post('/current/report', (req, res) => {
+matchup.post('/current/report', isBroadcaster, (req, res) => {
   const {channel_id: channelId} = req.twitch;
 
   if (channelMatchups[channelId]) {
@@ -43,7 +101,7 @@ matchup.post('/current/report', (req, res) => {
 });
 
 // Route for starting a new matchup.
-matchup.post('/start', (req, res) => {
+matchup.post('/start', isBroadcaster, (req, res) => {
   const {channel_id: channelId} = req.twitch;
   const currentMatchup = channelMatchups[channelId];
 
@@ -58,12 +116,10 @@ matchup.post('/start', (req, res) => {
   const queue = getQueue(channelId);
 
   if (queue.getSize() < 2) {
-    res
-        .status(500)
-        .send({
-          error: true,
-          message: 'There are not enough people in the queue',
-        });
+    res.status(500).send({
+      error: true,
+      message: 'There are not enough people in the queue',
+    });
     return;
   }
 
