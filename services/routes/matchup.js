@@ -7,10 +7,13 @@ const {getQueue} = require('../controller/queue');
 
 const DEFAULT_MESSAGE = 'You\'re up! Connect to the match now!';
 
+const channelChampions = {};
 const channelMatchups = {};
 const channelMessages = {};
 
 /**
+ * Rejects requests from people not the broadcaster.
+ *
  * @param {express.Request} req request object
  * @param {express.Response} res response object
  * @param {Function} next next handler
@@ -24,8 +27,9 @@ function isBroadcaster(req, res, next) {
 }
 
 /**
- * 
- * 
+ * Express middleware that rejects people not
+ * authoized to get a channels you're up message
+ *
  * @param {express.Request} req request object
  * @param {express.Response} res response object
  * @param {Function} next next handler
@@ -50,7 +54,7 @@ function canGetMessage(req, res, next) {
 }
 
 /**
- * @param channelId the id of the channel who's matchup to broadcast.
+ * @param {*} channelId the id of the channel who's matchup to broadcast.
  */
 function broadcastMatchup(channelId) {
   const message = {
@@ -91,7 +95,29 @@ matchup.post('/current/report', isBroadcaster, (req, res) => {
   const {channel_id: channelId} = req.twitch;
 
   if (channelMatchups[channelId]) {
-    // TODO: report winner somewhere.
+    const previousMatchup = channelMatchups[channelId];
+    // Set the winner of the matchup as the new champion.
+    if (req.body.winner == 'challenger') {
+      channelChampions[channelId] = {
+        winStreak: 1,
+        user: previousMatchup.challenger,
+      };
+    } else if (req.body.winner == 'champion') {
+      const winner = previousMatchup.champion;
+      if (
+        channelChampions[channelId] &&
+        channelChampions[channelId].user.opaqueUserId == winner.opaqueUserId
+      ) {
+        channelChampions[channelId].winStreak++;
+      } else {
+        channelChampions[channelId] = {
+          winStreak: 1,
+          user: winner,
+        };
+      }
+    }
+
+    // reset the matchup.
     channelMatchups[channelId] = null;
     broadcastMatchup(channelId);
     res.sendStatus(200);
@@ -112,7 +138,7 @@ matchup.post('/start', isBroadcaster, (req, res) => {
         .send({error: true, message: 'There is already a match in progress'});
     return;
   }
-  // currentMatchup = {champion: 'tminz', challenger: 'pycses'};
+
   const queue = getQueue(channelId);
 
   if (queue.getSize() < 2) {
@@ -142,5 +168,7 @@ matchup.post('/start', isBroadcaster, (req, res) => {
   broadcastMatchup(channelId);
   res.json({matchup});
 });
+
+matchup.get('/champion/get', (req, res) => {});
 
 module.exports = matchup;

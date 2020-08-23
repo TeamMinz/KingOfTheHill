@@ -71,18 +71,18 @@ const MatchupController = (props) => {
         Declare a winner:
         <button
           onClick={() => {
-            declareWinner('player1');
+            declareWinner('champion');
           }}
         >
-          Player 1
+          {CurrentMatchup.champion.displayName}
         </button>
         vs
         <button
           onClick={() => {
-            declareWinner('player2');
+            declareWinner('challenger');
           }}
         >
-          Player 2
+          {CurrentMatchup.challenger.displayName}
         </button>
       </div>
     );
