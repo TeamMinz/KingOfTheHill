@@ -1,15 +1,15 @@
 import React, {useState, useEffect} from 'react';
+import NotificationSystem from 'react-notification-system';
 import Authentication from '../../util/Authentication/Authentication';
-import './QueueNotification.css';
+import '../App/App.css';
 
 const QueueNotification = (_props) => {
   const twitch = window.Twitch ? window.Twitch.ext : null;
   const authentication = new Authentication();
+  const notificationSystem = React.createRef();
 
   // state stuff.
   const [FinishedLoading, setFinishedLoading] = useState(false);
-  const [IsVisible, setVisible] = useState(false);
-  const [DisplayMessage, setMessage] = useState('');
 
   useEffect(() => {
     /**
@@ -32,10 +32,9 @@ const QueueNotification = (_props) => {
         ) {
           authentication
               .makeCall('https://localhost:8081/matchup/message/get')
-              .then((resp) => (resp.json()))
+              .then((resp) => resp.json())
               .then((json) => {
-                setMessage(json.message);
-                setVisible(true);
+                addNotification(json.message);
               });
         }
       }
@@ -65,15 +64,48 @@ const QueueNotification = (_props) => {
     }
   });
 
-  if (IsVisible) {
-    return (
-      <div className="QueueNotification">
-        <div className="MessageBox">{DisplayMessage}</div>
-      </div>
-    );
-  } else {
-    return null;
-  }
+  const addNotification = (message) => {
+    const notification = notificationSystem.current;
+    notification.addNotification({
+      position: 'tc',
+      message,
+      level: 'success',
+      autoDismiss: 0,
+      dismissable: 'click',
+    });
+  };
+
+  const style = {
+    DefaultWidth: '75%',
+    Containers: {
+      tc: {
+        top: '50%',
+        left: '50%',
+        msTransform: 'translate(-50%, -50%)',
+        transform: 'translate(-50%, -50%)',
+        textAlign: 'center',
+        width: '75%',
+        padding: '0px',
+        margin: '0px',
+        marginLeft: '0px',
+      },
+    },
+    NotificationItem: {
+      // Override the notification item
+      DefaultStyle: {
+        // Applied to every notification, regardless of the notification level
+        fontFamily: 'Arial, Helvetica, sans-serif',
+        fontWeight: 500,
+        fontSize: '1rem',
+        color: 'var(--text-color)',
+        borderTop: '10px solid var(--border-color)',
+        boxShadow: 'var(--border-color) 0px 0px 5px',
+        background: 'var(--not-selected-color)',
+      },
+    },
+  };
+
+  return <NotificationSystem ref={notificationSystem} style={style} />;
 };
 
 export default QueueNotification;
