@@ -169,6 +169,9 @@ matchup.post('/start', isBroadcaster, (req, res) => {
   res.json({matchup});
 });
 
-matchup.get('/champion/get', (req, res) => {});
+matchup.get('/champion/get', (req, res) => {
+  const {channel_id: channelId} = req.twitch;
+  res.json(channelChampions[channelId] || null);
+});
 
 module.exports = matchup;
