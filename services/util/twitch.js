@@ -20,7 +20,6 @@ async function resolveDisplayName(userId) {
       return 'anonymous';
     }
   } catch (e) {
-    console.log(e);
     return 'anonymous';
   }
 }
