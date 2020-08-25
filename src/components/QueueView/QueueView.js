@@ -12,6 +12,7 @@ const QueueView = (_props) => {
   const [ButtonAction, setButtonAction] = useState(() => {});
   const [FinishedLoading, setFinishedLoading] = useState(false);
   const [Queue, setQueue] = useState([]);
+  const [opaqueUserId, setOpaqueID] = useState(null);
 
   // helper functions
   /**
@@ -91,6 +92,7 @@ const QueueView = (_props) => {
      *
      */
     function firstTimeSetup() {
+      setOpaqueID(authentication.getOpaqueId());
       fetchQueue();
     }
 
@@ -134,14 +136,31 @@ const QueueView = (_props) => {
     )) :
     [];
 
+  const userEntry = Queue ?
+    Queue.findIndex((challenger) => {
+      return challenger.opaqueUserId == opaqueUserId;
+    }) :
+    -1;
+
   return (
     <div className="QueueView">
       <MatchupView />
-      <hr />
       <div className="Queue">
-        <ol>{queueEntries}</ol>
+        {queueEntries && queueEntries.length > 0 && (
+          <div>
+            <ol>{queueEntries.slice(0, 5)}</ol>
+            {userEntry > 4 && (
+              <div>
+                ...
+                <br />
+                <ol start={userEntry + 1}>
+                  <li key={userEntry}>{Queue[userEntry].displayName}</li>
+                </ol>
+              </div>
+            )}
+          </div>
+        )}
       </div>
-      <hr />
       <div className="Join">
         <button className="QueueButton" onClick={ButtonAction}>
           {ButtonText}

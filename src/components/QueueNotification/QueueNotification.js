@@ -22,7 +22,6 @@ const QueueNotification = (_props) => {
       if (message.type == 'updateMatchup') {
         const matchup = message.message;
         if (matchup == null) {
-          setVisible(false);
           return;
         }
 
