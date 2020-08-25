@@ -10,7 +10,6 @@ const QueueNotification = (_props) => {
 
   // state stuff.
   const [FinishedLoading, setFinishedLoading] = useState(false);
-
   useEffect(() => {
     /**
      * @param _target
@@ -22,6 +21,8 @@ const QueueNotification = (_props) => {
       if (message.type == 'updateMatchup') {
         const matchup = message.message;
         if (matchup == null) {
+          const notification = notificationSystem.current;
+          notification.clearNotifications();
           return;
         }
 
@@ -65,6 +66,7 @@ const QueueNotification = (_props) => {
 
   const addNotification = (message) => {
     const notification = notificationSystem.current;
+    notification.clearNotifications();
     notification.addNotification({
       position: 'tc',
       message,
