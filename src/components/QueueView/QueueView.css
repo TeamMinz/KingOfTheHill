@@ -2,20 +2,22 @@
   display: flex;
   flex-direction: column;
   flex-flow: column;
+  height: 90vh;
 }
 
 .Queue {
-  overflow-y: scroll;
-  overflow-x: hidden;
   display: flex;
-  height: 62vh;
-  padding-left: 1.2em;
+  flex: 1;
+  flex-direction: column;
+  padding: 0.5em;
+  border-bottom: solid 5px var(--not-selected-color);
 }
 
 .Join {
   height: 10vh;
   display: inline-block;
   text-align: center;
+  padding: 0.5em;
 }
 
 .QueueButton {
@@ -29,7 +31,10 @@
 }
 
 ol {
-  margin-top: 0px;
+  margin: 0px;
+  height: fit-content;
+  overflow: hidden;
+  padding-left: 1.2em;
 }
 
 hr {
