@@ -2,6 +2,7 @@ import React from 'react';
 import Authentication from '../../util/Authentication/Authentication';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import QueueView from '../QueueView/QueueView';
+import QueueNotification from '../QueueNotification/QueueNotification';
 import './App.css';
 
 export default class App extends React.Component {
@@ -9,7 +10,8 @@ export default class App extends React.Component {
     super(props);
     this.Authentication = new Authentication();
 
-    // if the extension is running on twitch or dev rig, set the shorthand here. otherwise, set to null.
+    // if the extension is running on twitch or dev rig,
+    // set the shorthand here. otherwise, set to null.
     this.twitch = window.Twitch ? window.Twitch.ext : null;
     this.state = {
       finishedLoading: false,
@@ -64,6 +66,7 @@ export default class App extends React.Component {
           <div
             className={this.state.theme === 'light' ? 'App-light' : 'App-dark'}
           >
+            <QueueNotification />
             <Tabs>
               <TabList>
                 <Tab>Queue</Tab>

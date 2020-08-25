@@ -1,50 +1,61 @@
 const jwt = require('jsonwebtoken');
 
 /**
- * Helper class for authentication against an EBS service. Allows the storage of a token to be accessed across componenents.
- * This is not meant to be a source of truth. Use only for presentational purposes.
+ * Helper class for authentication against an EBS service.
+ * Allows the storage of a token to be accessed across componenents.
+ * This is not meant to be a source of truth.
+ * Use only for presentational purposes.
  */
 export default class Authentication {
-  constructor(token, opaque_id) {
+  constructor(token, opaqueUserId) {
     this.state = {
       token,
-      opaque_id,
-      user_id: false,
+      opaqueUserId,
+      userId: false,
       isMod: false,
       role: '',
     };
   }
 
   isLoggedIn() {
-    return this.state.opaque_id[0] === 'U' ? true : false;
+    return this.state.opaqueUserId[0] === 'U' ? true : false;
   }
 
-  // This does guarantee the user is a moderator- this is fairly simple to bypass - so pass the JWT and verify
-  // server-side that this is true. This, however, allows you to render client-side UI for users without holding on a backend to verify the JWT.
-  // Additionally, this will only show if the user shared their ID, otherwise it will return false.
+  // This does guarantee the user is a moderator-
+  // this is fairly simple to bypass - so pass the JWT and verify
+  // server-side that this is true. This, however,
+  // allows you to render client-side UI for users
+  // without holding on a
+  // backend to verify the JWT.
+  // Additionally, this will only show if the user
+  // shared their ID, otherwise it will return false.
   isModerator() {
     return this.state.isMod;
   }
 
-  // similar to mod status, this isn't always verifiable, so have your backend verify before proceeding.
+  // similar to mod status, this isn't always verifiable,
+  // so have your backend verify before proceeding.
   hasSharedId() {
-    return !!this.state.user_id;
+    return !!this.state.userId;
   }
 
   getUserId() {
-    return this.state.user_id;
+    return this.state.userId;
   }
 
   getOpaqueId() {
-    return this.state.opaque_id;
+    return this.state.opaqueUserId;
   }
 
   // set the token in the Authentication componenent state
-  // this is naive, and will work with whatever token is returned. under no circumstances should you use this logic to trust private data- you should always verify the token on the backend before displaying that data.
-  setToken(token, opaque_id) {
+  // this is naive, and will work with whatever token is returned.
+  // under no circumstances should you use this logic to trust private data-
+  // you should always verify the token on the backend
+  // before displaying that data.
+  setToken(token, opaqueUserId) {
     let isMod = false;
     let role = '';
-    let user_id = '';
+    let userId = '';
 
     try {
       const decoded = jwt.decode(token);
@@ -53,25 +64,25 @@ export default class Authentication {
         isMod = true;
       }
 
-      user_id = decoded.user_id;
+      userId = decoded.user_id;
       role = decoded.role;
     } catch (e) {
       token = '';
-      opaque_id = '';
+      opaqueUserId = '';
     }
 
     this.state = {
       token,
-      opaque_id,
+      opaqueUserId,
       isMod,
-      user_id,
+      userId,
       role,
     };
   }
 
   // checks to ensure there is a valid token in the state
   isAuthenticated() {
-    if (this.state.token && this.state.opaque_id) {
+    if (this.state.token && this.state.opaqueUserId) {
       return true;
     } else {
       return false;
@@ -85,7 +96,7 @@ export default class Authentication {
    *
    */
 
-  makeCall(url, method = 'GET') {
+  makeCall(url, method = 'GET', body = null) {
     return new Promise((resolve, reject) => {
       if (this.isAuthenticated()) {
         const headers = {
@@ -93,14 +104,21 @@ export default class Authentication {
           'Authorization': `Bearer ${this.state.token}`,
         };
 
+        let bodyContent = null;
+
+        if (method != 'GET' && body != null) {
+          bodyContent = JSON.stringify(body);
+        }
+
         fetch(url, {
           method,
           headers,
+          body: bodyContent,
         })
             .then((response) => resolve(response))
             .catch((e) => reject(e));
       } else {
-        reject('Unauthorized');
+        reject(new Error('Unauthorized'));
       }
     });
   }
