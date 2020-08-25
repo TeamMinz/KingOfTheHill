@@ -14,6 +14,7 @@
   "plugins": ["react", "jsdoc"],
   "rules": {
     "require-jsdoc": "off",
-    "valid-jsdoc": "off"
+    "valid-jsdoc": "off",
+    "no-undef": "error"
   }
 }

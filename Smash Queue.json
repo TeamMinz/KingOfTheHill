@@ -1,6 +1,6 @@
 {
   "allowHttpBackend": false,
-  "backendCommand": "node index.js ",
+  "backendCommand": "node backend.js",
   "backendFolderName": "services",
   "certificateExceptions": [
     {
@@ -68,9 +68,9 @@
       "viewerType": "Broadcaster"
     },
     {
-      "channelId": "265737932",
+      "channelId": "26898606",
       "configurationAnchor": "panel",
-      "displayChannelName": "atlasmakesstuff",
+      "displayChannelName": "tminz",
       "features": {
         "isBitsEnabled": true,
         "isChatEnabled": false,
@@ -80,7 +80,7 @@
         "width": 1280,
         "height": 720
       },
-      "id": "3",
+      "id": "5",
       "isPopout": false,
       "label": "",
       "linked": true,
@@ -88,12 +88,34 @@
       "orientation": "Portrait",
       "type": "dashboard",
       "viewerType": "Broadcaster"
+    },
+    {
+      "channelId": "26898606",
+      "configurationAnchor": "panel",
+      "displayChannelName": "tminz",
+      "features": {
+        "isBitsEnabled": true,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "frameSize": {
+        "width": 1280,
+        "height": 720
+      },
+      "id": "6",
+      "isPopout": false,
+      "label": "",
+      "linked": false,
+      "linkedUserId": "",
+      "orientation": "Portrait",
+      "type": "component",
+      "viewerType": "Logged-In Viewer"
     }
   ],
   "manifest": {
     "anchor": "panel",
     "assetUrls": [],
-    "authorName": "",
+    "authorName": "TeamMinz",
     "bitsEnabled": true,
     "canInstall": true,
     "configUrl": "https://localhost:8080/config.html",
@@ -106,7 +128,7 @@
     "id": "z1eskwyierovbt4gz8zbq1r45tne31",
     "installationCount": -42,
     "liveConfigUrl": "https://localhost:8080/live_config.html",
-    "name": "Smash Queue",
+    "name": "QueuePlaceholderName",
     "panelHeight": 300,
     "privacyPolicyUrl": "",
     "requestIdentityLink": true,

@@ -1,10 +1,8 @@
-import React from 'react';
-
+import Authentication from '../../util/Authentication/Authentication';
+import React, {useState, useEffect} from 'react';
 import './SelectedMessageForm.css';
 
-function ErrorMessage({showError}) {
-  window.Twitch.ext.rig.log(showError);
-
+const ErrorMessage = ({showError}) => {
   if (showError) {
     return (
       <p>
@@ -14,64 +12,95 @@ function ErrorMessage({showError}) {
   } else {
     return null;
   }
-}
+};
 
-export default class SelectedMessageForm extends React.Component {
-  constructor(props) {
-    super(props);
+const SelectedMessageForm = (props) => {
+  const twitch = window.Twitch ? window.Twitch.ext : null;
+  const authentication = new Authentication();
 
-    this.state = {
-      selectionMessage:
-        'You\'re up! Join arena (ARENA CODE) with password (PASSWORD).',
-      showError: false,
-    };
-  }
+  // State stuff.
+  const [ShowError, setShowError] = useState(false);
+  const [SelectionMessage, setSelectionMessage] = useState('Loading...');
+  const [FinishedLoading, setFinishedLoading] = useState(false);
 
-  showErrorMessage() {
-    this.setState({
-      selectionMessage: this.state.selectionMessage,
-      showError: true,
-    });
-  }
-
-  updateSelectionMessage(event) {
+  const updateSelectionMessage = (event) => {
     event.preventDefault();
 
-    const formData = new FormData(event.target);
+    if (FinishedLoading) {
+      authentication
+          .makeCall(
+              'https://localhost:8081/matchup/message/set',
+              'POST',
+              {message: SelectionMessage},
+          )
+          .then((resp) => {
+            if (resp.ok) {
+              resp.json().then((json) => {
+                setSelectionMessage(json.message);
+              });
+            } else {
+              setShowError(true);
+            }
+          });
+    }
+  };
 
-    fetch('/updatemessage', {
-      method: 'POST',
-      body: formData,
-    }).then(
-        (resp) => {
-          if (resp.ok) {
-            this.setState({
-              selectionMessage: resp.selectionMessage,
-              showError: false,
+  const storeSelectionMessage = (event) => {
+    setSelectionMessage(event.target.value);
+  };
+
+  useEffect(() => {
+    /**
+     * @param auth
+     */
+    function handleAuthentication(auth) {
+      authentication.setToken(auth.token, auth.userId);
+
+      if (!FinishedLoading) {
+        authentication
+            .makeCall('https://localhost:8081/matchup/message/get')
+            .then((resp) => {
+              if (resp.ok) {
+                resp.json().then((json) => {
+                  setSelectionMessage(json.message);
+                  setFinishedLoading(true);
+                });
+              }
             });
-          } else {
-            this.showErrorMessage();
-          }
-        },
-        (err) => {
-          this.showErrorMessage();
-        },
-    );
-  }
+      }
+    }
 
-  render() {
+    if (twitch) {
+      twitch.onAuthorized(handleAuthentication);
+    }
+  });
+
+  if (FinishedLoading) {
     return (
-      <form method="POST" onSubmit={this.updateSelectionMessage}>
-        <ErrorMessage showError={this.state.showError} />
+      <form
+        method="POST"
+        className="SelectedMessageForm"
+        onSubmit={updateSelectionMessage}
+      >
+        <ErrorMessage showError={ShowError} />
 
         <label htmlFor="message">Set your selection message:</label>
 
-        <textarea type="text" name="message">
-          {this.state.selectionMessage}
-        </textarea>
+        <textarea
+          type="text"
+          name="message"
+          rows="5"
+          cols="30"
+          defaultValue={SelectionMessage}
+          onChange={storeSelectionMessage}
+        />
         <br />
         <input type="submit" value="Update Message"></input>
       </form>
     );
+  } else {
+    return null;
   }
-}
+};
+
+export default SelectedMessageForm;
