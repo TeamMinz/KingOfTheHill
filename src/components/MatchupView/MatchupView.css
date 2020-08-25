@@ -1,7 +1,7 @@
 .Matchup {
   height: fit-content;
   display: inline-block;
-  text-align: center;
+  text-align: left;
   padding: 0.5em;
   padding-top: 0;
   border-bottom: solid 5px var(--not-selected-color);
