@@ -48,6 +48,16 @@ class Queue {
     return challenger;
   }
   /**
+   * Inserts user into specified spot in the queue, 
+   * shifting everyone after that spot back a space.
+   * @param {*} pos the position to insert into the queue in.
+   * @param {*} user the user to insert into the queue.
+   */
+  insert(pos, user) {
+    this._queue.splice(pos, 0, user);
+    this.hasUpdated = true;
+  }
+  /**
    * Removes the specified challenger from the queue.
    *
    * @param {*} opaqueUserId The user to remove from the queue.
