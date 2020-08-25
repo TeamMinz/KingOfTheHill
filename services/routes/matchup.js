@@ -2,13 +2,12 @@
 const express = require('express');
 // eslint-disable-next-line new-cap
 const matchup = express.Router();
-const {broadcast} = require('../util/pubsub');
 const {getQueue} = require('../controller/queue');
+const {getChampion, setChampion} = require('../controller/champion');
+const {getMatchup, setMatchup} = require('../controller/matchup');
 
 const DEFAULT_MESSAGE = 'You\'re up! Connect to the match now!';
 
-const channelChampions = {};
-const channelMatchups = {};
 const channelMessages = {};
 
 /**
@@ -40,7 +39,12 @@ function canGetMessage(req, res, next) {
   if (req.twitch.role == 'broadcaster') {
     next();
   } else {
-    const {challenger, champion} = channelMatchups[channelId];
+    if (!getMatchup(channelId)) {
+      res.sendStatus(401);
+      return;
+    }
+
+    const {challenger, champion} = getMatchup(channelId);
 
     if (
       challenger.opaqueUserId == opaqueUserId ||
@@ -53,18 +57,6 @@ function canGetMessage(req, res, next) {
   }
 }
 
-/**
- * @param {*} channelId the id of the channel who's matchup to broadcast.
- */
-function broadcastMatchup(channelId) {
-  const message = {
-    type: 'updateMatchup',
-    message: channelMatchups[channelId] ? channelMatchups[channelId] : null,
-  };
-
-  broadcast(channelId, message);
-}
-
 matchup.get('/message/get', canGetMessage, (req, res) => {
   const {channel_id: channelId} = req.twitch;
 
@@ -74,7 +66,6 @@ matchup.get('/message/get', canGetMessage, (req, res) => {
 matchup.post('/message/set', isBroadcaster, (req, res) => {
   const {channel_id: channelId} = req.twitch;
   const {message} = req.body;
-  console.log(req.body);
   channelMessages[channelId] = message;
   res.json({message});
 });
@@ -83,43 +74,43 @@ matchup.post('/message/set', isBroadcaster, (req, res) => {
 matchup.get('/current/get', (req, res) => {
   const {channel_id: channelId} = req.twitch;
 
-  const matchup = channelMatchups[channelId] ?
-    channelMatchups[channelId] :
-    null;
-
-  res.json({matchup});
+  res.json({matchup: getMatchup(channelId)});
 });
 
 // Route for reporting the winner of the current mathcup
 matchup.post('/current/report', isBroadcaster, (req, res) => {
   const {channel_id: channelId} = req.twitch;
 
-  if (channelMatchups[channelId]) {
-    const previousMatchup = channelMatchups[channelId];
+  if (getMatchup(channelId)) {
+    const previousMatchup = getMatchup(channelId);
     // Set the winner of the matchup as the new champion.
     if (req.body.winner == 'challenger') {
-      channelChampions[channelId] = {
+      setChampion(channelId, {
         winStreak: 1,
         user: previousMatchup.challenger,
-      };
+      });
     } else if (req.body.winner == 'champion') {
       const winner = previousMatchup.champion;
+      // Record this win.
+      const champ = getChampion(channelId);
       if (
-        channelChampions[channelId] &&
-        channelChampions[channelId].user.opaqueUserId == winner.opaqueUserId
+        champ &&
+        champ.user.opaqueUserId == winner.opaqueUserId
       ) {
-        channelChampions[channelId].winStreak++;
+        champ.winStreak++;
+        setChampion(channelId, champ);
       } else {
-        channelChampions[channelId] = {
+        setChampion(channelId, {
           winStreak: 1,
           user: winner,
-        };
+        });
       }
+      // Put the winner back in as #0 in the queue.
+      const queue = getQueue(channelId);
+      queue.insert(0, winner);
     }
-
     // reset the matchup.
-    channelMatchups[channelId] = null;
-    broadcastMatchup(channelId);
+    setMatchup(channelId, null);
     res.sendStatus(200);
   } else {
     res.sendStatus(500);
@@ -129,7 +120,7 @@ matchup.post('/current/report', isBroadcaster, (req, res) => {
 // Route for starting a new matchup.
 matchup.post('/start', isBroadcaster, (req, res) => {
   const {channel_id: channelId} = req.twitch;
-  const currentMatchup = channelMatchups[channelId];
+  const currentMatchup = getMatchup(channelId);
 
   // Lets do some checks to make sure we're not doing anything bad.
   if (currentMatchup) {
@@ -164,14 +155,8 @@ matchup.post('/start', isBroadcaster, (req, res) => {
       `Starting match between ${matchup.champion} and ${matchup.challenger}`,
   );
 
-  channelMatchups[channelId] = matchup;
-  broadcastMatchup(channelId);
+  setMatchup(channelId, matchup);
   res.json({matchup});
-});
-
-matchup.get('/champion/get', (req, res) => {
-  const {channel_id: channelId} = req.twitch;
-  res.json(channelChampions[channelId] || null);
 });
 
 module.exports = matchup;
