@@ -31,7 +31,7 @@ const QueueNotification = (_props) => {
           authentication.getOpaqueId() == matchup.champion.opaqueUserId
         ) {
           authentication
-              .makeCall('https://localhost:8081/matchup/message/get')
+              .makeCall('/matchup/message/get')
               .then((resp) => resp.json())
               .then((json) => {
                 addNotification(json.message);
