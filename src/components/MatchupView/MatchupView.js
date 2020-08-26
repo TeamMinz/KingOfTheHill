@@ -26,7 +26,7 @@ const MatchupView = (_props) => {
 
   const fetchChampion = () => {
     authentication
-        .makeCall('https://localhost:8081/matchup/champion/get')
+        .makeCall('https://localhost:8081/champion/get')
         .then((resp) => {
           if (resp.ok) {
             resp.json().then((resp) => {
@@ -47,6 +47,15 @@ const MatchupView = (_props) => {
       const message = JSON.parse(body);
       if (message.type == 'updateMatchup') {
         setCurrentMatchup(message.message);
+      } else if (message.type == 'updateChampion') {
+        twitch.rig.log(JSON.stringify(message));
+        if (message.message) {
+          setChampion(message.message.user);
+          setWinstreak(message.message.winStreak);
+        } else {
+          setChampion(null);
+          setWinstreak(0);
+        }
       }
     };
 
@@ -82,8 +91,7 @@ const MatchupView = (_props) => {
         {Champion && `👑: (${winStreak}) ${Champion.displayName}`}
       </div>
       <div className="Challenger">
-        {CurrentMatchup &&
-          `⚔️: ${CurrentMatchup.challenger.displayName}`}
+        {CurrentMatchup && `⚔️: ${CurrentMatchup.challenger.displayName}`}
       </div>
     </div>
   );
