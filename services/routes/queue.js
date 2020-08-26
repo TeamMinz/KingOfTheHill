@@ -3,7 +3,8 @@ const queue = require('express').Router();
 const {broadcast} = require('../util/pubsub');
 const {resolveDisplayName} = require('../util/twitch');
 const {getQueue, getAllQueues} = require('../controller/queue');
-
+const {getMatchup} = require('../controller/matchup');
+const {getChampion, setChampion} = require('../controller/champion');
 const queueUpdateIntervalMs = 1000;
 
 // Set up our routes.
@@ -38,6 +39,20 @@ queue.post('/join', async (req, res) => {
       message: 'You must sign in to join the queue.',
     });
     return;
+  }
+
+  const currentMatchup = getMatchup(channelId);
+
+  if (currentMatchup) {
+    if (
+      currentMatchup.champion.opaqueUserId == opaqueUserId ||
+      currentMatchup.challenger.opaqueUserId == opaqueUserId
+    ) {
+      res.status(500).send({
+        message: 'You may not join the queue if you are in a current match.',
+      });
+      return;
+    }
   }
 
   // Make sure this person isn't already in this queue.
@@ -83,9 +98,17 @@ queue.post('/leave', function(req, res) {
     return;
   }
 
+  // Lets check to see if the person thats leaving is the current champion,
+  // then remove them as champion.
+  const champ = getChampion(channelId);
+  console.log(champ);
+  console.log(opaqueUserId);
+  if (champ && champ.user.opaqueUserId == opaqueUserId) {
+    setChampion(channelId, null);
+  }
+
   // Okay. lets remove them from the queue.
   currentQueue.remove(opaqueUserId);
-  // console.log(channelQueues[channelId]);
 
   res.send({
     message: 'You have been removed from the queue.',
