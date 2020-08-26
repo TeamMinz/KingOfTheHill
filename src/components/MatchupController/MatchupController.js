@@ -13,7 +13,7 @@ const MatchupController = (props) => {
     if (FinishedLoading) {
       console.log('sending request to start matchup');
       authentication
-          .makeCall('https://localhost:8081/matchup/start', 'POST')
+          .makeCall('/matchup/start', 'POST')
           .then((resp) => {
             if (resp.ok) {
               resp.json().then((resp) => {
@@ -30,7 +30,7 @@ const MatchupController = (props) => {
 
   const declareWinner = (winner) => {
     authentication
-        .makeCall('https://localhost:8081/matchup/current/report', 'POST', {
+        .makeCall('/matchup/current/report', 'POST', {
           winner,
         })
         .then((resp) => {
@@ -50,7 +50,7 @@ const MatchupController = (props) => {
         authentication.setToken(auth.token, auth.userId);
         if (!FinishedLoading) {
           authentication
-              .makeCall('https://localhost:8081/matchup/current/get')
+              .makeCall('/matchup/current/get')
               .then((resp) => {
                 if (resp.ok) {
                   resp.json().then((resp) => {

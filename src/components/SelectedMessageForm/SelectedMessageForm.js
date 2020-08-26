@@ -29,7 +29,7 @@ const SelectedMessageForm = (props) => {
     if (FinishedLoading) {
       authentication
           .makeCall(
-              'https://localhost:8081/matchup/message/set',
+              '/matchup/message/set',
               'POST',
               {message: SelectionMessage},
           )
@@ -58,7 +58,7 @@ const SelectedMessageForm = (props) => {
 
       if (!FinishedLoading) {
         authentication
-            .makeCall('https://localhost:8081/matchup/message/get')
+            .makeCall('/matchup/message/get')
             .then((resp) => {
               if (resp.ok) {
                 resp.json().then((json) => {
