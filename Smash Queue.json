@@ -110,6 +110,116 @@
       "orientation": "Portrait",
       "type": "component",
       "viewerType": "Logged-In Viewer"
+    },
+    {
+      "channelId": "26898606",
+      "configurationAnchor": "panel",
+      "displayChannelName": "tminz",
+      "features": {
+        "isBitsEnabled": true,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "frameSize": {
+        "width": 1280,
+        "height": 720
+      },
+      "id": "7",
+      "isPopout": false,
+      "label": "3",
+      "linked": true,
+      "linkedUserId": "135887033",
+      "orientation": "Portrait",
+      "type": "component",
+      "viewerType": "Logged-In Viewer"
+    },
+    {
+      "channelId": "26898606",
+      "configurationAnchor": "panel",
+      "displayChannelName": "tminz",
+      "features": {
+        "isBitsEnabled": true,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "frameSize": {
+        "width": 1280,
+        "height": 720
+      },
+      "id": "8",
+      "isPopout": false,
+      "label": "4",
+      "linked": true,
+      "linkedUserId": "93536131",
+      "orientation": "Portrait",
+      "type": "component",
+      "viewerType": "Logged-In Viewer"
+    },
+    {
+      "channelId": "26898606",
+      "configurationAnchor": "panel",
+      "displayChannelName": "tminz",
+      "features": {
+        "isBitsEnabled": true,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "frameSize": {
+        "width": 1280,
+        "height": 720
+      },
+      "id": "9",
+      "isPopout": false,
+      "label": "4",
+      "linked": true,
+      "linkedUserId": "137137594",
+      "orientation": "Portrait",
+      "type": "component",
+      "viewerType": "Logged-In Viewer"
+    },
+    {
+      "channelId": "26898606",
+      "configurationAnchor": "panel",
+      "displayChannelName": "tminz",
+      "features": {
+        "isBitsEnabled": true,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "frameSize": {
+        "width": 1280,
+        "height": 720
+      },
+      "id": "10",
+      "isPopout": false,
+      "label": "",
+      "linked": true,
+      "linkedUserId": "255929813",
+      "orientation": "Portrait",
+      "type": "component",
+      "viewerType": "Logged-In Viewer"
+    },
+    {
+      "channelId": "26898606",
+      "configurationAnchor": "panel",
+      "displayChannelName": "tminz",
+      "features": {
+        "isBitsEnabled": true,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "frameSize": {
+        "width": 1280,
+        "height": 720
+      },
+      "id": "11",
+      "isPopout": false,
+      "label": "",
+      "linked": true,
+      "linkedUserId": "71806812",
+      "orientation": "Portrait",
+      "type": "component",
+      "viewerType": "Logged-In Viewer"
     }
   ],
   "manifest": {
@@ -161,10 +271,10 @@
         "viewerUrl": "https://localhost:8080/video_component.html",
         "aspectWidth": 0,
         "aspectHeight": 0,
-        "aspectRatioX": 500,
-        "aspectRatioY": 600,
+        "aspectRatioX": 300,
+        "aspectRatioY": 400,
         "scalePixels": 1024,
-        "targetHeight": 5000,
+        "targetHeight": 5500,
         "size": 0,
         "zoom": false,
         "zoomPixels": 0,

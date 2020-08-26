@@ -9,6 +9,8 @@ const MatchupView = (_props) => {
 
   const [FinishedLoading, setFinishedLoading] = useState(false);
   const [CurrentMatchup, setCurrentMatchup] = useState(null);
+  const [Champion, setChampion] = useState(null);
+  const [winStreak, setWinstreak] = useState(0);
 
   const fetchMatchup = () => {
     authentication
@@ -22,11 +24,38 @@ const MatchupView = (_props) => {
         });
   };
 
+  const fetchChampion = () => {
+    authentication
+        .makeCall('https://localhost:8081/champion/get')
+        .then((resp) => {
+          if (resp.ok) {
+            resp.json().then((resp) => {
+              if (resp) {
+                setChampion(resp.user);
+                setWinstreak(resp.winStreak);
+              } else {
+                setChampion(null);
+                setWinstreak(0);
+              }
+            });
+          }
+        });
+  };
+
   const MatchupEffect = () => {
     const handleMessage = (_target, _contentType, body) => {
       const message = JSON.parse(body);
       if (message.type == 'updateMatchup') {
         setCurrentMatchup(message.message);
+      } else if (message.type == 'updateChampion') {
+        twitch.rig.log(JSON.stringify(message));
+        if (message.message) {
+          setChampion(message.message.user);
+          setWinstreak(message.message.winStreak);
+        } else {
+          setChampion(null);
+          setWinstreak(0);
+        }
       }
     };
 
@@ -35,6 +64,7 @@ const MatchupView = (_props) => {
 
       if (!FinishedLoading) {
         fetchMatchup();
+        fetchChampion();
         setFinishedLoading(true);
       }
     };
@@ -55,11 +85,14 @@ const MatchupView = (_props) => {
   useEffect(MatchupEffect, [CurrentMatchup, FinishedLoading]);
 
   return (
-    <div className="Champion">
-      {!CurrentMatchup && '👑 No Champion Yet!'}
-      {CurrentMatchup &&
-        `Now Playing: 👑 ${CurrentMatchup.champion.displayName} (0) v
-        ${CurrentMatchup.challenger.displayName}`}
+    <div className="Matchup">
+      <div className="Champion">
+        {!Champion && '👑 No Champion Yet!'}
+        {Champion && `👑: (${winStreak}) ${Champion.displayName}`}
+      </div>
+      <div className="Challenger">
+        {CurrentMatchup && `⚔️: ${CurrentMatchup.challenger.displayName}`}
+      </div>
     </div>
   );
 };
