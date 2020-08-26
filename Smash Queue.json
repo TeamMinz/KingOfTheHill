@@ -198,6 +198,28 @@
       "orientation": "Portrait",
       "type": "component",
       "viewerType": "Logged-In Viewer"
+    },
+    {
+      "channelId": "26898606",
+      "configurationAnchor": "panel",
+      "displayChannelName": "tminz",
+      "features": {
+        "isBitsEnabled": true,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "frameSize": {
+        "width": 1280,
+        "height": 720
+      },
+      "id": "11",
+      "isPopout": false,
+      "label": "",
+      "linked": true,
+      "linkedUserId": "71806812",
+      "orientation": "Portrait",
+      "type": "component",
+      "viewerType": "Logged-In Viewer"
     }
   ],
   "manifest": {

@@ -11,6 +11,29 @@ const DEFAULT_MESSAGE = 'You\'re up! Connect to the match now!';
 const channelMessages = {};
 
 /**
+ * Reports the winner of a matchup.
+ *
+ * @param channelId The channel to report the winner for.
+ * @param winner the user object of the winner of the matchup.
+ */
+function reportWinner(channelId, winner) {
+  // Record this win.
+  const champ = getChampion(channelId);
+  if (champ && champ.user.opaqueUserId == winner.opaqueUserId) {
+    champ.winStreak++;
+    setChampion(channelId, champ);
+  } else {
+    setChampion(channelId, {
+      winStreak: 1,
+      user: winner,
+    });
+  }
+  // Put the winner back in as #0 in the queue.
+  const queue = getQueue(channelId);
+  queue.insert(0, winner);
+}
+
+/**
  * Rejects requests from people not the broadcaster.
  *
  * @param {express.Request} req request object
@@ -85,29 +108,9 @@ matchup.post('/current/report', isBroadcaster, (req, res) => {
     const previousMatchup = getMatchup(channelId);
     // Set the winner of the matchup as the new champion.
     if (req.body.winner == 'challenger') {
-      setChampion(channelId, {
-        winStreak: 1,
-        user: previousMatchup.challenger,
-      });
+      reportWinner(channelId, previousMatchup.challenger);
     } else if (req.body.winner == 'champion') {
-      const winner = previousMatchup.champion;
-      // Record this win.
-      const champ = getChampion(channelId);
-      if (
-        champ &&
-        champ.user.opaqueUserId == winner.opaqueUserId
-      ) {
-        champ.winStreak++;
-        setChampion(channelId, champ);
-      } else {
-        setChampion(channelId, {
-          winStreak: 1,
-          user: winner,
-        });
-      }
-      // Put the winner back in as #0 in the queue.
-      const queue = getQueue(channelId);
-      queue.insert(0, winner);
+      reportWinner(channelId, previousMatchup.champion);
     }
     // reset the matchup.
     setMatchup(channelId, null);
@@ -149,6 +152,14 @@ matchup.post('/start', isBroadcaster, (req, res) => {
     champion,
     challenger,
   };
+
+  console.log(getChampion(channelId));
+  if (!getChampion(channelId)) {
+    setChampion(channelId, {
+      winStreak: 0,
+      user: champion,
+    });
+  }
 
   console.log(
       // eslint-disable-next-line max-len
