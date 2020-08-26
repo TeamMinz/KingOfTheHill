@@ -1,0 +1,6 @@
+{
+  "tls": {
+    "certPath": "../conf/.crt",
+    "keyPath": "../conf/.key"
+  }
+}
