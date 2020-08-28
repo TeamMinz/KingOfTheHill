@@ -10,13 +10,44 @@ const QueueNotification = (_props) => {
 
   // state stuff.
   const [FinishedLoading, setFinishedLoading] = useState(false);
-  useEffect(() => {
+
+  const fetchMessage = (matchup) => {
+    if (
+      matchup &&
+      (authentication.getOpaqueId() == matchup.challenger.opaqueUserId ||
+        authentication.getOpaqueId() == matchup.champion.opaqueUserId)
+    ) {
+      authentication
+          .makeCall('https://localhost:8081/matchup/message/get')
+          .then((resp) => {
+            if (resp.ok) {
+              resp.json().then((resp) => {
+                addNotification(resp.message);
+              });
+            }
+          });
+    }
+  };
+
+  const fetchMatchup = () => {
+    authentication
+        .makeCall('https://localhost:8081/matchup/current/get')
+        .then((resp) => {
+          if (resp.ok) {
+            resp.json().then((resp) => {
+              fetchMessage(resp.matchup);
+            });
+          }
+        });
+  };
+
+  const NotificationEffect = () => {
     /**
      * @param _target
      * @param _contentType
      * @param body
      */
-    function handleMessage(_target, _contentType, body) {
+    const handleMessage = (_target, _contentType, body) => {
       const message = JSON.parse(body);
       if (message.type == 'updateMatchup') {
         const matchup = message.message;
@@ -26,30 +57,21 @@ const QueueNotification = (_props) => {
           return;
         }
 
-        if (
-          authentication.getOpaqueId() == matchup.challenger.opaqueUserId ||
-          authentication.getOpaqueId() == matchup.champion.opaqueUserId
-        ) {
-          authentication
-              .makeCall('https://localhost:8081/matchup/message/get')
-              .then((resp) => resp.json())
-              .then((json) => {
-                addNotification(json.message);
-              });
-        }
+        fetchMessage(matchup);
       }
-    }
+    };
 
     /**
      * @param auth auth information passed by twitch
      */
-    function handleAuthentication(auth) {
+    const handleAuthentication = (auth) => {
       authentication.setToken(auth.token, auth.userId);
 
       if (!FinishedLoading) {
+        fetchMatchup();
         setFinishedLoading(true);
       }
-    }
+    };
 
     if (twitch) {
       twitch.onAuthorized(handleAuthentication);
@@ -62,7 +84,9 @@ const QueueNotification = (_props) => {
         twitch.unlisten('broadcast', handleMessage);
       };
     }
-  });
+  };
+  // called when the component mounts.
+  useEffect(NotificationEffect, [FinishedLoading]);
 
   const addNotification = (message) => {
     const notification = notificationSystem.current;
