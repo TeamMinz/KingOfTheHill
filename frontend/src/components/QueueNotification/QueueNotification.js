@@ -17,10 +17,21 @@ const QueueNotification = (_props) => {
       (authentication.getOpaqueId() == matchup.challenger.opaqueUserId ||
         authentication.getOpaqueId() == matchup.champion.opaqueUserId)
     ) {
+<<<<<<< HEAD:src/components/QueueNotification/QueueNotification.js
       authentication.makeCall('/matchup/message/get').then((resp) => {
         if (resp.ok) {
           resp.json().then((resp) => {
             addNotification(resp.message);
+=======
+      authentication
+          .makeCall('/matchup/message/get')
+          .then((resp) => {
+            if (resp.ok) {
+              resp.json().then((resp) => {
+                addNotification(resp.message);
+              });
+            }
+>>>>>>> 0be35f5b25a98d0b7db7fd0f9914468dfbff4a06:frontend/src/components/QueueNotification/QueueNotification.js
           });
         }
       });
@@ -28,10 +39,21 @@ const QueueNotification = (_props) => {
   };
 
   const fetchMatchup = () => {
+<<<<<<< HEAD:src/components/QueueNotification/QueueNotification.js
     authentication.makeCall('/matchup/current/get').then((resp) => {
       if (resp.ok) {
         resp.json().then((resp) => {
           fetchMessage(resp.matchup);
+=======
+    authentication
+        .makeCall('/matchup/current/get')
+        .then((resp) => {
+          if (resp.ok) {
+            resp.json().then((resp) => {
+              fetchMessage(resp.matchup);
+            });
+          }
+>>>>>>> 0be35f5b25a98d0b7db7fd0f9914468dfbff4a06:frontend/src/components/QueueNotification/QueueNotification.js
         });
       }
     });

@@ -294,7 +294,7 @@
     "whitelistedPanelUrls": []
   },
   "frontendCommand": "npm run start",
-  "frontendFolderName": ".",
+  "frontendFolderName": "frontend",
   "name": "QueuePlaceholderName",
   "version": 2
 }
