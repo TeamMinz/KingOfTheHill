@@ -18,7 +18,7 @@ const QueueNotification = (_props) => {
         authentication.getOpaqueId() == matchup.champion.opaqueUserId)
     ) {
       authentication
-          .makeCall('matchup/message/get')
+          .makeCall('/matchup/message/get')
           .then((resp) => {
             if (resp.ok) {
               resp.json().then((resp) => {
@@ -31,7 +31,7 @@ const QueueNotification = (_props) => {
 
   const fetchMatchup = () => {
     authentication
-        .makeCall('matchup/current/get')
+        .makeCall('/matchup/current/get')
         .then((resp) => {
           if (resp.ok) {
             resp.json().then((resp) => {
