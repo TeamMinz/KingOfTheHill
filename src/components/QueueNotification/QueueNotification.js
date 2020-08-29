@@ -18,7 +18,7 @@ const QueueNotification = (_props) => {
         authentication.getOpaqueId() == matchup.champion.opaqueUserId)
     ) {
       authentication
-          .makeCall('https://localhost:8081/matchup/message/get')
+          .makeCall('matchup/message/get')
           .then((resp) => {
             if (resp.ok) {
               resp.json().then((resp) => {
@@ -31,7 +31,7 @@ const QueueNotification = (_props) => {
 
   const fetchMatchup = () => {
     authentication
-        .makeCall('https://localhost:8081/matchup/current/get')
+        .makeCall('matchup/current/get')
         .then((resp) => {
           if (resp.ok) {
             resp.json().then((resp) => {
@@ -57,21 +57,7 @@ const QueueNotification = (_props) => {
           return;
         }
 
-<<<<<<< HEAD
         fetchMessage(matchup);
-=======
-        if (
-          authentication.getOpaqueId() == matchup.challenger.opaqueUserId ||
-          authentication.getOpaqueId() == matchup.champion.opaqueUserId
-        ) {
-          authentication
-              .makeCall('/matchup/message/get')
-              .then((resp) => resp.json())
-              .then((json) => {
-                addNotification(json.message);
-              });
-        }
->>>>>>> 068e7f98a451e6fe571bedaaf0ca9bfb19220218
       }
     };
 
