@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const routes = require('./routes');
+const config = require('./config.json');
 const {SECRET} = require('./util/options');
 
 if (process.env.NODE_ENV == 'development') {
@@ -14,11 +15,10 @@ if (process.env.NODE_ENV == 'development') {
 
 // Load our TLS cert and key.
 
-const TLS_CERT_PATH = '../conf/.crt';
-const TLS_KEY_PATH = '../conf/.key';
+const TLS_CERT_PATH = config.tls.certPath;
+const TLS_KEY_PATH = config.tls.keyPath;
 
 const TLS = {
-  // If you need a certificate, execute "npm run cert".
   cert: fs.readFileSync(TLS_CERT_PATH),
   key: fs.readFileSync(TLS_KEY_PATH),
 };

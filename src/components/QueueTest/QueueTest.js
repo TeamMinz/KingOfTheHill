@@ -38,7 +38,7 @@ export default class QueueTest extends React.Component {
 
   joinQueue() {
     this.Authentication.makeCall(
-        'https://localhost:8081/queue/join',
+        '/queue/join',
         'POST',
     ).then((resp) => {
       resp.json().then((bodyData) => {
@@ -54,7 +54,7 @@ export default class QueueTest extends React.Component {
 
   leaveQueue() {
     this.Authentication.makeCall(
-        'https://localhost:8081/queue/leave',
+        '/queue/leave',
         'POST',
     ).then((resp) => {
       resp.json().then((bodyData) => {
