@@ -6,7 +6,7 @@ import '../App/App.css';
 const QueueNotification = (_props) => {
   const twitch = window.Twitch ? window.Twitch.ext : null;
   const authentication = new Authentication();
-  const notificationSystem = React.createRef();
+  const notificationSystem = React.useRef();
 
   // state stuff.
   const [FinishedLoading, setFinishedLoading] = useState(false);
