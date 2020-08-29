@@ -57,7 +57,21 @@ const QueueNotification = (_props) => {
           return;
         }
 
+<<<<<<< HEAD
         fetchMessage(matchup);
+=======
+        if (
+          authentication.getOpaqueId() == matchup.challenger.opaqueUserId ||
+          authentication.getOpaqueId() == matchup.champion.opaqueUserId
+        ) {
+          authentication
+              .makeCall('/matchup/message/get')
+              .then((resp) => resp.json())
+              .then((json) => {
+                addNotification(json.message);
+              });
+        }
+>>>>>>> 068e7f98a451e6fe571bedaaf0ca9bfb19220218
       }
     };
 

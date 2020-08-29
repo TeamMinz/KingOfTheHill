@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 
+const BASE_URL = 'https://localhost:8081';
+
 /**
  * Helper class for authentication against an EBS service.
  * Allows the storage of a token to be accessed across componenents.
@@ -110,7 +112,7 @@ export default class Authentication {
           bodyContent = JSON.stringify(body);
         }
 
-        fetch(url, {
+        fetch(BASE_URL + url, {
           method,
           headers,
           body: bodyContent,

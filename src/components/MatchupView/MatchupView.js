@@ -14,7 +14,7 @@ const MatchupView = (_props) => {
 
   const fetchMatchup = () => {
     authentication
-        .makeCall('https://localhost:8081/matchup/current/get')
+        .makeCall('/matchup/current/get')
         .then((resp) => {
           if (resp.ok) {
             resp.json().then((resp) => {
@@ -26,7 +26,7 @@ const MatchupView = (_props) => {
 
   const fetchChampion = () => {
     authentication
-        .makeCall('https://localhost:8081/champion/get')
+        .makeCall('/champion/get')
         .then((resp) => {
           if (resp.ok) {
             resp.json().then((resp) => {

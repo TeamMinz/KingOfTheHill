@@ -20,7 +20,7 @@ const QueueView = (_props) => {
    */
   function fetchQueue() {
     authentication
-        .makeCall('https://localhost:8081/queue/get', 'GET')
+        .makeCall('/queue/get', 'GET')
         .then((resp) => {
           if (resp.ok) {
             resp.json().then((bodyData) => {
@@ -39,7 +39,7 @@ const QueueView = (_props) => {
 
   const JoinQueue = () => {
     authentication
-        .makeCall('https://localhost:8081/queue/join', 'POST')
+        .makeCall('/queue/join', 'POST')
         .then((resp) => {
           resp.json().then((bodyData) => {
             if (resp.ok) {
@@ -52,7 +52,7 @@ const QueueView = (_props) => {
 
   const LeaveQueue = () => {
     authentication
-        .makeCall('https://localhost:8081/queue/leave', 'POST')
+        .makeCall('/queue/leave', 'POST')
         .then((resp) => {
           resp.json().then((bodyData) => {
             if (resp.ok) {
