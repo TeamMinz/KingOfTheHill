@@ -3,6 +3,7 @@ import '../App/App.css';
 import './QueueView.css';
 import Authentication from '../../util/Authentication/Authentication';
 import MatchupView from '../MatchupView/MatchupView';
+
 const QueueView = (_props) => {
   const twitch = window.Twitch ? window.Twitch.ext : null;
   const authentication = new Authentication();
@@ -13,54 +14,49 @@ const QueueView = (_props) => {
   const [FinishedLoading, setFinishedLoading] = useState(false);
   const [Queue, setQueue] = useState([]);
   const [opaqueUserId, setOpaqueID] = useState(null);
+  const [UserId, setUserID] = useState(null);
 
   // helper functions
   /**
    * Fethches the current queue from the backend.
    */
   function fetchQueue() {
-    authentication
-        .makeCall('/queue/get', 'GET')
-        .then((resp) => {
-          if (resp.ok) {
-            resp.json().then((bodyData) => {
-              const queue = bodyData.queue;
+    authentication.makeCall('/queue/get', 'GET').then((resp) => {
+      if (resp.ok) {
+        resp.json().then((bodyData) => {
+          const queue = bodyData.queue;
 
-              if (queue.includes(authentication.getOpaqueId())) {
-                setButtonText('Leave the Queue');
-                setButtonAction(() => LeaveQueue);
-              }
-
-              setQueue(queue);
-            });
+          if (queue.includes(authentication.getOpaqueId())) {
+            setButtonText('Leave the Queue');
+            setButtonAction(() => LeaveQueue);
           }
+
+          setQueue(queue);
         });
+      }
+    });
   }
 
   const JoinQueue = () => {
-    authentication
-        .makeCall('/queue/join', 'POST')
-        .then((resp) => {
-          resp.json().then((bodyData) => {
-            if (resp.ok) {
-              setButtonText('Leave the Queue');
-              setButtonAction(() => LeaveQueue);
-            }
-          });
-        });
+    authentication.makeCall('/queue/join', 'POST').then((resp) => {
+      resp.json().then((bodyData) => {
+        if (resp.ok) {
+          setButtonText('Leave the Queue');
+          setButtonAction(() => LeaveQueue);
+        }
+      });
+    });
   };
 
   const LeaveQueue = () => {
-    authentication
-        .makeCall('/queue/leave', 'POST')
-        .then((resp) => {
-          resp.json().then((bodyData) => {
-            if (resp.ok) {
-              setButtonAction(() => JoinQueue);
-              setButtonText('Join the Queue');
-            }
-          });
-        });
+    authentication.makeCall('/queue/leave', 'POST').then((resp) => {
+      resp.json().then((bodyData) => {
+        if (resp.ok) {
+          setButtonAction(() => JoinQueue);
+          setButtonText('Join the Queue');
+        }
+      });
+    });
   };
 
   const QueueEffect = () => {
@@ -93,6 +89,7 @@ const QueueView = (_props) => {
      */
     function firstTimeSetup() {
       setOpaqueID(authentication.getOpaqueId());
+      setUserID(authentication.getUserId());
       fetchQueue();
     }
 
@@ -162,7 +159,11 @@ const QueueView = (_props) => {
         )}
       </div>
       <div className="Join">
-        <button className="QueueButton" onClick={ButtonAction}>
+        <button
+          className="QueueButton"
+          onClick={ButtonAction}
+          disabled={!UserId}
+        >
           {ButtonText}
         </button>
       </div>

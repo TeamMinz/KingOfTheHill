@@ -17,28 +17,35 @@ const QueueNotification = (_props) => {
       (authentication.getOpaqueId() == matchup.challenger.opaqueUserId ||
         authentication.getOpaqueId() == matchup.champion.opaqueUserId)
     ) {
-      authentication
-          .makeCall('matchup/message/get')
-          .then((resp) => {
-            if (resp.ok) {
-              resp.json().then((resp) => {
-                addNotification(resp.message);
-              });
-            }
+      authentication.makeCall('/matchup/message/get').then((resp) => {
+        if (resp.ok) {
+          resp.json().then((resp) => {
+            addNotification(resp.message);
           });
+        }
+      });
     }
   };
 
   const fetchMatchup = () => {
-    authentication
-        .makeCall('matchup/current/get')
-        .then((resp) => {
-          if (resp.ok) {
-            resp.json().then((resp) => {
-              fetchMessage(resp.matchup);
-            });
-          }
+    authentication.makeCall('/matchup/current/get').then((resp) => {
+      if (resp.ok) {
+        resp.json().then((resp) => {
+          fetchMessage(resp.matchup);
         });
+      }
+    });
+  };
+
+  const checkUserPermission = () => {
+    if (authentication.getUserId()) {
+      return true;
+    } else {
+      addNotification(
+          'Click the gear in the top right and give permission to be able to join the queue!',
+      );
+      return false;
+    }
   };
 
   const NotificationEffect = () => {
@@ -68,7 +75,9 @@ const QueueNotification = (_props) => {
       authentication.setToken(auth.token, auth.userId);
 
       if (!FinishedLoading) {
-        fetchMatchup();
+        if (checkUserPermission()) {
+          fetchMatchup();
+        }
         setFinishedLoading(true);
       }
     };
