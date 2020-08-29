@@ -30,6 +30,10 @@
   text-decoration: none;
 }
 
+.QueueButton:disabled {
+  color: var(--border-color);
+}
+
 ol {
   margin: 0px;
   height: fit-content;

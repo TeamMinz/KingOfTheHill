@@ -5,7 +5,12 @@
     "commonjs": true,
     "es2020": true
   },
-  "extends": ["google", "plugin:node/recommended", "plugin:jsdoc/recommended"],
+  "extends": [
+    "google",
+    "plugin:node/recommended",
+    "plugin:jsdoc/recommended",
+    "eslint:recommended"
+  ],
   "parserOptions": {
     "ecmaVersion": 11
   },
@@ -13,6 +18,17 @@
   "rules": {
     "require-jsdoc": "off",
     "valid-jsdoc": "off",
-    "no-undef": "error"
+    "no-undef": "error",
+    "jsdoc/require-jsdoc": [
+      "warning",
+      {
+        "ArrowFunctionExpression": true,
+        "ClassDeclaration": true,
+        "ClassExpression": true,
+        "FunctionDeclaration": true,
+        "FunctionExpression": true,
+        "MethodDefinition": true
+      }
+    ]
   }
 }
