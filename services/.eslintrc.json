@@ -20,14 +20,16 @@
     "valid-jsdoc": "off",
     "no-undef": "error",
     "jsdoc/require-jsdoc": [
-      "warning",
+      "warn",
       {
-        "ArrowFunctionExpression": true,
-        "ClassDeclaration": true,
-        "ClassExpression": true,
-        "FunctionDeclaration": true,
-        "FunctionExpression": true,
-        "MethodDefinition": true
+        "require": {
+          "ArrowFunctionExpression": true,
+          "ClassDeclaration": true,
+          "ClassExpression": true,
+          "FunctionDeclaration": true,
+          "FunctionExpression": true,
+          "MethodDefinition": true
+        }
       }
     ]
   }
