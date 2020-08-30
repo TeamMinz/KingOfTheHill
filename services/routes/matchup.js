@@ -13,8 +13,8 @@ const channelMessages = {};
 /**
  * Reports the winner of a matchup.
  *
- * @param channelId The channel to report the winner for.
- * @param winner the user object of the winner of the matchup.
+ * @param {string} channelId The channel to report the winner for.
+ * @param {object} winner the user object of the winner of the matchup.
  */
 function reportWinner(channelId, winner) {
   // Record this win.
@@ -153,7 +153,6 @@ matchup.post('/start', isBroadcaster, (req, res) => {
     challenger,
   };
 
-  console.log(getChampion(channelId));
   if (!getChampion(channelId)) {
     setChampion(channelId, {
       winStreak: 0,

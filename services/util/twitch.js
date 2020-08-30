@@ -6,7 +6,7 @@ const {CLIENT_ID} = require('./options');
  * Resolves display name from a given user id.
  *
  * @param {*} userId the id of the users who's name to resolve.
- * @returns The display name of the specified person.
+ * @returns {string} The display name of the specified person.
  */
 async function resolveDisplayName(userId) {
   try {
