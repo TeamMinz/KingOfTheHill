@@ -5,7 +5,13 @@ import QueueView from '../QueueView/QueueView';
 import QueueNotification from '../QueueNotification/QueueNotification';
 import './App.css';
 
+/**
+ * Base class for the React App. Sets up the scene
+ */
 export default class App extends React.Component {
+  /**
+   * @param {object} props - components
+   */
   constructor(props) {
     super(props);
     this.Authentication = new Authentication();
@@ -20,6 +26,12 @@ export default class App extends React.Component {
     };
   }
 
+  /**
+   * Updates the Extension when the twitch viewer changes
+   *
+   * @param {object} context - twitch viewer settings
+   * @param {string[]} delta - changed settings
+   */
   contextUpdate(context, delta) {
     if (delta.includes('theme')) {
       this.setState(() => {
@@ -28,6 +40,11 @@ export default class App extends React.Component {
     }
   }
 
+  /**
+   * Sets when Visibilityt of extension changes
+   *
+   * @param {boolean} isVisible - Whether the extension is visible.
+   */
   visibilityChanged(isVisible) {
     this.setState(() => {
       return {
@@ -36,6 +53,12 @@ export default class App extends React.Component {
     });
   }
 
+  /**
+   * Called immediately after a component is mounted.
+   * Setting state here will trigger re-rendering.
+   *
+   * Authorizes Twitch account and gathers context
+   */
   componentDidMount() {
     if (this.twitch) {
       this.twitch.onAuthorized((auth) => {
@@ -57,8 +80,11 @@ export default class App extends React.Component {
     }
   }
 
-  componentWillUnmount() {}
-
+  /**
+   * Renders the Extension
+   *
+   * @returns {string} HTML markup for the base extension
+   */
   render() {
     if (this.state.finishedLoading && this.state.isVisible) {
       return (

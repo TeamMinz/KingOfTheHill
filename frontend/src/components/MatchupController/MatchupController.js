@@ -2,6 +2,13 @@ import React, {useState, useEffect} from 'react';
 import Authentication from '../../util/Authentication/Authentication';
 import './MatchupController.css';
 
+/**
+ * Matchup Component for Config
+ * Handles starting matchup, declaring winner
+ *
+ * @param {object} props - components
+ * @returns {string} html markup for Mathcup
+ */
 const MatchupController = (props) => {
   const twitch = window.Twitch ? window.Twitch.ext : null;
   const authentication = new Authentication();
@@ -9,25 +16,31 @@ const MatchupController = (props) => {
   const [CurrentMatchup, setCurrentMatchup] = useState(null);
   const [FinishedLoading, setFinishedLoading] = useState(false);
 
+  /**
+   * Sends request to start a new matchup
+   */
   const startMatchup = () => {
     if (FinishedLoading) {
       console.log('sending request to start matchup');
-      authentication
-          .makeCall('/matchup/start', 'POST')
-          .then((resp) => {
-            if (resp.ok) {
-              resp.json().then((resp) => {
-                // console.log('started a matchup: ' + resp);
-                setCurrentMatchup(resp.matchup);
-              });
-            } else {
-              console.log('Error starting matchup.');
-            // Display error
-            }
+      authentication.makeCall('/matchup/start', 'POST').then((resp) => {
+        if (resp.ok) {
+          resp.json().then((resp) => {
+            // console.log('started a matchup: ' + resp);
+            setCurrentMatchup(resp.matchup);
           });
+        } else {
+          console.log('Error starting matchup.');
+          // Display error
+        }
+      });
     }
   };
 
+  /**
+   * Sends a request to declare a winner
+   *
+   * @param {string} winner - champion or challenger
+   */
   const declareWinner = (winner) => {
     authentication
         .makeCall('/matchup/current/report', 'POST', {
@@ -36,7 +49,7 @@ const MatchupController = (props) => {
         .then((resp) => {
           if (resp.ok) {
             setCurrentMatchup(null);
-            // console.log(`${winner} has been declared the winner.`);
+          // console.log(`${winner} has been declared the winner.`);
           } else {
             console.log('there was an error processing the request.');
           }
@@ -49,15 +62,13 @@ const MatchupController = (props) => {
       twitch.onAuthorized((auth) => {
         authentication.setToken(auth.token, auth.userId);
         if (!FinishedLoading) {
-          authentication
-              .makeCall('/matchup/current/get')
-              .then((resp) => {
-                if (resp.ok) {
-                  resp.json().then((resp) => {
-                    setCurrentMatchup(resp.matchup);
-                  });
-                }
+          authentication.makeCall('/matchup/current/get').then((resp) => {
+            if (resp.ok) {
+              resp.json().then((resp) => {
+                setCurrentMatchup(resp.matchup);
               });
+            }
+          });
 
           setFinishedLoading(true);
         }

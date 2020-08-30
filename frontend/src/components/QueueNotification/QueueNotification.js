@@ -3,6 +3,14 @@ import NotificationSystem from 'react-notification-system';
 import Authentication from '../../util/Authentication/Authentication';
 import '../App/App.css';
 
+/**
+ * Handles all notifications
+ * Mainly 'Currently Up' Messages
+ * Also notifications for extra permissions
+ *
+ * @param {object} _props - components
+ * @returns {string} html markup for notifications
+ */
 const QueueNotification = (_props) => {
   const twitch = window.Twitch ? window.Twitch.ext : null;
   const authentication = new Authentication();
@@ -11,6 +19,11 @@ const QueueNotification = (_props) => {
   // state stuff.
   const [FinishedLoading, setFinishedLoading] = useState(false);
 
+  /**
+   * Gets Notification message from server
+   *
+   * @param {object} matchup - Current matchup
+   */
   const fetchMessage = (matchup) => {
     if (
       matchup &&
@@ -27,6 +40,9 @@ const QueueNotification = (_props) => {
     }
   };
 
+  /**
+   * Gets Current Matchup from server
+   */
   const fetchMatchup = () => {
     authentication.makeCall('/matchup/current/get').then((resp) => {
       if (resp.ok) {
@@ -37,6 +53,11 @@ const QueueNotification = (_props) => {
     });
   };
 
+  /**
+   * Checks if the User has granted the proper permissions
+   *
+   * @returns {boolean} Whether extension has proper permissions
+   */
   const checkUserPermission = () => {
     if (authentication.getUserId()) {
       return true;
@@ -48,8 +69,16 @@ const QueueNotification = (_props) => {
     }
   };
 
+  /**
+   * Custom Effect for QueuNotification
+   * Handles Twitch authentication and pubsubs
+   *
+   * @returns {Function} closing function to stop listening to twitch broadcasts
+   */
   const NotificationEffect = () => {
     /**
+     * Handles pubsub messages for 'updateMatchup'
+     *
      * @param _target
      * @param _contentType
      * @param body
@@ -69,7 +98,9 @@ const QueueNotification = (_props) => {
     };
 
     /**
-     * @param auth auth information passed by twitch
+     * Handles authorizing with twitch and running first time setup
+     *
+     * @param {object} auth auth information passed by twitch
      */
     const handleAuthentication = (auth) => {
       authentication.setToken(auth.token, auth.userId);
@@ -97,6 +128,11 @@ const QueueNotification = (_props) => {
   // called when the component mounts.
   useEffect(NotificationEffect, [FinishedLoading]);
 
+  /**
+   * Adds a new notification
+   *
+   * @param {string} message - message for user on notification
+   */
   const addNotification = (message) => {
     const notification = notificationSystem.current;
     notification.clearNotifications();
