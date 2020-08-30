@@ -65,4 +65,4 @@ typings/
 **/.env
 
 # Finalized files
-dist/
+**/dist/
