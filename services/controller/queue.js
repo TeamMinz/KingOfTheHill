@@ -3,6 +3,9 @@
  * @property {string} opaqueUserId The opaque id of the user.
  */
 class Queue {
+  /**
+   * Constructor
+   */
   constructor() {
     this._queue = [];
     this.hasUpdated = false;
@@ -30,7 +33,7 @@ class Queue {
    * Adds a challenger to the back of the queue.
    *
    * @param {Challenger} challenger The challenger to add to the queue.
-   * @returns The position of the element inserted into the queue.
+   * @returns {number} The position of the element inserted into the queue.
    */
   enqueue(challenger) {
     this._queue.push(challenger);
@@ -48,8 +51,9 @@ class Queue {
     return challenger;
   }
   /**
-   * Inserts user into specified spot in the queue, 
+   * Inserts user into specified spot in the queue,
    * shifting everyone after that spot back a space.
+   *
    * @param {*} pos the position to insert into the queue in.
    * @param {*} user the user to insert into the queue.
    */
@@ -80,7 +84,7 @@ class Queue {
   /**
    * Get this queue represented as an array.
    *
-   * @returns the array representation of this queue.
+   * @returns {Array} the array representation of this queue.
    */
   getAsArray() {
     return this._queue;
@@ -88,7 +92,7 @@ class Queue {
   /**
    * Get the number of people currently in this queue.
    *
-   * @returns the number of people in the queue.
+   * @returns {number} the number of people in the queue.
    */
   getSize() {
     return this._queue.length;
@@ -113,7 +117,7 @@ function getQueue(channelId) {
 /**
  * Gets all queues.
  *
- * @returns an object containing all the queues.
+ * @returns {object} an object containing all the queues.
  */
 function getAllQueues() {
   return channelQueues;
