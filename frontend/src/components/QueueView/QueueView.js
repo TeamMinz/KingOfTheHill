@@ -4,6 +4,12 @@ import './QueueView.css';
 import Authentication from '../../util/Authentication/Authentication';
 import MatchupView from '../MatchupView/MatchupView';
 
+/**
+ * Component to Queue Tab
+ *
+ * @param {object} _props - components
+ * @returns {string} html markup for view
+ */
 const QueueView = (_props) => {
   const twitch = window.Twitch ? window.Twitch.ext : null;
   const authentication = new Authentication();
@@ -37,6 +43,9 @@ const QueueView = (_props) => {
     });
   }
 
+  /**
+   * Adds the User to the Queue
+   */
   const JoinQueue = () => {
     authentication.makeCall('/queue/join', 'POST').then((resp) => {
       resp.json().then((bodyData) => {
@@ -48,6 +57,9 @@ const QueueView = (_props) => {
     });
   };
 
+  /**
+   * Removes the User from the Queue
+   */
   const LeaveQueue = () => {
     authentication.makeCall('/queue/leave', 'POST').then((resp) => {
       resp.json().then((bodyData) => {
@@ -59,8 +71,16 @@ const QueueView = (_props) => {
     });
   };
 
+  /**
+   * Custom Effect for QueueView
+   * Handles Twitch authentication and pubsubs
+   *
+   * @returns {Function} closing function to stop listening to twitch broadcasts
+   */
   const QueueEffect = () => {
     /**
+     * handles pubsub messages 'updateQueue'
+     *
      * @param _target
      * @param _contentType
      * @param body
@@ -73,7 +93,9 @@ const QueueView = (_props) => {
     }
 
     /**
-     * @param auth
+     * Handles authorizing with twitch and running first time setup
+     *
+     * @param {object} auth - twitch authentication information
      */
     function handleAuthentication(auth) {
       authentication.setToken(auth.token, auth.userId);
@@ -85,7 +107,7 @@ const QueueView = (_props) => {
     }
 
     /**
-     *
+     * Sets the Users Opaque and User ID
      */
     function firstTimeSetup() {
       setOpaqueID(authentication.getOpaqueId());

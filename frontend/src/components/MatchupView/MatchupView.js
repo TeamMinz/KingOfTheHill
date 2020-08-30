@@ -3,6 +3,12 @@ import '../App/App.css';
 import './MatchupView.css';
 import Authentication from '../../util/Authentication/Authentication';
 
+/**
+ * Component to display current matchup/champion
+ *
+ * @param {object} _props - components
+ * @returns {string} html markup for view
+ */
 const MatchupView = (_props) => {
   const twitch = window.Twitch ? window.Twitch.ext : null;
   const authentication = new Authentication();
@@ -12,37 +18,52 @@ const MatchupView = (_props) => {
   const [Champion, setChampion] = useState(null);
   const [winStreak, setWinstreak] = useState(0);
 
+  /**
+   * Gets the current matchup from the server
+   */
   const fetchMatchup = () => {
-    authentication
-        .makeCall('/matchup/current/get')
-        .then((resp) => {
-          if (resp.ok) {
-            resp.json().then((resp) => {
-              setCurrentMatchup(resp.matchup);
-            });
-          }
+    authentication.makeCall('/matchup/current/get').then((resp) => {
+      if (resp.ok) {
+        resp.json().then((resp) => {
+          setCurrentMatchup(resp.matchup);
         });
+      }
+    });
   };
 
+  /**
+   * Gets the current champion from the server
+   */
   const fetchChampion = () => {
-    authentication
-        .makeCall('/champion/get')
-        .then((resp) => {
-          if (resp.ok) {
-            resp.json().then((resp) => {
-              if (resp) {
-                setChampion(resp.user);
-                setWinstreak(resp.winStreak);
-              } else {
-                setChampion(null);
-                setWinstreak(0);
-              }
-            });
+    authentication.makeCall('/champion/get').then((resp) => {
+      if (resp.ok) {
+        resp.json().then((resp) => {
+          if (resp) {
+            setChampion(resp.user);
+            setWinstreak(resp.winStreak);
+          } else {
+            setChampion(null);
+            setWinstreak(0);
           }
         });
+      }
+    });
   };
 
+  /**
+   * Custom Effect for MatchupView
+   * Handles Twitch authentication and pubsubs
+   *
+   * @returns {Function} closing function to stop listening to twitch broadcasts
+   */
   const MatchupEffect = () => {
+    /**
+     * handles pubsub messages 'updateMatchup' and 'updateChampion'
+     *
+     * @param _target
+     * @param _contentType
+     * @param body
+     */
     const handleMessage = (_target, _contentType, body) => {
       const message = JSON.parse(body);
       if (message.type == 'updateMatchup') {
@@ -59,6 +80,11 @@ const MatchupView = (_props) => {
       }
     };
 
+    /**
+     * Handles authorizing with twitch and running first time setup
+     *
+     * @param {object} auth - twitch authentication information
+     */
     const handleAuthentication = (auth) => {
       authentication.setToken(auth.token, auth.userId);
 
