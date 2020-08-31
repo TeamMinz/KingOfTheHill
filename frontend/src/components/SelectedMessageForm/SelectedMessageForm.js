@@ -2,6 +2,12 @@ import Authentication from '../../util/Authentication/Authentication';
 import React, {useState, useEffect} from 'react';
 import './SelectedMessageForm.css';
 
+/**
+ * Component that displays an error.
+ *
+ * @param {{showError: boolean}} options whether the error should be shown.
+ * @returns {object} the react component to be rendered.
+ */
 const ErrorMessage = ({showError}) => {
   if (showError) {
     return (
@@ -14,6 +20,12 @@ const ErrorMessage = ({showError}) => {
   }
 };
 
+/**
+ * Component that allows you to set a 'you're up!' message.
+ *
+ * @param {*} props properties passed to the component.
+ * @returns {Function} a cleanup function.
+ */
 const SelectedMessageForm = (props) => {
   const twitch = window.Twitch ? window.Twitch.ext : null;
   const authentication = new Authentication();
@@ -23,6 +35,11 @@ const SelectedMessageForm = (props) => {
   const [SelectionMessage, setSelectionMessage] = useState('Loading...');
   const [FinishedLoading, setFinishedLoading] = useState(false);
 
+  /**
+   * Called when the selection message should be updated.
+   *
+   * @param {*} event event containing the message.
+   */
   const updateSelectionMessage = (event) => {
     event.preventDefault();
 
@@ -45,13 +62,18 @@ const SelectedMessageForm = (props) => {
     }
   };
 
+  /**
+   * Stores selection message.
+   *
+   * @param {*} event the event with the selection message.
+   */
   const storeSelectionMessage = (event) => {
     setSelectionMessage(event.target.value);
   };
 
   useEffect(() => {
     /**
-     * @param auth
+     * @param {object} auth auth object passed by twitch.
      */
     function handleAuthentication(auth) {
       authentication.setToken(auth.token, auth.userId);
