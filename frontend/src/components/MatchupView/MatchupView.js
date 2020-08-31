@@ -97,6 +97,11 @@ const MatchupView = (_props) => {
 
     if (twitch) {
       twitch.onAuthorized(handleAuthentication);
+      twitch.onVisibilityChanged((isVisible, context) => {
+        if (isVisible) {
+          twitch.listen('broadcast', handleMessage);
+        }
+      });
     }
 
     if (FinishedLoading) {
