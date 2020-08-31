@@ -242,6 +242,50 @@
       "orientation": "Portrait",
       "type": "component",
       "viewerType": "Logged-In Viewer"
+    },
+    {
+      "channelId": "26898606",
+      "configurationAnchor": "panel",
+      "displayChannelName": "tminz",
+      "features": {
+        "isBitsEnabled": true,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "frameSize": {
+        "width": 1280,
+        "height": 720
+      },
+      "id": "13",
+      "isPopout": false,
+      "label": "",
+      "linked": false,
+      "linkedUserId": "",
+      "orientation": "Portrait",
+      "type": "panel",
+      "viewerType": "Broadcaster"
+    },
+    {
+      "channelId": "26898606",
+      "configurationAnchor": "panel",
+      "displayChannelName": "tminz",
+      "features": {
+        "isBitsEnabled": true,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "frameSize": {
+        "width": 480,
+        "height": 853
+      },
+      "id": "14",
+      "isPopout": false,
+      "label": "",
+      "linked": false,
+      "linkedUserId": "",
+      "orientation": "Portrait",
+      "type": "mobile",
+      "viewerType": "Broadcaster"
     }
   ],
   "manifest": {
@@ -265,7 +309,7 @@
     "installationCount": -42,
     "liveConfigUrl": "https://localhost:8080/live_config.html",
     "name": "King of the Hill",
-    "panelHeight": 300,
+    "panelHeight": 500,
     "privacyPolicyUrl": "",
     "requestIdentityLink": true,
     "requiredBroadcasterAbilities": [],
@@ -278,7 +322,7 @@
     "summary": "A queue extension that specializes in a King of the Hill style queue.",
     "supportEmail": "support@teamminz.com",
     "vendorCode": "",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "viewerSummary": "Join the queue to compete for King of the Hill!",
     "viewerUrl": "https://localhost:8080/panel.html",
     "viewerUrls": {
@@ -292,7 +336,7 @@
       },
       "panel": {
         "viewerUrl": "https://localhost:8080/panel.html",
-        "height": 300,
+        "height": 500,
         "canLinkExternalContent": false
       },
       "component": {
