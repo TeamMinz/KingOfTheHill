@@ -278,7 +278,7 @@
     "summary": "A queue extension that specializes in a King of the Hill style queue.",
     "supportEmail": "support@teamminz.com",
     "vendorCode": "",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "viewerSummary": "Join the queue to compete for King of the Hill!",
     "viewerUrl": "https://localhost:8080/panel.html",
     "viewerUrls": {
