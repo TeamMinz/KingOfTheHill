@@ -63,6 +63,7 @@ const QueueNotification = (_props) => {
       return true;
     } else {
       addNotification(
+          // eslint-disable-next-line max-len
           'Click the gear in the top right and grant access under the manage access tab to be able to join!',
       );
       return false;
@@ -79,9 +80,9 @@ const QueueNotification = (_props) => {
     /**
      * Handles pubsub messages for 'updateMatchup'
      *
-     * @param _target
-     * @param _contentType
-     * @param body
+     * @param {string} _target target
+     * @param {string} _contentType content type
+     * @param {object} body message body passed by twitch api.
      */
     const handleMessage = (_target, _contentType, body) => {
       const message = JSON.parse(body);
@@ -115,6 +116,11 @@ const QueueNotification = (_props) => {
 
     if (twitch) {
       twitch.onAuthorized(handleAuthentication);
+      twitch.onVisibilityChanged((isVisible, context) => {
+        if (isVisible) {
+          twitch.listen('broadcast', handleMessage);
+        }
+      });
     }
 
     if (FinishedLoading) {
