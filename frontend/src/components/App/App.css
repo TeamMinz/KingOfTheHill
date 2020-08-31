@@ -1,7 +1,19 @@
 :root {
   font-family: Arial, Helvetica, sans-serif;
   font-weight: 500;
+  
+}
+
+:root .mobile {
+  font-size: 1.5rem;
+}
+
+:root .component {
   font-size: 5rem;
+}
+
+:root .panel {
+  font-size: 1.2rem;
 }
 
 :root .App-light {
@@ -33,10 +45,12 @@
   border-bottom: 1px solid #aaa;
   margin: 0 0 10px;
   padding: 0;
+  display: flex;
+  flex-direction: row;
 }
 
 .react-tabs__tab {
-  display: inline-block;
+  display: block;
   border: 1px solid transparent;
   border-bottom: none;
   bottom: -1px;
@@ -44,7 +58,7 @@
   list-style: none;
   padding: 6px 12px;
   cursor: pointer;
-  width: 47%;
+  flex-grow: 1;
   background: var(--not-selected-color);
   text-align: center;
 }
