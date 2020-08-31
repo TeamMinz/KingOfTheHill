@@ -170,9 +170,7 @@ const QueueNotification = (_props) => {
       // Override the notification item
       DefaultStyle: {
         // Applied to every notification, regardless of the notification level
-        fontFamily: 'Arial, Helvetica, sans-serif',
-        fontWeight: 500,
-        fontSize: '1rem',
+        fontSize: '1em',
         color: 'var(--text-color)',
         borderTop: '10px solid var(--border-color)',
         boxShadow: 'var(--border-color) 0px 0px 5px',
