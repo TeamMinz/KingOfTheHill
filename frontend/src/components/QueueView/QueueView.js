@@ -79,11 +79,11 @@ const QueueView = (_props) => {
    */
   const QueueEffect = () => {
     /**
-     * handles pubsub messages 'updateQueue'
+     * Handles pubsub messages for 'updateQueue'
      *
-     * @param _target
-     * @param _contentType
-     * @param body
+     * @param {string} _target target
+     * @param {string} _contentType content type
+     * @param {object} body message body passed by twitch api.
      */
     function handleMessage(_target, _contentType, body) {
       const message = JSON.parse(body);
@@ -117,6 +117,11 @@ const QueueView = (_props) => {
 
     if (twitch) {
       twitch.onAuthorized(handleAuthentication);
+      twitch.onVisibilityChanged((isVisible, context) => {
+        if (isVisible) {
+          twitch.listen('broadcast', handleMessage);
+        }
+      });
     }
 
     if (FinishedLoading) {
