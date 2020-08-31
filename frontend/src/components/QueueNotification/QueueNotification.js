@@ -63,7 +63,7 @@ const QueueNotification = (_props) => {
       return true;
     } else {
       addNotification(
-          'Click the gear in the top right and give permission to be able to join the queue!',
+          'Click the gear in the top right and grant access under the manage access tab to be able to join!',
       );
       return false;
     }
