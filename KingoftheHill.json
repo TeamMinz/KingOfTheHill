@@ -220,6 +220,28 @@
       "orientation": "Portrait",
       "type": "component",
       "viewerType": "Logged-In Viewer"
+    },
+    {
+      "channelId": "26898606",
+      "configurationAnchor": "panel",
+      "displayChannelName": "tminz",
+      "features": {
+        "isBitsEnabled": true,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "frameSize": {
+        "width": 1600,
+        "height": 900
+      },
+      "id": "12",
+      "isPopout": false,
+      "label": "Dae",
+      "linked": true,
+      "linkedUserId": "130059350",
+      "orientation": "Portrait",
+      "type": "component",
+      "viewerType": "Logged-In Viewer"
     }
   ],
   "manifest": {
@@ -230,28 +252,34 @@
     "canInstall": true,
     "configUrl": "https://localhost:8080/config.html",
     "configurationLocation": "none",
-    "description": "",
+    "description": "Allow your viewers to battle it out in a King of the Hill style match up!\nKeep track of the current king and their win streak!\n\nFuture Plans:\n* Leaderboard support.\n* Subscriber only mode.\n* Bits support.\n* Further customization.",
     "eulaTosUrl": "",
     "hasChatSupport": false,
-    "iconUrl": "",
-    "iconUrls": {},
+    "iconUrl": "https://extensions-discovery-images.twitch.tv/z1eskwyierovbt4gz8zbq1r45tne31/0.0.1/logo79644e4d-0d78-4a2b-8ae9-fda7c502b43e",
+    "iconUrls": {
+      "100x100": "https://extensions-discovery-images.twitch.tv/z1eskwyierovbt4gz8zbq1r45tne31/0.0.1/logo79644e4d-0d78-4a2b-8ae9-fda7c502b43e",
+      "24x24": "https://extensions-discovery-images.twitch.tv/z1eskwyierovbt4gz8zbq1r45tne31/0.0.1/taskbarbcc721a6-0da6-455e-9854-f72429d44928",
+      "300x200": "https://extensions-discovery-images.twitch.tv/z1eskwyierovbt4gz8zbq1r45tne31/0.0.1/discovery86cb94d9-1ad7-4209-b787-23a3e92936a0"
+    },
     "id": "z1eskwyierovbt4gz8zbq1r45tne31",
     "installationCount": -42,
     "liveConfigUrl": "https://localhost:8080/live_config.html",
-    "name": "QueuePlaceholderName",
+    "name": "King of the Hill",
     "panelHeight": 300,
     "privacyPolicyUrl": "",
     "requestIdentityLink": true,
     "requiredBroadcasterAbilities": [],
-    "screenshotUrls": [],
+    "screenshotUrls": [
+      "https://extensions-discovery-images.twitch.tv/z1eskwyierovbt4gz8zbq1r45tne31/0.0.1/screenshot7e96674b-8963-42b1-8e5a-0fe13bb87b95"
+    ],
     "sku": "",
     "state": "Testing",
     "subscriptionsSupportLevel": "none",
-    "summary": "",
-    "supportEmail": "",
+    "summary": "A queue extension that specializes in a King of the Hill style queue.",
+    "supportEmail": "support@teamminz.com",
     "vendorCode": "",
     "version": "0.0.1",
-    "viewerSummary": "",
+    "viewerSummary": "Join the queue to compete for King of the Hill!",
     "viewerUrl": "https://localhost:8080/panel.html",
     "viewerUrls": {
       "mobile": "https://localhost:8080/mobile.html",
@@ -295,6 +323,6 @@
   },
   "frontendCommand": "npm run start",
   "frontendFolderName": "frontend",
-  "name": "QueuePlaceholderName",
+  "name": "King of the Hill",
   "version": 2
 }
