@@ -4,16 +4,16 @@
     "es2020": true
   },
   "extends": [
+    "eslint:recommended",
     "plugin:react/recommended",
     "plugin:jsdoc/recommended",
-    "google",
-    "eslint:recommended"
+    "google"
   ],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
     },
-    "ecmaVersion": 11,
+    "ecmaVersion": 2021,
     "sourceType": "module"
   },
   "plugins": ["react", "jsdoc"],
