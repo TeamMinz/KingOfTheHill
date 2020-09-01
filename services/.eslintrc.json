@@ -6,13 +6,13 @@
     "es2020": true
   },
   "extends": [
-    "google",
+    "eslint:recommended",
     "plugin:node/recommended",
     "plugin:jsdoc/recommended",
-    "eslint:recommended"
+    "google"
   ],
   "parserOptions": {
-    "ecmaVersion": 11
+    "ecmaVersion": 2021
   },
   "plugins": ["jsdoc", "node"],
   "rules": {

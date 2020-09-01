@@ -1,8 +1,13 @@
 {
   "name": "services",
-  "version": "1.0.0",
-  "description": "The Extension Backend Service (EBS) for the SmashQueue app.",
+  "version": "0.0.2",
+  "description": "The Extension Backend Service (EBS) for the King of the Hill app.",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TeamMinz/QueueExtension",
+    "directory": "services"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,7 +15,7 @@
   "license": "SEE LICENSE IN ../LICENSE",
   "devDependencies": {
     "cross-env": "^7.0.2",
-    "eslint": "^7.7.0",
+    "eslint": "^7.8.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-jsdoc": "^30.3.0",
     "eslint-plugin-node": "^11.1.0",
