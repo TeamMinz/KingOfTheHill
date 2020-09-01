@@ -1,6 +1,6 @@
 {
   "name": "services",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "description": "The Extension Backend Service (EBS) for the King of the Hill app.",
   "main": "index.js",
   "repository": {
