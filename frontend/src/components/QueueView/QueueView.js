@@ -99,6 +99,8 @@ const QueueView = (_props) => {
      */
     function handleAuthentication(auth) {
       authentication.setToken(auth.token, auth.userId);
+      setOpaqueID(authentication.getOpaqueId());
+      setUserID(authentication.getUserId());
 
       if (!FinishedLoading) {
         firstTimeSetup();
