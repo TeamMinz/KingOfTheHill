@@ -62,10 +62,7 @@ const QueueNotification = (_props) => {
     if (authentication.getUserId()) {
       return true;
     } else {
-      addNotification(
-          // eslint-disable-next-line max-len
-          'Click the gear in the top right and grant access under the manage access tab to be able to join!',
-      );
+      twitch.actions.requestIdShare();
       return false;
     }
   };
