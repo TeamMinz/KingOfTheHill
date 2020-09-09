@@ -1,6 +1,6 @@
 {
   "allowHttpBackend": false,
-  "backendCommand": "node backend.js",
+  "backendCommand": "node backend.js ",
   "backendFolderName": "services",
   "certificateExceptions": [
     {
@@ -88,28 +88,6 @@
       "orientation": "Portrait",
       "type": "dashboard",
       "viewerType": "Broadcaster"
-    },
-    {
-      "channelId": "26898606",
-      "configurationAnchor": "panel",
-      "displayChannelName": "tminz",
-      "features": {
-        "isBitsEnabled": true,
-        "isChatEnabled": false,
-        "isSubscriptionStatusAvailable": false
-      },
-      "frameSize": {
-        "width": 1280,
-        "height": 720
-      },
-      "id": "6",
-      "isPopout": false,
-      "label": "",
-      "linked": false,
-      "linkedUserId": "",
-      "orientation": "Portrait",
-      "type": "component",
-      "viewerType": "Logged-In Viewer"
     },
     {
       "channelId": "26898606",

@@ -15,6 +15,7 @@ const MatchupController = (props) => {
 
   const [CurrentMatchup, setCurrentMatchup] = useState(null);
   const [FinishedLoading, setFinishedLoading] = useState(false);
+  const [ShowForfeitMenu, setShowForfeitMenu] = useState(false);
 
   /**
    * Sends request to start a new matchup
@@ -51,6 +52,27 @@ const MatchupController = (props) => {
             setCurrentMatchup(null);
           // console.log(`${winner} has been declared the winner.`);
           } else {
+          // TODO : add logging.
+            console.log('there was an error processing the request.');
+          }
+        });
+  };
+
+  /**
+   * Sends a request to forfeit a player.
+   *
+   * @param {string} player the player to forefeit: 'challenger' or 'champion'
+   */
+  const forfeitPlayer = (player) => {
+    authentication
+        .makeCall('/matchup/current/forfeit', 'POST', {
+          player,
+        })
+        .then((resp) => {
+          if (resp.ok) {
+            setCurrentMatchup(null);
+          } else {
+          // TODO : add logging.
             console.log('there was an error processing the request.');
           }
         });
@@ -67,6 +89,8 @@ const MatchupController = (props) => {
               resp.json().then((resp) => {
                 setCurrentMatchup(resp.matchup);
               });
+            } else {
+              // TODO: add logging.
             }
           });
 
@@ -95,6 +119,34 @@ const MatchupController = (props) => {
         >
           {CurrentMatchup.challenger.displayName}
         </button>
+        {!ShowForfeitMenu && (
+          <button
+            onClick={() => {
+              setShowForfeitMenu(true);
+            }}
+          >
+            Forfeit a player
+          </button>
+        )}
+        {ShowForfeitMenu && (
+          <div>
+            Pick a player to forfeit:
+            <button
+              onClick={() => {
+                forfeitPlayer('champion');
+              }}
+            >
+              {CurrentMatchup.champion.displayName}
+            </button>
+            <button
+              onClick={() => {
+                forfeitPlayer('challenger');
+              }}
+            >
+              {CurrentMatchup.challenger.displayName}
+            </button>
+          </div>
+        )}
       </div>
     );
   } else {
