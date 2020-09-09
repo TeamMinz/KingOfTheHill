@@ -7,6 +7,8 @@ const routes = require('./routes');
 const config = require('./config.json');
 const {SECRET} = require('./util/options');
 
+process.env.NODE_ENV = config.mode;
+
 if (process.env.NODE_ENV == 'development') {
   // We will be using self signed certs in development.
   // We need to make sure that we specifically allow that.
@@ -21,7 +23,7 @@ const TLS_CA_PATH = config.tls.caPath;
 
 const TLS = {
   cert: fs.readFileSync(TLS_CERT_PATH),
-  key: fs.readFileSync(TLS_KEY_PATH)
+  key: fs.readFileSync(TLS_KEY_PATH),
 };
 
 if (process.env.NODE_ENV != 'development') {

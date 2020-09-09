@@ -6,6 +6,12 @@ import MatchupController from '../MatchupController/MatchupController.js';
 import '../App/App.css';
 import './LiveConfigPage.css';
 
+/**
+ * Live config page react hook.
+ *
+ * @param {*} props properties of the live config page.
+ * @returns {any} the html to be rendered.
+ */
 const LiveConfigPage = (props) => {
   // Twitch & Authentication stuff.
   const twitch = window.Twitch ? window.Twitch.ext : null;
