@@ -17,11 +17,16 @@ if (process.env.NODE_ENV == 'development') {
 
 const TLS_CERT_PATH = config.tls.certPath;
 const TLS_KEY_PATH = config.tls.keyPath;
+const TLS_CA_PATH = config.tls.caPath;
 
 const TLS = {
   cert: fs.readFileSync(TLS_CERT_PATH),
-  key: fs.readFileSync(TLS_KEY_PATH),
+  key: fs.readFileSync(TLS_KEY_PATH)
 };
+
+if (process.env.NODE_ENV != 'development') {
+  TLS.ca = fs.readFileSync(TLS_CA_PATH);
+}
 
 // Create some middleware to help authorize the requests.
 
