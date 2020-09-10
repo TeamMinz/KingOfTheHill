@@ -7,6 +7,8 @@
 .MessageTextBox {
   display: block;
   color: #232127;
+
+  max-width: 95%;
   
   border-color: #7D5BBE;
   border-width: 2px;
