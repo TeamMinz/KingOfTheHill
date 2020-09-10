@@ -5,6 +5,7 @@ import Authentication from '../../util/Authentication/Authentication';
 import SelectedMessageForm from './components/SelectedMessageForm/SelectedMessageForm';
 // eslint-disable-next-line max-len
 import MatchupController from './components/MatchupController/MatchupController';
+import QueueController from './components/QueueController/QueueController';
 
 import '../App/App.css';
 import './LiveConfigPage.css';
@@ -52,6 +53,7 @@ const LiveConfigPage = (props) => {
       >
         <SelectedMessageForm />
         <MatchupController />
+        <QueueController />
       </div>
     );
   } else {

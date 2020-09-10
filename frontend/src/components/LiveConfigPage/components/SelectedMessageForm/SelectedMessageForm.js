@@ -46,11 +46,7 @@ const SelectedMessageForm = (props) => {
 
     if (FinishedLoading) {
       authentication
-          .makeCall(
-              '/matchup/message/set',
-              'POST',
-              {message: SelectionMessage},
-          )
+          .makeCall('/matchup/message/set', 'POST', {message: SelectionMessage})
           .then((resp) => {
             if (resp.ok) {
               resp.json().then((json) => {
@@ -80,16 +76,14 @@ const SelectedMessageForm = (props) => {
       authentication.setToken(auth.token, auth.userId);
 
       if (!FinishedLoading) {
-        authentication
-            .makeCall('/matchup/message/get')
-            .then((resp) => {
-              if (resp.ok) {
-                resp.json().then((json) => {
-                  setSelectionMessage(json.message);
-                  setFinishedLoading(true);
-                });
-              }
+        authentication.makeCall('/matchup/message/get').then((resp) => {
+          if (resp.ok) {
+            resp.json().then((json) => {
+              setSelectionMessage(json.message);
+              setFinishedLoading(true);
             });
+          }
+        });
       }
     }
 
@@ -100,26 +94,31 @@ const SelectedMessageForm = (props) => {
 
   if (FinishedLoading) {
     return (
-      <form
-        method="POST"
-        className="SelectedMessageForm"
-        onSubmit={updateSelectionMessage}
+      <div
+        className="Well"
       >
-        <ErrorMessage showError={ShowError} />
-        <textarea
-          className="MessageTextBox"
-          type="text"
-          name="message"
-          rows="5"
-          cols="30"
-          defaultValue={SelectionMessage}
-          onChange={storeSelectionMessage}
-        />
-        <input
-          className="DefaultButton"
-          type="submit"
-          value="Update Message"></input>
-      </form>
+        <form
+          method="POST"
+          className="SelectedMessageForm"
+          onSubmit={updateSelectionMessage}
+        >
+          <ErrorMessage showError={ShowError} />
+          <textarea
+            className="MessageTextBox"
+            type="text"
+            name="message"
+            rows="5"
+            cols="30"
+            defaultValue={SelectionMessage}
+            onChange={storeSelectionMessage}
+          />
+          <input
+            className="DefaultButton"
+            type="submit"
+            value="Update Message"
+          ></input>
+        </form>
+      </div>
     );
   } else {
     return null;
