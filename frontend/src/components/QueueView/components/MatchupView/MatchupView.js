@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import '../App/App.css';
+import '../../../App/App.css';
 import './MatchupView.css';
-import Authentication from '../../util/Authentication/Authentication';
+import Authentication from '../../../../util/Authentication/Authentication';
 
 /**
  * Component to display current matchup/champion
