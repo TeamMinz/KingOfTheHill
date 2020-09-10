@@ -1,11 +1,60 @@
 .LiveConfigPage {
   font-family: Arial, Helvetica, sans-serif;
+
+  margin-left: auto;
+  margin-right: auto;
+
+  text-align: center;
+
+  padding: 5px;
 }
 
 .LiveConfigPage-light {
   color: #232127;
+  background-color: #e5e3e8;
+  
 }
 
 .LiveConfigPage-dark {
   color: #e5e3e8;
+  background-color: #232127;
+}
+
+.DefaultButton {
+  display:inline-block;
+  margin: 5px;
+
+  background-color: #9147FF;
+  color: white;
+  padding: 7px 6px 7px 6px;
+
+  border: none;
+  border-radius: 2px;
+}
+
+.DefaultButton:hover {
+  background-color: #7D5BBE;
+}
+
+.DefaultButton:focus {
+  outline:none;
+}
+
+.DefaultButton:active {
+  background-color: #604691;
+}
+
+.Well {
+  display: block;
+  width:90%;
+  
+  background-color: #b9b8bb;
+  
+  font-size: medium;
+  
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0.5em;
+
+  border-radius: 4px;
 }

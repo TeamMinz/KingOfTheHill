@@ -104,6 +104,12 @@ matchup.get('/current/get', (req, res) => {
 matchup.post('/current/report', isBroadcaster, (req, res) => {
   const {channel_id: channelId} = req.twitch;
 
+  // Error out if we don't have the required parameters.
+  if (!req.body.winner) {
+    res.sendStatus(400);
+    return;
+  }
+
   if (getMatchup(channelId)) {
     const previousMatchup = getMatchup(channelId);
     // Set the winner of the matchup as the new champion.
@@ -113,6 +119,34 @@ matchup.post('/current/report', isBroadcaster, (req, res) => {
       reportWinner(channelId, previousMatchup.champion);
     }
     // reset the matchup.
+    setMatchup(channelId, null);
+    res.sendStatus(200);
+  } else {
+    res.sendStatus(500);
+  }
+});
+
+// Route for reporting a forfeit
+matchup.post('/current/forfeit', isBroadcaster, (req, res) => {
+  const {channel_id: channelId} = req.twitch;
+  const matchup = getMatchup(channelId);
+
+  // Error out if we don't have the required parameters.
+  if (!req.body.player) {
+    res.sendStatus(400);
+    return;
+  }
+
+  if (matchup) {
+    const queue = getQueue(channelId);
+
+    if (req.body.player == 'challenger') {
+      queue.insert(0, matchup.champion);
+    } else {
+      queue.insert(0, matchup.challenger);
+      setChampion(channelId, null);
+    }
+    // reset the matchup
     setMatchup(channelId, null);
     res.sendStatus(200);
   } else {
