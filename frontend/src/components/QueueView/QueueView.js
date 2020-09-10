@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import '../App/App.css';
 import './QueueView.css';
 import Authentication from '../../util/Authentication/Authentication';
-import MatchupView from '../MatchupView/MatchupView';
+import MatchupView from './components/MatchupView/MatchupView';
 
 /**
  * Component to Queue Tab
