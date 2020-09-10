@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import Authentication from '../../util/Authentication/Authentication';
+import Authentication from '../../../../util/Authentication/Authentication';
 import './MatchupController.css';
+import '../../LiveConfigPage.css';
 
 /**
  * Matchup Component for Config
@@ -100,62 +101,69 @@ const MatchupController = (props) => {
     }
   });
 
-  if (CurrentMatchup != null && FinishedLoading) {
-    return (
-      <div className="MatchupController">
-        Declare a winner:
-        <button
-          onClick={() => {
-            declareWinner('champion');
-          }}
-        >
-          {CurrentMatchup.champion.displayName}
-        </button>
-        vs
-        <button
-          onClick={() => {
-            declareWinner('challenger');
-          }}
-        >
-          {CurrentMatchup.challenger.displayName}
-        </button>
-        {!ShowForfeitMenu && (
+  // Stuff for rendering.
+
+  const matchupView = null;
+
+  const matchupController = (CurrentMatchup != null && FinishedLoading && (
+    <div>
+      <button
+        className="DefaultButton"
+        onClick={() => {
+          declareWinner('champion');
+        }}
+      >
+        {CurrentMatchup.champion.displayName}
+      </button>
+      vs
+      <button
+        className="DefaultButton"
+        onClick={() => {
+          declareWinner('challenger');
+        }}
+      >
+        {CurrentMatchup.challenger.displayName}
+      </button>
+      {(ShowForfeitMenu && (
+        <div>
           <button
+            className="DefaultButton"
             onClick={() => {
-              setShowForfeitMenu(true);
+              forfeitPlayer('champion');
             }}
           >
-            Forfeit a player
+            {CurrentMatchup.champion.displayName}
           </button>
-        )}
-        {ShowForfeitMenu && (
-          <div>
-            Pick a player to forfeit:
-            <button
-              onClick={() => {
-                forfeitPlayer('champion');
-              }}
-            >
-              {CurrentMatchup.champion.displayName}
-            </button>
-            <button
-              onClick={() => {
-                forfeitPlayer('challenger');
-              }}
-            >
-              {CurrentMatchup.challenger.displayName}
-            </button>
-          </div>
-        )}
-      </div>
-    );
-  } else {
-    return (
-      <div className="MatchupController">
-        <button onClick={startMatchup}>Start Matchup!</button>
-      </div>
-    );
-  }
+          or
+          <button
+            className="DefaultButton"
+            onClick={() => {
+              forfeitPlayer('challenger');
+            }}
+          >
+            {CurrentMatchup.challenger.displayName}
+          </button>
+        </div>
+      )) || (
+        <button
+          className="DefaultButton"
+          onClick={() => {
+            setShowForfeitMenu(true);
+          }}
+        >
+          Forfeit a player
+        </button>
+      )}
+    </div>
+  )) || (
+    <div className="MatchupController">
+      <button className="DefaultButton" onClick={startMatchup}>
+        Start Matchup!
+      </button>
+    </div>
+  );
+
+  return <div className="Well">{matchupController}</div>;
 };
 
 export default MatchupController;

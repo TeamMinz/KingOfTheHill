@@ -1,5 +1,6 @@
-import Authentication from '../../util/Authentication/Authentication';
+import Authentication from '../../../../util/Authentication/Authentication';
 import React, {useState, useEffect} from 'react';
+import '../../LiveConfigPage.css';
 import './SelectedMessageForm.css';
 
 /**
@@ -105,10 +106,8 @@ const SelectedMessageForm = (props) => {
         onSubmit={updateSelectionMessage}
       >
         <ErrorMessage showError={ShowError} />
-
-        <label htmlFor="message">Set your selection message:</label>
-
         <textarea
+          className="MessageTextBox"
           type="text"
           name="message"
           rows="5"
@@ -116,8 +115,10 @@ const SelectedMessageForm = (props) => {
           defaultValue={SelectionMessage}
           onChange={storeSelectionMessage}
         />
-        <br />
-        <input type="submit" value="Update Message"></input>
+        <input
+          className="DefaultButton"
+          type="submit"
+          value="Update Message"></input>
       </form>
     );
   } else {
