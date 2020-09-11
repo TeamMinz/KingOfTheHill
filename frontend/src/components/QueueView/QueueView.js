@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import '../App/App.css';
 import './QueueView.css';
 import Authentication from '../../util/Authentication/Authentication';
@@ -12,15 +12,14 @@ import MatchupView from './components/MatchupView/MatchupView';
  */
 const QueueView = (_props) => {
   const twitch = window.Twitch ? window.Twitch.ext : null;
-  const authentication = new Authentication();
+  const authRef = useRef(new Authentication());
+  const authentication = authRef.current;
 
   // state stuff
   const [ButtonText, setButtonText] = useState('Loading...');
   const [ButtonAction, setButtonAction] = useState(() => {});
   const [FinishedLoading, setFinishedLoading] = useState(false);
   const [Queue, setQueue] = useState([]);
-  const [opaqueUserId, setOpaqueID] = useState(null);
-  const [UserId, setUserID] = useState(null);
 
   // helper functions
   /**
@@ -42,6 +41,25 @@ const QueueView = (_props) => {
       }
     });
   }
+
+  /**
+   * Interfaces with the backend to remove someone from the queue.
+   * @param {*} opaqueUserId The user to remove from the queue.
+   */
+  const kickPlayer = (opaqueUserId) => {
+    console.log(authentication);
+    console.log('Kicking player ' + opaqueUserId);
+    authentication.makeCall('/queue/kick', 'POST', {
+      kickTarget: opaqueUserId,
+    }).then((resp) => {
+      if (!resp.ok) {
+        // TODO: log error.
+      }
+    }).catch((err) => {
+      // TODO: log error.
+      console.log(err);
+    });
+  };
 
   /**
    * Adds the User to the Queue
@@ -99,8 +117,6 @@ const QueueView = (_props) => {
      */
     function handleAuthentication(auth) {
       authentication.setToken(auth.token, auth.userId);
-      setOpaqueID(authentication.getOpaqueId());
-      setUserID(authentication.getUserId());
 
       if (!FinishedLoading) {
         firstTimeSetup();
@@ -112,8 +128,6 @@ const QueueView = (_props) => {
      * Sets the Users Opaque and User ID
      */
     function firstTimeSetup() {
-      setOpaqueID(authentication.getOpaqueId());
-      setUserID(authentication.getUserId());
       fetchQueue();
     }
 
@@ -156,15 +170,29 @@ const QueueView = (_props) => {
     }
   }, [Queue]);
 
+  // console.log(authentication);
+
   const queueEntries = Queue ?
-    Queue.map((challenger, index) => (
-      <li key={index}>{challenger.displayName}</li>
-    )) :
+    Queue.map((challenger, index) => {
+      // console.log(authentication);
+      return (<li key={index}>
+        {challenger.displayName}
+        {authentication.isModerator() && (
+          <button
+            style={{fontSize: '5rem', border: 'none'}}
+            onClick={() => {
+              kickPlayer(challenger.opaqueUserId);
+            }}>
+              &times;
+          </button>
+        )}
+      </li>);
+    }) :
     [];
 
   const userEntry = Queue ?
     Queue.findIndex((challenger) => {
-      return challenger.opaqueUserId == opaqueUserId;
+      return challenger.opaqueUserId == authentication.getOpaqueId();
     }) :
     -1;
 
@@ -191,7 +219,7 @@ const QueueView = (_props) => {
         <button
           className="QueueButton"
           onClick={ButtonAction}
-          disabled={!UserId}
+          disabled={!authentication.getUserId()}
         >
           {ButtonText}
         </button>
