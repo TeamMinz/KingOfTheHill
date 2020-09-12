@@ -7,6 +7,7 @@ const routes = require('./routes');
 const config = require('./config.json');
 const {SECRET} = require('./util/options');
 
+process.env.NODE_ENV = config.mode;
 if (process.env.NODE_ENV == 'development') {
   // We will be using self signed certs in development.
   // We need to make sure that we specifically allow that.

@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import Authentication from '../../util/Authentication/Authentication';
 import SelectedMessageForm from '../SelectedMessageForm/SelectedMessageForm.js';
 import MatchupController from '../MatchupController/MatchupController.js';
-
+import RejoinController from '../RejoinController/RejoinController.js';
 import '../App/App.css';
 import './LiveConfigPage.css';
 
@@ -46,6 +46,7 @@ const LiveConfigPage = (props) => {
       >
         <SelectedMessageForm />
         <MatchupController />
+        <RejoinController />
       </div>
     );
   } else {

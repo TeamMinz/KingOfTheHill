@@ -341,13 +341,13 @@
     "canInstall": true,
     "configUrl": "https://localhost:8080/config.html",
     "configurationLocation": "none",
-    "description": "Allow your viewers to battle it out in a King of the Hill style match up!\nKeep track of the current king and their win streak!\n\nFuture Plans:\n* Leaderboard support.\n* Subscriber only mode.\n* Bits support.\n* Further customization.",
+    "description": "Allow your viewers to battle it out in a King of the Hill style match up!\nKeep track of the current king and their win streak!\n\nNeed help? Join our discord: https://discord.gg/9FwRsx6\nOr email our support email: support@teamminz.com\n\nFuture Plans:\n* Leaderboard support.\n* Subscriber only mode.\n* Bits support.\n* Further customization.",
     "eulaTosUrl": "",
     "hasChatSupport": false,
     "iconUrl": "https://extensions-discovery-images.twitch.tv/z1eskwyierovbt4gz8zbq1r45tne31/0.0.1/logo79644e4d-0d78-4a2b-8ae9-fda7c502b43e",
     "iconUrls": {
       "100x100": "https://extensions-discovery-images.twitch.tv/z1eskwyierovbt4gz8zbq1r45tne31/0.0.1/logo79644e4d-0d78-4a2b-8ae9-fda7c502b43e",
-      "24x24": "https://extensions-discovery-images.twitch.tv/z1eskwyierovbt4gz8zbq1r45tne31/0.0.1/taskbarbcc721a6-0da6-455e-9854-f72429d44928",
+      "24x24": "https://extensions-discovery-images.twitch.tv/z1eskwyierovbt4gz8zbq1r45tne31/0.0.2/taskbar1a5b0dab-749a-4c53-a666-381e86a8318b",
       "300x200": "https://extensions-discovery-images.twitch.tv/z1eskwyierovbt4gz8zbq1r45tne31/0.0.1/discovery86cb94d9-1ad7-4209-b787-23a3e92936a0"
     },
     "id": "z1eskwyierovbt4gz8zbq1r45tne31",
