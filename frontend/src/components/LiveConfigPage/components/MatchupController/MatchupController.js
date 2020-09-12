@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import Authentication from '../../util/Authentication/Authentication';
+import Authentication from '../../../../util/Authentication/Authentication';
 import './MatchupController.css';
+import '../../LiveConfigPage.css';
 
 /**
  * Matchup Component for Config
@@ -15,6 +16,7 @@ const MatchupController = (props) => {
 
   const [CurrentMatchup, setCurrentMatchup] = useState(null);
   const [FinishedLoading, setFinishedLoading] = useState(false);
+  const [ShowForfeitMenu, setShowForfeitMenu] = useState(false);
 
   /**
    * Sends request to start a new matchup
@@ -51,6 +53,27 @@ const MatchupController = (props) => {
             setCurrentMatchup(null);
           // console.log(`${winner} has been declared the winner.`);
           } else {
+          // TODO : add logging.
+            console.log('there was an error processing the request.');
+          }
+        });
+  };
+
+  /**
+   * Sends a request to forfeit a player.
+   *
+   * @param {string} player the player to forefeit: 'challenger' or 'champion'
+   */
+  const forfeitPlayer = (player) => {
+    authentication
+        .makeCall('/matchup/current/forfeit', 'POST', {
+          player,
+        })
+        .then((resp) => {
+          if (resp.ok) {
+            setCurrentMatchup(null);
+          } else {
+          // TODO : add logging.
             console.log('there was an error processing the request.');
           }
         });
@@ -67,6 +90,8 @@ const MatchupController = (props) => {
               resp.json().then((resp) => {
                 setCurrentMatchup(resp.matchup);
               });
+            } else {
+              // TODO: add logging.
             }
           });
 
@@ -76,34 +101,69 @@ const MatchupController = (props) => {
     }
   });
 
-  if (CurrentMatchup != null && FinishedLoading) {
-    return (
-      <div className="MatchupController">
-        Declare a winner:
+  // Stuff for rendering.
+
+  const matchupView = null;
+
+  const matchupController = (CurrentMatchup != null && FinishedLoading && (
+    <div>
+      <button
+        className="DefaultButton"
+        onClick={() => {
+          declareWinner('champion');
+        }}
+      >
+        {CurrentMatchup.champion.displayName}
+      </button>
+      vs
+      <button
+        className="DefaultButton"
+        onClick={() => {
+          declareWinner('challenger');
+        }}
+      >
+        {CurrentMatchup.challenger.displayName}
+      </button>
+      {(ShowForfeitMenu && (
+        <div>
+          <button
+            className="DefaultButton"
+            onClick={() => {
+              forfeitPlayer('champion');
+            }}
+          >
+            {CurrentMatchup.champion.displayName}
+          </button>
+          or
+          <button
+            className="DefaultButton"
+            onClick={() => {
+              forfeitPlayer('challenger');
+            }}
+          >
+            {CurrentMatchup.challenger.displayName}
+          </button>
+        </div>
+      )) || (
         <button
+          className="DefaultButton"
           onClick={() => {
-            declareWinner('champion');
+            setShowForfeitMenu(true);
           }}
         >
-          {CurrentMatchup.champion.displayName}
+          Forfeit a player
         </button>
-        vs
-        <button
-          onClick={() => {
-            declareWinner('challenger');
-          }}
-        >
-          {CurrentMatchup.challenger.displayName}
-        </button>
-      </div>
-    );
-  } else {
-    return (
-      <div className="MatchupController">
-        <button onClick={startMatchup}>Start Matchup!</button>
-      </div>
-    );
-  }
+      )}
+    </div>
+  )) || (
+    <div className="MatchupController">
+      <button className="DefaultButton" onClick={startMatchup}>
+        Start Matchup!
+      </button>
+    </div>
+  );
+
+  return <div className="Well">{matchupController}</div>;
 };
 
 export default MatchupController;

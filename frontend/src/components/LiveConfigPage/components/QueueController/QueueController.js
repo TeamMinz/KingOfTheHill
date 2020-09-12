@@ -1,41 +1,36 @@
+import Authentication from '../../../../util/Authentication/Authentication';
 import React, {useState, useEffect} from 'react';
-import '../App/App.css';
-import './QueueView.css';
-import Authentication from '../../util/Authentication/Authentication';
-import MatchupView from './components/MatchupView/MatchupView';
+import '../../../App/App.css';
 
 /**
- * Component to Queue Tab
+ * Component that shows your current position in queue,
+ * then allows you to join / leave it, from the live config page.
  *
- * @param {object} _props - components
- * @returns {string} html markup for view
+ * @param {*} props properties passed to the component.
+ * @returns {Function} a cleanup function.
  */
-const QueueView = (_props) => {
+const QueueController = (props) => {
   const twitch = window.Twitch ? window.Twitch.ext : null;
   const authentication = new Authentication();
 
-  // state stuff
+  // State stuff.
+  const [FinishedLoading, setFinishedLoading] = useState(false);
   const [ButtonText, setButtonText] = useState('Loading...');
   const [ButtonAction, setButtonAction] = useState(() => {});
-  const [FinishedLoading, setFinishedLoading] = useState(false);
   const [Queue, setQueue] = useState([]);
   const [opaqueUserId, setOpaqueID] = useState(null);
-  const [UserId, setUserID] = useState(null);
 
   // helper functions
   /**
    * Fethches the current queue from the backend.
    */
   function fetchQueue() {
-    authentication.makeCall('/queue/get', 'GET').then((resp) => {
+    console.log('fetching queue');
+
+    authentication.makeCall('/queue/get', 'GET').then(function(resp) {
       if (resp.ok) {
         resp.json().then((bodyData) => {
           const queue = bodyData.queue;
-
-          if (queue.includes(authentication.getOpaqueId())) {
-            setButtonText('Leave the Queue');
-            setButtonAction(() => LeaveQueue);
-          }
 
           setQueue(queue);
         });
@@ -72,7 +67,7 @@ const QueueView = (_props) => {
   };
 
   /**
-   * Custom Effect for QueueView
+   * Custom Effect for QueueController
    * Handles Twitch authentication and pubsubs
    *
    * @returns {Function} closing function to stop listening to twitch broadcasts
@@ -100,7 +95,6 @@ const QueueView = (_props) => {
     function handleAuthentication(auth) {
       authentication.setToken(auth.token, auth.userId);
       setOpaqueID(authentication.getOpaqueId());
-      setUserID(authentication.getUserId());
 
       if (!FinishedLoading) {
         firstTimeSetup();
@@ -112,18 +106,21 @@ const QueueView = (_props) => {
      * Sets the Users Opaque and User ID
      */
     function firstTimeSetup() {
-      setOpaqueID(authentication.getOpaqueId());
-      setUserID(authentication.getUserId());
       fetchQueue();
+
+      console.log('running first time setup');
     }
 
     if (twitch) {
       twitch.onAuthorized(handleAuthentication);
-      twitch.onVisibilityChanged((isVisible, context) => {
-        if (isVisible) {
-          twitch.listen('broadcast', handleMessage);
-        }
-      });
+
+      if (FinishedLoading) {
+        twitch.onVisibilityChanged((isVisible, context) => {
+          if (isVisible) {
+            twitch.listen('broadcast', handleMessage);
+          }
+        });
+      }
     }
 
     if (FinishedLoading) {
@@ -135,16 +132,13 @@ const QueueView = (_props) => {
     }
   };
 
-  // called when the component mounts.
-  useEffect(QueueEffect, [Queue, FinishedLoading]);
-
   // Controls the join / leave button
   useEffect(() => {
     if (FinishedLoading) {
       if (
         Queue.findIndex(
             (challenger) =>
-              challenger.opaqueUserId == authentication.getOpaqueId(),
+              challenger.opaqueUserId == opaqueUserId,
         ) == -1
       ) {
         setButtonAction(() => JoinQueue);
@@ -156,48 +150,31 @@ const QueueView = (_props) => {
     }
   }, [Queue]);
 
-  const queueEntries = Queue ?
-    Queue.map((challenger, index) => (
-      <li key={index}>{challenger.displayName}</li>
-    )) :
-    [];
+  // called when the component mounts.
+  useEffect(QueueEffect, [Queue, FinishedLoading]);
 
-  const userEntry = Queue ?
-    Queue.findIndex((challenger) => {
-      return challenger.opaqueUserId == opaqueUserId;
-    }) :
-    -1;
+  if (FinishedLoading) {
+    const userEntry = Queue ?
+      Queue.findIndex((challenger) => {
+        return challenger.opaqueUserId == opaqueUserId;
+      }) :
+      -1;
 
-  return (
-    <div className="QueueView">
-      <MatchupView />
-      <div className="Queue">
-        {queueEntries && queueEntries.length > 0 && (
-          <div>
-            <ol>{queueEntries.slice(0, 5)}</ol>
-            {userEntry > 4 && (
-              <div>
-                ...
-                <br />
-                <ol start={userEntry + 1}>
-                  <li key={userEntry}>{Queue[userEntry].displayName}</li>
-                </ol>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-      <div className="Join">
-        <button
-          className="QueueButton"
-          onClick={ButtonAction}
-          disabled={!UserId}
-        >
+    return (
+      <div className="Well">
+        <span>
+          {(userEntry == -1 && 'You\'re not currently in the queue.') ||
+            `You are #${userEntry + 1} in the queue`}
+        </span>
+
+        <button className="DefaultButton" onClick={ButtonAction}>
           {ButtonText}
         </button>
       </div>
-    </div>
-  );
+    );
+  } else {
+    return null;
+  }
 };
 
-export default QueueView;
+export default QueueController;

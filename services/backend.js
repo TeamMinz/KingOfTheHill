@@ -22,7 +22,7 @@ const TLS_CA_PATH = config.tls.caPath;
 
 const TLS = {
   cert: fs.readFileSync(TLS_CERT_PATH),
-  key: fs.readFileSync(TLS_KEY_PATH)
+  key: fs.readFileSync(TLS_KEY_PATH),
 };
 
 if (process.env.NODE_ENV != 'development') {
