@@ -1,4 +1,5 @@
 {
+  "mode": "development",
   "tls": {
     "certPath": "../conf/.crt",
     "keyPath": "../conf/.key"

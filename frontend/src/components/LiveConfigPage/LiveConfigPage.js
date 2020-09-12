@@ -1,11 +1,22 @@
 import React, {useState, useEffect} from 'react';
 import Authentication from '../../util/Authentication/Authentication';
-import SelectedMessageForm from '../SelectedMessageForm/SelectedMessageForm.js';
-import MatchupController from '../MatchupController/MatchupController.js';
-import RejoinController from '../RejoinController/RejoinController.js';
+
+// eslint-disable-next-line max-len
+import SelectedMessageForm from './components/SelectedMessageForm/SelectedMessageForm';
+// eslint-disable-next-line max-len
+import MatchupController from './components/MatchupController/MatchupController';
+import QueueController from './components/QueueController/QueueController';
+import RejoinController from './components/RejoinController/RejoinController';
+
 import '../App/App.css';
 import './LiveConfigPage.css';
 
+/**
+ * Live config page react hook.
+ *
+ * @param {*} props properties of the live config page.
+ * @returns {any} the html to be rendered.
+ */
 const LiveConfigPage = (props) => {
   // Twitch & Authentication stuff.
   const twitch = window.Twitch ? window.Twitch.ext : null;
@@ -38,15 +49,13 @@ const LiveConfigPage = (props) => {
   if (FinishedLoading) {
     return (
       <div
-        className={
-          Theme === 'light' ?
-            'LiveConfigPage-light' :
-            'LiveConfigPage-dark'
-        }
+        // eslint-disable-next-line max-len
+        className={`LiveConfigPage ${Theme === 'light' ? 'LiveConfigPage-light' : 'LiveConfigPage-dark'}`}
       >
         <SelectedMessageForm />
         <MatchupController />
         <RejoinController />
+        <QueueController />
       </div>
     );
   } else {

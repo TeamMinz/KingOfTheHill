@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import Authentication from '../../util/Authentication/Authentication';
+import Authentication from '../../../../util/Authentication/Authentication';
 import './RejoinController.css';
 /**
  * Rejoin Component for LiveConfig
