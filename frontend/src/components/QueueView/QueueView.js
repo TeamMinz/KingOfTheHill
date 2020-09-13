@@ -176,27 +176,27 @@ const QueueView = (_props) => {
 
   // console.log(authentication);
 
+  const createUserEntry = (challenger, index) => {
+    return (
+      <li key={index}>
+        {challenger.displayName}
+        {authentication.isModerator() && (
+          <a
+            className="KickButton"
+            style={{float: 'right'}}
+            onClick={() => {
+              kickPlayer(challenger.opaqueUserId);
+            }}
+          >
+              &times;
+          </a>
+        )}
+      </li>
+    );
+  };
+
   const queueEntries = Queue ?
-    Queue.map((challenger, index) => {
-      // console.log(authentication);
-      return (
-        <li key={index}>
-          {challenger.displayName}
-          {authentication.isModerator() && (
-            <a
-              className="KickButton"
-              style={{float: 'right'}}
-              onClick={() => {
-                kickPlayer(challenger.opaqueUserId);
-              }}
-            >
-                &times;
-            </a>
-          )}
-        </li>
-      );
-    }) :
-    [];
+    Queue.map(createUserEntry) : [];
 
   const userEntry = Queue ?
     Queue.findIndex((challenger) => {
@@ -216,7 +216,16 @@ const QueueView = (_props) => {
                 ...
                 <br />
                 <ol start={userEntry + 1}>
-                  <li key={userEntry}>{Queue[userEntry].displayName}</li>
+                  {createUserEntry(Queue[userEntry], userEntry)}
+                </ol>
+              </div>
+            )}
+            {(userEntry <= 4 && Queue.length > 5) && (
+              <div>
+                ...
+                <br />
+                <ol start={Queue.length}>
+                  {createUserEntry(Queue[Queue.length - 1], Queue.length - 1)}
                 </ol>
               </div>
             )}
