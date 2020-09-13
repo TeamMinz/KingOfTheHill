@@ -1,5 +1,6 @@
 import Authentication from '../../../../util/Authentication/Authentication';
 import React, {useState, useEffect} from 'react';
+import Collapsible from 'react-collapsible';
 import '../../../App/App.css';
 
 /**
@@ -162,14 +163,23 @@ const QueueController = (props) => {
 
     return (
       <div className="Well">
-        <span>
-          {(userEntry == -1 && 'You\'re not currently in the queue.') ||
-            `You are #${userEntry + 1} in the queue`}
-        </span>
+        <Collapsible
+          trigger="Selection Message"
+          triggerClassName="DropdownTrigger"
+          triggerOpenedClassName="DropdownTrigger--open"
+          easing="ease-out"
+          open={true}
+          transitionTime={250}
+        >
+          <span>
+            {(userEntry == -1 && 'You\'re not currently in the queue.') ||
+              `You are #${userEntry + 1} in the queue`}
+          </span>
 
-        <button className="DefaultButton" onClick={ButtonAction}>
-          {ButtonText}
-        </button>
+          <button className="DefaultButton" onClick={ButtonAction}>
+            {ButtonText}
+          </button>
+        </Collapsible>
       </div>
     );
   } else {

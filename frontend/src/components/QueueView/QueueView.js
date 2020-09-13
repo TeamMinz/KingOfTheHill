@@ -44,21 +44,25 @@ const QueueView = (_props) => {
 
   /**
    * Interfaces with the backend to remove someone from the queue.
+   *
    * @param {*} opaqueUserId The user to remove from the queue.
    */
   const kickPlayer = (opaqueUserId) => {
     console.log(authentication);
     console.log('Kicking player ' + opaqueUserId);
-    authentication.makeCall('/queue/kick', 'POST', {
-      kickTarget: opaqueUserId,
-    }).then((resp) => {
-      if (!resp.ok) {
+    authentication
+        .makeCall('/queue/kick', 'POST', {
+          kickTarget: opaqueUserId,
+        })
+        .then((resp) => {
+          if (!resp.ok) {
+          // TODO: log error.
+          }
+        })
+        .catch((err) => {
         // TODO: log error.
-      }
-    }).catch((err) => {
-      // TODO: log error.
-      console.log(err);
-    });
+          console.log(err);
+        });
   };
 
   /**
@@ -175,18 +179,21 @@ const QueueView = (_props) => {
   const queueEntries = Queue ?
     Queue.map((challenger, index) => {
       // console.log(authentication);
-      return (<li key={index}>
-        {challenger.displayName}
-        {authentication.isModerator() && (
-          <button
-            style={{fontSize: '5rem', border: 'none'}}
-            onClick={() => {
-              kickPlayer(challenger.opaqueUserId);
-            }}>
-              &times;
-          </button>
-        )}
-      </li>);
+      return (
+        <li key={index}>
+          {challenger.displayName}
+          {authentication.isModerator() && (
+            <button
+              style={{fontSize: '5rem', border: 'none', float: 'right'}}
+              onClick={() => {
+                kickPlayer(challenger.opaqueUserId);
+              }}
+            >
+                &times;
+            </button>
+          )}
+        </li>
+      );
     }) :
     [];
 
