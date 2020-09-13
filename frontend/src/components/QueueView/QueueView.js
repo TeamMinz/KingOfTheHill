@@ -183,14 +183,15 @@ const QueueView = (_props) => {
         <li key={index}>
           {challenger.displayName}
           {authentication.isModerator() && (
-            <button
-              style={{fontSize: '5rem', border: 'none', float: 'right'}}
+            <a
+              className="KickButton"
+              style={{float: 'right'}}
               onClick={() => {
                 kickPlayer(challenger.opaqueUserId);
               }}
             >
                 &times;
-            </button>
+            </a>
           )}
         </li>
       );
