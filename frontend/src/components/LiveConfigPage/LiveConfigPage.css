@@ -47,7 +47,8 @@
 .Well {
   display: block;
   width:90%;
-  
+  min-height: 2rem;
+
   background-color: #b9b8bb;
   
   font-size: medium;
@@ -57,4 +58,32 @@
   margin-bottom: 0.5em;
 
   border-radius: 4px;
+}
+
+.DropdownTrigger {
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.DropdownTrigger--open {
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.DropdownTrigger:after {
+  float: right;
+  margin-right: 1rem;
+  content: '+';
+  transform:rotateZ(360deg);
+  transition: transform 250ms;
+}
+
+.DropdownTrigger--open:after {
+  transform: rotateZ(180deg);
+  transition: transform 250ms;
+  content: '-';
+  margin-right: 1rem;
+  float: right;
 }
