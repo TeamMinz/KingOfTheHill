@@ -5,6 +5,7 @@ const matchup = express.Router();
 const {getQueue} = require('../controller/queue');
 const {getChampion, setChampion} = require('../controller/champion');
 const {getMatchup, setMatchup} = require('../controller/matchup');
+const twitch = require('../util/twitch');
 
 const DEFAULT_MESSAGE = 'You\'re up! Connect to the match now!';
 
@@ -15,8 +16,10 @@ const channelMessages = {};
  *
  * @param {string} channelId The channel to report the winner for.
  * @param {object} winner the user object of the winner of the matchup.
+ * @param {object} loser the user object of the loser of the matchup.
+ * @param {boolean} broadcasterLost If the broadcaster lost
  */
-function reportWinner(channelId, winner) {
+function reportWinner(channelId, winner, loser, broadcasterLost) {
   // Record this win.
   const champ = getChampion(channelId);
   if (champ && champ.user.opaqueUserId == winner.opaqueUserId) {
@@ -31,6 +34,14 @@ function reportWinner(channelId, winner) {
   // Put the winner back in as #0 in the queue.
   const queue = getQueue(channelId);
   queue.insert(0, winner);
+
+
+  console.log(broadcasterLost);
+  twitch.getbroadcasterConfig(channelId);
+  // If broadcaster lost set them back to their dedired position
+  if (broadcasterLost) {
+    twitch.getbroadcasterConfig(channelId);
+  }
 }
 
 /**
@@ -102,7 +113,7 @@ matchup.get('/current/get', (req, res) => {
 
 // Route for reporting the winner of the current mathcup
 matchup.post('/current/report', isBroadcaster, (req, res) => {
-  const {channel_id: channelId} = req.twitch;
+  const {channel_id: channelId, opaque_user_id: opaqueUserId} = req.twitch;
 
   // Error out if we don't have the required parameters.
   if (!req.body.winner) {
@@ -114,9 +125,23 @@ matchup.post('/current/report', isBroadcaster, (req, res) => {
     const previousMatchup = getMatchup(channelId);
     // Set the winner of the matchup as the new champion.
     if (req.body.winner == 'challenger') {
-      reportWinner(channelId, previousMatchup.challenger);
+      const broadcasterLost =
+        opaqueUserId === previousMatchup.champion.opaqueUserId;
+      reportWinner(
+          channelId,
+          previousMatchup.challenger,
+          previousMatchup.champion,
+          broadcasterLost,
+      );
     } else if (req.body.winner == 'champion') {
-      reportWinner(channelId, previousMatchup.champion);
+      const broadcasterLost =
+        opaqueUserId === previousMatchup.challenger.opaqueUserId;
+      reportWinner(
+          channelId,
+          previousMatchup.champion,
+          previousMatchup.challenger,
+          broadcasterLost,
+      );
     }
     // reset the matchup.
     setMatchup(channelId, null);
