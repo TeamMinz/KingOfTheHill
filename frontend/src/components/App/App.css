@@ -21,6 +21,7 @@
   --border-color: #5a5a5a;
   --background-color: #e5e3e8;
   --not-selected-color: #c5c4c5;
+  --well-color: #b9b8bb;
   background-color: var(--background-color);
   border-color: var(--border-color);
   color: var(--text-color);
@@ -31,6 +32,7 @@
   --border-color: #9b9a9a;
   --background-color: #232127;
   --not-selected-color: #3b383f;
+  --well-color:red;
   background-color: var(--background-color);
   border-color: var(--border-color);
   color: var(--text-color);
