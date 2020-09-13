@@ -5,6 +5,7 @@ const matchup = express.Router();
 const {getQueue} = require('../controller/queue');
 const {getChampion, setChampion} = require('../controller/champion');
 const {getMatchup, setMatchup} = require('../controller/matchup');
+const {isBroadcaster} = require('../util/middleware');
 
 const DEFAULT_MESSAGE = 'You\'re up! Connect to the match now!';
 
@@ -31,21 +32,6 @@ function reportWinner(channelId, winner) {
   // Put the winner back in as #0 in the queue.
   const queue = getQueue(channelId);
   queue.insert(0, winner);
-}
-
-/**
- * Rejects requests from people not the broadcaster.
- *
- * @param {express.Request} req request object
- * @param {express.Response} res response object
- * @param {Function} next next handler
- */
-function isBroadcaster(req, res, next) {
-  if (req.twitch.role == 'broadcaster') {
-    next();
-  } else {
-    res.sendStatus(401);
-  }
 }
 
 /**

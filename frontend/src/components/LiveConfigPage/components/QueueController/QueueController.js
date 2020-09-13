@@ -217,10 +217,10 @@ const QueueController = (props) => {
           transitionTime={250}
         >
           <div>
-            <span>
+            <p>
               {(userEntry == -1 && 'You\'re not currently in the queue.') ||
                 `You are #${userEntry + 1} in the queue`}
-            </span>
+            </p>
 
             {queueEntries && queueEntries.length > 0 && (
               <div>
