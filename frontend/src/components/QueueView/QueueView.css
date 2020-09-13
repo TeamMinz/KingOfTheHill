@@ -36,9 +36,8 @@
 }
 
 .KickButton {
-  float: 'right';
+  float: right;
   cursor: pointer;
-  font-size: '5rem';
   border: 'none';
 }
 
