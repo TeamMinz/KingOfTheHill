@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import Authentication from '../../../../util/Authentication/Authentication';
 import './RejoinController.css';
 /**
@@ -10,11 +10,12 @@ import './RejoinController.css';
  */
 const RejoinController = (props) => {
   const twitch = window.Twitch ? window.Twitch.ext : null;
-  const authentication = new Authentication();
+  const authRef = useRef(new Authentication());
+  const authentication = authRef.current;
 
   const [FinishedLoading, setFinishedLoading] = useState(false);
-  const [AutoRejoin, setAutoRejoin] = useState(false);
-  const [Position, setPosition] = useState('');
+  const [AutoRejoin, setAutoRejoin] = useState(props.AutoRejoin);
+  const [Position, setPosition] = useState(props.Position);
 
   // make sure we authorize when the page loads.
   useEffect(() => {
@@ -27,6 +28,20 @@ const RejoinController = (props) => {
       });
     }
   });
+
+  useEffect(() => {
+    if (FinishedLoading) {
+      twitch.rig.log(`${AutoRejoin} ${Position}`);
+      twitch.configuration.set(
+          'broadcaster',
+          '1.0',
+          JSON.stringify({
+            AutoRejoin,
+            Position,
+          }),
+      );
+    }
+  }, [Position, AutoRejoin]);
 
   return (
     <div className="RejoinController">

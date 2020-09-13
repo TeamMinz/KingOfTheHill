@@ -25,6 +25,8 @@ const LiveConfigPage = (props) => {
   // State stuff.
   const [FinishedLoading, setFinishedLoading] = useState(false);
   const [Theme, setTheme] = useState('light');
+  const [AutoRejoin, setAutoRejoin] = useState(false);
+  const [Position, setPosition] = useState('');
 
   // Initialize authentication & twitch stuff.
   useEffect(() => {
@@ -43,6 +45,34 @@ const LiveConfigPage = (props) => {
           setTheme(context.theme);
         }
       });
+
+      twitch.configuration.onChanged(() => {
+        twitch.rig.log(
+            `Anything: ${JSON.stringify(twitch.configuration.broadcaster)}`,
+        );
+        twitch.configuration.set(
+            'broadcaster',
+            '0.2',
+            JSON.stringify({
+              AutoRejoin: true,
+              Position: 2,
+            }),
+        );
+        if (twitch.configuration.broadcaster) {
+          try {
+            const config = JSON.parse(twitch.configuration.broadcaster.content);
+            twitch.rig.log(config);
+            if (typeof config === 'object') {
+              setAutoRejoin(config.rejoin || false);
+              setPosition(config.position || '');
+            } else {
+              console.log('invalid config');
+            }
+          } catch (e) {
+            console.log('invalid config');
+          }
+        }
+      });
     }
   });
 
@@ -50,11 +80,13 @@ const LiveConfigPage = (props) => {
     return (
       <div
         // eslint-disable-next-line max-len
-        className={`LiveConfigPage ${Theme === 'light' ? 'LiveConfigPage-light' : 'LiveConfigPage-dark'}`}
+        className={`LiveConfigPage ${
+          Theme === 'light' ? 'LiveConfigPage-light' : 'LiveConfigPage-dark'
+        }`}
       >
         <SelectedMessageForm />
         <MatchupController />
-        <RejoinController />
+        <RejoinController Position={Position} AutoRejoin={AutoRejoin} />
         <QueueController />
       </div>
     );

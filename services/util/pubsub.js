@@ -1,30 +1,6 @@
 const superagent = require('superagent');
-const jwt = require('jsonwebtoken');
-const {OWNER_ID, SECRET, CLIENT_ID} = require('./options');
-
-// const messageQueues = {};
-// const channelCooldowns = {};
-// const channelCooldownMs = 1000;
-const serverTokenDurationSec = 30;
-
-/**
- * @param {string} channelId the channel id
- * @returns {object} a signed authentication token.
- */
-function buildChannelAuth(channelId) {
-  const payload = {
-    exp: Math.floor(Date.now() / 1000) + serverTokenDurationSec,
-    channel_id: channelId,
-    user_id: OWNER_ID.toString(),
-    role: 'external',
-    pubsub_perms: {
-      send: ['*'],
-    },
-  };
-
-  return jwt.sign(payload, SECRET, {algorithm: 'HS256'});
-}
-
+const {CLIENT_ID} = require('./options');
+const {buildChannelAuth} = require('./twitch');
 /**
  * @param {*} channelId the channel to broadcast to
  * @param {object} message the message to broadcast
@@ -47,7 +23,7 @@ function broadcastMessage(channelId, message) {
       .set('Authorization', 'Bearer ' + buildChannelAuth(channelId))
       .send(JSON.stringify(body))
       .then(function(response) {
-        // eslint-disable-next-line max-len
+      // eslint-disable-next-line max-len
         console.log('Successfully published broadcast for channel: ' + channelId);
       })
       .catch(function(err) {
@@ -77,7 +53,7 @@ function broadcastUserSpecific(channelId, opaqueUserId, message) {
       .set('Authorization', 'Bearer ' + buildChannelAuth(channelId))
       .send(JSON.stringify(body))
       .then(function(response) {
-        // eslint-disable-next-line max-len
+      // eslint-disable-next-line max-len
         console.log('Successfully published broadcast for channel: ' + channelId);
       })
       .catch(function(err) {

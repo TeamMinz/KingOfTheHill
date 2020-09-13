@@ -318,8 +318,8 @@
     "bitsEnabled": true,
     "canInstall": true,
     "configUrl": "https://localhost:8080/config.html",
-    "configurationLocation": "none",
-    "description": "Allow your viewers to battle it out in a King of the Hill style match up!\nKeep track of the current king and their win streak!\n\nNeed help? Join our discord: https://discord.gg/9FwRsx6\nOr email our support email: support@teamminz.com\n\nFuture Plans:\n* Leaderboard support.\n* Subscriber only mode.\n* Bits support.\n* Further customization.",
+    "configurationLocation": "hosted",
+    "description": "Allow your viewers to battle it out in a King of the Hill style match up!\nKeep track of the current king and their win streak!\n\nNeed help? Join our discord: https://discord.gg/9FwRsx6\nOr email our support email: support@teamminz.com\n\nChangelog:\n0.0.2 - \n\n\nFuture Plans:\n* Leaderboard support.\n* Subscriber only mode.\n* Bits support.\n* Further customization.",
     "eulaTosUrl": "",
     "hasChatSupport": false,
     "iconUrl": "https://extensions-discovery-images.twitch.tv/z1eskwyierovbt4gz8zbq1r45tne31/0.0.1/logo79644e4d-0d78-4a2b-8ae9-fda7c502b43e",
@@ -378,14 +378,16 @@
       },
       "config": {
         "viewerUrl": "https://localhost:8080/config.html",
-        "canLinkExternalContent": false
+        "canLinkExternalContent": true
       },
       "liveConfig": {
         "viewerUrl": "https://localhost:8080/live_config.html",
-        "canLinkExternalContent": false
+        "canLinkExternalContent": true
       }
     },
-    "whitelistedConfigUrls": [],
+    "whitelistedConfigUrls": [
+      ""
+    ],
     "whitelistedPanelUrls": []
   },
   "frontendCommand": "npm run start",

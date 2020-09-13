@@ -123,7 +123,7 @@ module.exports = queue;
 setInterval(function() {
   const channelQueues = getAllQueues();
   for (const channelId in channelQueues) {
-    if (channelQueues.hasOwnProperty(channelId)) {
+    if (Object.prototype.hasOwnProperty.call(channelQueues, channelId)) {
       const queue = channelQueues[channelId];
 
       if (queue.hasUpdated) {
