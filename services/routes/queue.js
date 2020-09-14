@@ -43,6 +43,7 @@ queue.post('/kick', isQueueOpen, (req, res) => {
   }
 
   currentQueue.remove(req.body.kickTarget);
+  res.sendStatus(200);
 });
 
 queue.post('/join', isQueueOpen, async (req, res) => {

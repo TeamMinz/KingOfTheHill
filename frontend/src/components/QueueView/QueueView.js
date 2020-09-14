@@ -53,7 +53,7 @@ const QueueView = (_props) => {
    */
   const kickPlayer = (opaqueUserId) => {
     // console.log(authentication);
-    // console.log('Kicking player ' + opaqueUserId);
+    console.log('Kicking player ' + opaqueUserId);
     authentication
         .makeCall('/queue/kick', 'POST', {
           kickTarget: opaqueUserId,
@@ -61,6 +61,9 @@ const QueueView = (_props) => {
         .then((resp) => {
           if (!resp.ok) {
           // TODO: log error.
+            console.log('Kick failed');
+          } else {
+            console.log('kick successful');
           }
         })
         .catch((err) => {
