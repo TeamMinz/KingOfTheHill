@@ -19,7 +19,7 @@ const channelMessages = {};
  * @param {object} loser the user object of the loser of the matchup.
  * @param {boolean} broadcasterLost If the broadcaster lost
  */
-function reportWinner(channelId, winner, loser, broadcasterLost) {
+const reportWinner = async (channelId, winner, loser, broadcasterLost) => {
   // Record this win.
   const champ = getChampion(channelId);
   if (champ && champ.user.opaqueUserId == winner.opaqueUserId) {
@@ -31,18 +31,25 @@ function reportWinner(channelId, winner, loser, broadcasterLost) {
       user: winner,
     });
   }
-  // Put the winner back in as #0 in the queue.
-  const queue = getQueue(channelId);
-  queue.insert(0, winner);
 
+  const queue = getQueue(channelId);
 
   console.log(broadcasterLost);
-  twitch.getbroadcasterConfig(channelId);
   // If broadcaster lost set them back to their dedired position
   if (broadcasterLost) {
-    twitch.getbroadcasterConfig(channelId);
+    const content = await twitch.getbroadcasterConfig(channelId);
+    if (content.rejoin) {
+      if (content.position != '') {
+        queue.insert(content.position, loser);
+      } else {
+        queue.enqueue(loser);
+      }
+    }
   }
-}
+
+  // Put the winner back in as #0 in the queue.
+  queue.insert(0, winner);
+};
 
 /**
  * Express middleware that rejects people not

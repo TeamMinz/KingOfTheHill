@@ -50,7 +50,7 @@ async function resolveDisplayName(userId) {
 
 /**
  * @param {*} channelId the channel to broadcast to
- * 
+ *
  */
 const getbroadcasterConfig = async (channelId) => {
   try {
@@ -63,16 +63,16 @@ const getbroadcasterConfig = async (channelId) => {
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + buildChannelAuth(channelId));
     if (resp.ok) {
-      console.log(resp);
-      console.log(resp.body);
-      return resp.body.broadcaster.rejoin;
+      const content = JSON.parse(
+          resp.body[`broadcaster:${channelId}`].record.content,
+      );
+      return content;
     } else {
-      console.log(resp.body);
-      return 'anonymous';
+      return {rejoin: false, position: ''};
     }
   } catch (e) {
     console.log(e);
-    return 'anonymous';
+    return {rejoin: false, position: ''};
   }
 };
 
