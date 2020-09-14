@@ -17,6 +17,29 @@ queue.get('/get', function(req, res) {
   res.send({queue: currentQueue.getAsArray(), position: currentPosition});
 });
 
+queue.post('/kick', (req, res) => {
+  const {channel_id: channelId, role} = req.twitch;
+
+  const currentQueue = getQueue(channelId);
+
+  if (!(role == 'broadcaster' || role == 'moderator')) {
+    res.sendStatus(401);
+    return;
+  }
+
+  if (!req.body.kickTarget) {
+    res.sendStatus(400);
+    return;
+  }
+
+  if (currentQueue.getPosition(req.body.kickTarget) == -1) {
+    res.sendStatus(400);
+    return;
+  }
+
+  currentQueue.remove(req.body.kickTarget);
+});
+
 queue.post('/join', async (req, res) => {
   // Handles joining the queue.
   const {
@@ -25,12 +48,12 @@ queue.post('/join', async (req, res) => {
     user_id: userId,
   } = req.twitch;
 
-  /* if (!userId) {
+  if (!userId) {
     res.status(401).send({
       message: 'You must share your identity to enter the queue.',
     });
     return;
-  }*/
+  }
 
   // Some checks to make sure we're not doing anything bad ...
   // If the user is not signed into twitch, they cannot join the queue.
@@ -82,7 +105,7 @@ queue.post('/join', async (req, res) => {
   }); // All done.
 });
 
-queue.post('/leave', function(req, res) {
+queue.post('/leave', (req, res) => {
   // Handles leaving the queue.
   const {channel_id: channelId, opaque_user_id: opaqueUserId} = req.twitch;
 
@@ -101,8 +124,8 @@ queue.post('/leave', function(req, res) {
   // Lets check to see if the person thats leaving is the current champion,
   // then remove them as champion.
   const champ = getChampion(channelId);
-  console.log(champ);
-  console.log(opaqueUserId);
+  // console.log(champ);
+  // console.log(opaqueUserId);
   if (champ && champ.user.opaqueUserId == opaqueUserId) {
     setChampion(channelId, null);
   }
@@ -123,7 +146,7 @@ module.exports = queue;
 setInterval(function() {
   const channelQueues = getAllQueues();
   for (const channelId in channelQueues) {
-    if (channelQueues.hasOwnProperty(channelId)) {
+    if (Object.prototype.hasOwnProperty.call(channelQueues, channelId)) {
       const queue = channelQueues[channelId];
 
       if (queue.hasUpdated) {
