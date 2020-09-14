@@ -1,6 +1,8 @@
 import Authentication from '../../../../util/Authentication/Authentication';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
+import Collapsible from 'react-collapsible';
 import '../../../App/App.css';
+import './QueueController.css';
 
 /**
  * Component that shows your current position in queue,
@@ -11,7 +13,8 @@ import '../../../App/App.css';
  */
 const QueueController = (props) => {
   const twitch = window.Twitch ? window.Twitch.ext : null;
-  const authentication = new Authentication();
+  const authProp = useRef(new Authentication());
+  const authentication = authProp.current;
 
   // State stuff.
   const [FinishedLoading, setFinishedLoading] = useState(false);
@@ -64,6 +67,29 @@ const QueueController = (props) => {
         }
       });
     });
+  };
+
+  /**
+   * Interfaces with the backend to remove someone from the queue.
+   *
+   * @param {*} opaqueUserId The user to remove from the queue.
+   */
+  const kickPlayer = (opaqueUserId) => {
+    console.log(authentication);
+    console.log('Kicking player ' + opaqueUserId);
+    authentication
+        .makeCall('/queue/kick', 'POST', {
+          kickTarget: opaqueUserId,
+        })
+        .then((resp) => {
+          if (!resp.ok) {
+          // TODO: log error.
+          }
+        })
+        .catch((err) => {
+        // TODO: log error.
+          console.log(err);
+        });
   };
 
   /**
@@ -137,8 +163,7 @@ const QueueController = (props) => {
     if (FinishedLoading) {
       if (
         Queue.findIndex(
-            (challenger) =>
-              challenger.opaqueUserId == opaqueUserId,
+            (challenger) => challenger.opaqueUserId == opaqueUserId,
         ) == -1
       ) {
         setButtonAction(() => JoinQueue);
@@ -160,16 +185,54 @@ const QueueController = (props) => {
       }) :
       -1;
 
+    const queueEntries = Queue ?
+      Queue.map((challenger, index) => {
+        return (
+          <li key={index}>
+            {challenger.displayName}
+            {authentication.isModerator() && (
+              <a
+                className="KickButton"
+                style={{float: 'right'}}
+                onClick={() => {
+                  kickPlayer(challenger.opaqueUserId);
+                }}
+              >
+                  &times;
+              </a>
+            )}
+          </li>
+        );
+      }) :
+      [];
+
     return (
       <div className="Well">
-        <span>
-          {(userEntry == -1 && 'You\'re not currently in the queue.') ||
-            `You are #${userEntry + 1} in the queue`}
-        </span>
+        <Collapsible
+          trigger="QueueController"
+          triggerClassName="DropdownTrigger"
+          triggerOpenedClassName="DropdownTrigger--open"
+          easing="ease-out"
+          open={true}
+          transitionTime={250}
+        >
+          <div>
+            <p>
+              {(userEntry == -1 && 'You\'re not currently in the queue.') ||
+                `You are #${userEntry + 1} in the queue`}
+            </p>
 
-        <button className="DefaultButton" onClick={ButtonAction}>
-          {ButtonText}
-        </button>
+            {queueEntries && queueEntries.length > 0 && (
+              <div>
+                <ol>{queueEntries.slice(0, 5)}</ol>
+              </div>
+            )}
+
+            <button className="DefaultButton" onClick={ButtonAction}>
+              {ButtonText}
+            </button>
+          </div>
+        </Collapsible>
       </div>
     );
   } else {

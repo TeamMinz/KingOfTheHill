@@ -1,12 +1,13 @@
 .SelectedMessageForm {
+  display:block;
   font-size: medium;
-
   padding: 5px;
 }
 
 .MessageTextBox {
   display: block;
-  color: #232127;
+  color: var(--text-color);
+  background-color: var(--background-color);
 
   max-width: 95%;
   
