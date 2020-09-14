@@ -1,7 +1,7 @@
 const {SECRET} = require('./options');
 const jwt = require('jsonwebtoken');
 const express = require('express');
-const { getQueue } = require('../controller/queue');
+const {getQueue} = require('../controller/queue');
 // Create some middleware to help authorize the requests.
 
 /**

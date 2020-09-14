@@ -159,6 +159,8 @@ queue.post('/close', isBroadcaster, (req, res) => {
 
   const matchup = getMatchup(channelId);
 
+  setChampion(channelId, null);
+
   if (matchup) {
     setMatchup(channelId, null);
   }
