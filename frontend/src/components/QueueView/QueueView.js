@@ -20,6 +20,7 @@ const QueueView = (_props) => {
   const [ButtonAction, setButtonAction] = useState(() => {});
   const [FinishedLoading, setFinishedLoading] = useState(false);
   const [Queue, setQueue] = useState([]);
+  const [queueIsOpen, setQueueOpen] = useState(true);
 
   // helper functions
   /**
@@ -30,10 +31,13 @@ const QueueView = (_props) => {
       if (resp.ok) {
         resp.json().then((bodyData) => {
           const queue = bodyData.queue;
+          setQueueOpen(bodyData.isOpen);
+
+          // console.log(bodyData);
 
           if (queue.includes(authentication.getOpaqueId())) {
             setButtonText('Leave the Queue');
-            setButtonAction(() => LeaveQueue);
+            setButtonAction(() => leaveQueue);
           }
 
           setQueue(queue);
@@ -48,8 +52,8 @@ const QueueView = (_props) => {
    * @param {*} opaqueUserId The user to remove from the queue.
    */
   const kickPlayer = (opaqueUserId) => {
-    console.log(authentication);
-    console.log('Kicking player ' + opaqueUserId);
+    // console.log(authentication);
+    // console.log('Kicking player ' + opaqueUserId);
     authentication
         .makeCall('/queue/kick', 'POST', {
           kickTarget: opaqueUserId,
@@ -68,12 +72,12 @@ const QueueView = (_props) => {
   /**
    * Adds the User to the Queue
    */
-  const JoinQueue = () => {
+  const joinQueue = () => {
     authentication.makeCall('/queue/join', 'POST').then((resp) => {
       resp.json().then((bodyData) => {
         if (resp.ok) {
           setButtonText('Leave the Queue');
-          setButtonAction(() => LeaveQueue);
+          setButtonAction(() => leaveQueue);
         }
       });
     });
@@ -82,11 +86,11 @@ const QueueView = (_props) => {
   /**
    * Removes the User from the Queue
    */
-  const LeaveQueue = () => {
+  const leaveQueue = () => {
     authentication.makeCall('/queue/leave', 'POST').then((resp) => {
       resp.json().then((bodyData) => {
         if (resp.ok) {
-          setButtonAction(() => JoinQueue);
+          setButtonAction(() => joinQueue);
           setButtonText('Join the Queue');
         }
       });
@@ -110,7 +114,9 @@ const QueueView = (_props) => {
     function handleMessage(_target, _contentType, body) {
       const message = JSON.parse(body);
       if (message.type == 'updateQueue') {
-        setQueue(message.message);
+        // console.log(message.message);
+        setQueue(message.message.queue);
+        setQueueOpen(message.message.status);
       }
     }
 
@@ -165,10 +171,10 @@ const QueueView = (_props) => {
               challenger.opaqueUserId == authentication.getOpaqueId(),
         ) == -1
       ) {
-        setButtonAction(() => JoinQueue);
+        setButtonAction(() => joinQueue);
         setButtonText('Join the Queue');
       } else {
-        setButtonAction(() => LeaveQueue);
+        setButtonAction(() => leaveQueue);
         setButtonText('Leave the Queue');
       }
     }
@@ -204,6 +210,9 @@ const QueueView = (_props) => {
     }) :
     -1;
 
+  // console.log("User id: " + (authentication.getUserId()));
+  // console.log("Queue closed: " + (!queueIsOpen));
+
   return (
     <div className="QueueView">
       <MatchupView />
@@ -236,7 +245,7 @@ const QueueView = (_props) => {
         <button
           className="QueueButton"
           onClick={ButtonAction}
-          disabled={!authentication.getUserId()}
+          disabled={!authentication.getUserId() || !queueIsOpen}
         >
           {ButtonText}
         </button>
