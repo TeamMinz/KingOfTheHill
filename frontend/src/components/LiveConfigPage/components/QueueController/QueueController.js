@@ -22,34 +22,35 @@ const QueueController = (props) => {
   const [ButtonAction, setButtonAction] = useState(() => {});
   const [Queue, setQueue] = useState([]);
   const [opaqueUserId, setOpaqueID] = useState(null);
+  const [queueIsOpen, setQueueOpen] = useState(true);
 
   // helper functions
   /**
    * Fethches the current queue from the backend.
    */
-  function fetchQueue() {
-    console.log('fetching queue');
+  const fetchQueue = () => {
+    // console.log('fetching queue');
 
     authentication.makeCall('/queue/get', 'GET').then(function(resp) {
       if (resp.ok) {
         resp.json().then((bodyData) => {
           const queue = bodyData.queue;
-
+          setQueueOpen(bodyData.isOpen);
           setQueue(queue);
         });
       }
     });
-  }
+  };
 
   /**
    * Adds the User to the Queue
    */
-  const JoinQueue = () => {
+  const joinQueue = () => {
     authentication.makeCall('/queue/join', 'POST').then((resp) => {
       resp.json().then((bodyData) => {
         if (resp.ok) {
           setButtonText('Leave the Queue');
-          setButtonAction(() => LeaveQueue);
+          setButtonAction(() => leaveQueue);
         }
       });
     });
@@ -58,11 +59,11 @@ const QueueController = (props) => {
   /**
    * Removes the User from the Queue
    */
-  const LeaveQueue = () => {
+  const leaveQueue = () => {
     authentication.makeCall('/queue/leave', 'POST').then((resp) => {
       resp.json().then((bodyData) => {
         if (resp.ok) {
-          setButtonAction(() => JoinQueue);
+          setButtonAction(() => joinQueue);
           setButtonText('Join the Queue');
         }
       });
@@ -75,8 +76,8 @@ const QueueController = (props) => {
    * @param {*} opaqueUserId The user to remove from the queue.
    */
   const kickPlayer = (opaqueUserId) => {
-    console.log(authentication);
-    console.log('Kicking player ' + opaqueUserId);
+    // console.log(authentication);
+    // console.log('Kicking player ' + opaqueUserId);
     authentication
         .makeCall('/queue/kick', 'POST', {
           kickTarget: opaqueUserId,
@@ -88,6 +89,42 @@ const QueueController = (props) => {
         })
         .catch((err) => {
         // TODO: log error.
+          console.log(err);
+        });
+  };
+
+  /**
+   * Interfaces with the backend to close the queue.
+   */
+  const closeQueue = () => {
+    authentication
+        .makeCall('/queue/close', 'POST')
+        .then((resp) => {
+          if (!resp.ok) {
+          // TODO: log error.
+            return;
+          }
+          setQueueOpen(false);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+  };
+
+  /**
+   * Interfaces with the backend to open the queue.
+   */
+  const openQueue = () => {
+    authentication
+        .makeCall('/queue/open', 'POST')
+        .then((resp) => {
+          if (!resp.ok) {
+          // TODO: log error.
+            return;
+          }
+          setQueueOpen(true);
+        })
+        .catch((err) => {
           console.log(err);
         });
   };
@@ -109,7 +146,8 @@ const QueueController = (props) => {
     function handleMessage(_target, _contentType, body) {
       const message = JSON.parse(body);
       if (message.type == 'updateQueue') {
-        setQueue(message.message);
+        setQueue(message.message.queue);
+        setQueueOpen(message.message.status);
       }
     }
 
@@ -166,10 +204,10 @@ const QueueController = (props) => {
             (challenger) => challenger.opaqueUserId == opaqueUserId,
         ) == -1
       ) {
-        setButtonAction(() => JoinQueue);
+        setButtonAction(() => joinQueue);
         setButtonText('Join the Queue');
       } else {
-        setButtonAction(() => LeaveQueue);
+        setButtonAction(() => leaveQueue);
         setButtonText('Leave the Queue');
       }
     }
@@ -206,6 +244,25 @@ const QueueController = (props) => {
       }) :
       [];
 
+    const queueView = (
+      <div>
+        <p>
+          {(userEntry == -1 && 'You\'re not currently in the queue.') ||
+            `You are #${userEntry + 1} in the queue`}
+        </p>
+
+        {queueEntries && queueEntries.length > 0 && (
+          <div>
+            <ol>{queueEntries.slice(0, 5)}</ol>
+          </div>
+        )}
+
+        <button className="DefaultButton" onClick={ButtonAction}>
+          {ButtonText}
+        </button>
+      </div>
+    );
+
     return (
       <div className="Well">
         <Collapsible
@@ -216,22 +273,19 @@ const QueueController = (props) => {
           open={true}
           transitionTime={250}
         >
-          <div>
-            <p>
-              {(userEntry == -1 && 'You\'re not currently in the queue.') ||
-                `You are #${userEntry + 1} in the queue`}
-            </p>
-
-            {queueEntries && queueEntries.length > 0 && (
-              <div>
-                <ol>{queueEntries.slice(0, 5)}</ol>
-              </div>
-            )}
-
-            <button className="DefaultButton" onClick={ButtonAction}>
-              {ButtonText}
+          {queueIsOpen && (
+            <button className="DefaultButton" onClick={closeQueue}>
+              Close the Queue
             </button>
-          </div>
+          )}
+
+          {queueIsOpen && queueView}
+
+          {!queueIsOpen && (
+            <button className="DefaultButton" onClick={openQueue}>
+              Open the Queue
+            </button>
+          )}
         </Collapsible>
       </div>
     );
