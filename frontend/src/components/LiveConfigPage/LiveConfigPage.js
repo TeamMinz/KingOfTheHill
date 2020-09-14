@@ -35,6 +35,18 @@ const LiveConfigPage = (props) => {
       twitch.onAuthorized((auth) => {
         authentication.setToken(auth.token, auth.userId);
         if (!FinishedLoading) {
+          twitch.onError((err) => {
+            console.log('Error', err);
+          });
+          twitch.rig.log('setting');
+          twitch.configuration.set(
+              'broadcaster',
+              '0.2',
+              JSON.stringify({
+                rejoin: false,
+                position: 2,
+              }),
+          );
           setFinishedLoading(true);
         }
       });
@@ -49,14 +61,6 @@ const LiveConfigPage = (props) => {
       twitch.configuration.onChanged(() => {
         twitch.rig.log(
             `Anything: ${JSON.stringify(twitch.configuration.broadcaster)}`,
-        );
-        twitch.configuration.set(
-            'broadcaster',
-            '0.2',
-            JSON.stringify({
-              AutoRejoin: true,
-              Position: 2,
-            }),
         );
         if (twitch.configuration.broadcaster) {
           try {
