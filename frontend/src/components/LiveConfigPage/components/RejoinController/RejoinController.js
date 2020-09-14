@@ -1,5 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
-import Authentication from '../../../../util/Authentication/Authentication';
+import React, {useState, useEffect} from 'react';
 import './RejoinController.css';
 /**
  * Rejoin Component for LiveConfig
@@ -10,34 +9,42 @@ import './RejoinController.css';
  */
 const RejoinController = (props) => {
   const twitch = window.Twitch ? window.Twitch.ext : null;
-  const authRef = useRef(new Authentication());
-  const authentication = authRef.current;
-
   const [FinishedLoading, setFinishedLoading] = useState(false);
-  const [AutoRejoin, setAutoRejoin] = useState(props.AutoRejoin);
-  const [Position, setPosition] = useState(props.Position);
+  const [AutoRejoin, setAutoRejoin] = useState(false);
+  const [Position, setPosition] = useState('');
 
   // make sure we authorize when the page loads.
   useEffect(() => {
-    if (twitch) {
-      twitch.onAuthorized((auth) => {
-        authentication.setToken(auth.token, auth.userId);
-        if (!FinishedLoading) {
-          setFinishedLoading(true);
-        }
-      });
-    }
+    twitch.onAuthorized((auth) => {
+      if (!FinishedLoading) {
+        setFinishedLoading(true);
+      }
+    });
   });
 
   useEffect(() => {
     if (FinishedLoading) {
-      twitch.rig.log(`${AutoRejoin} ${Position}`);
+      if (twitch.configuration.broadcaster) {
+        try {
+          const config = JSON.parse(twitch.configuration.broadcaster.content);
+
+          setAutoRejoin(config.rejoin);
+          setPosition(config.position);
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+  }, [FinishedLoading]);
+
+  useEffect(() => {
+    if (FinishedLoading) {
       twitch.configuration.set(
           'broadcaster',
-          '1.0',
+          '0.2',
           JSON.stringify({
-            AutoRejoin,
-            Position,
+            rejoin: AutoRejoin,
+            position: Position,
           }),
       );
     }
