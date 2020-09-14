@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import Authentication from '../../../../util/Authentication/Authentication';
 import './MatchupController.css';
 import '../../LiveConfigPage.css';
+import Collapsible from 'react-collapsible';
 
 /**
  * Matchup Component for Config
@@ -163,7 +164,18 @@ const MatchupController = (props) => {
     </div>
   );
 
-  return <div className="Well">{matchupController}</div>;
+  return <div className="Well">
+    <Collapsible
+      trigger="Matchup Controller"
+      triggerClassName="DropdownTrigger"
+      triggerOpenedClassName="DropdownTrigger--open"
+      easing="ease-out"
+      open={true}
+      transitionTime={250}
+    >
+      {matchupController}
+    </Collapsible>
+  </div>;
 };
 
 export default MatchupController;

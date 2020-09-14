@@ -1,3 +1,25 @@
+:root .LiveConfigPage-light {
+  --text-color: #000000;
+  --border-color: #5a5a5a;
+  --background-color: #e5e3e8;
+  --not-selected-color: #c5c4c5;
+  --well-color: #b9b8bb;
+  background-color: var(--background-color);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+:root .LiveConfigPage-dark {
+  --text-color: #e5e3e8;
+  --border-color: #9b9a9a;
+  --background-color: #232127;
+  --not-selected-color: #3b383f;
+  --well-color: #15151a;
+  background-color: var(--background-color);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
 .LiveConfigPage {
   font-family: Arial, Helvetica, sans-serif;
 
@@ -7,17 +29,9 @@
   text-align: center;
 
   padding: 5px;
-}
 
-.LiveConfigPage-light {
-  color: #232127;
-  background-color: #e5e3e8;
-  
-}
-
-.LiveConfigPage-dark {
-  color: #e5e3e8;
-  background-color: #232127;
+  color: var(--text-color);
+  background-color: var(--background-color);
 }
 
 .DefaultButton {
@@ -45,10 +59,12 @@
 }
 
 .Well {
+  position:relative;
   display: block;
   width:90%;
-  
-  background-color: #b9b8bb;
+  min-height: 2rem;
+
+  background-color: var(--well-color);
   
   font-size: medium;
   
@@ -57,4 +73,35 @@
   margin-bottom: 0.5em;
 
   border-radius: 4px;
+}
+
+.DropdownTrigger {
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.DropdownTrigger--open {
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.DropdownTrigger:after {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.2rem;
+  content: '+';
+  transform:rotateZ(360deg);
+  transition: transform 250ms;
+}
+
+.DropdownTrigger--open:after {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.2rem;
+  transform: rotateZ(180deg);
+  transition: transform 250ms;
+  content: '-';
+  float: right;
 }
