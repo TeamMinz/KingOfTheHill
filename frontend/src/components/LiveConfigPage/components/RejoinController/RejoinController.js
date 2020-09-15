@@ -77,6 +77,7 @@ const RejoinController = (props) => {
                 Position to rejoin (leave blank to rejoin at the end):
                 <input
                   type="number"
+                  min="1"
                   onChange={(e) => setPosition(e.target.value)}
                   value={Position}
                 />

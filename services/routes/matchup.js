@@ -41,7 +41,7 @@ const reportWinner = async (channelId, winner, loser, broadcasterLost) => {
     const content = await twitch.getbroadcasterConfig(channelId);
     if (content.rejoin) {
       if (content.position != '') {
-        queue.insert(content.position, loser);
+        queue.insert(content.position - 1, loser);
       } else {
         queue.enqueue(loser);
       }
