@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import Authentication from '../../util/Authentication/Authentication';
 
 // eslint-disable-next-line max-len
 import SelectedMessageForm from './components/SelectedMessageForm/SelectedMessageForm';
 // eslint-disable-next-line max-len
 import MatchupController from './components/MatchupController/MatchupController';
 import QueueController from './components/QueueController/QueueController';
+import RejoinController from './components/RejoinController/RejoinController';
 
 import '../App/App.css';
 import './LiveConfigPage.css';
@@ -19,7 +19,6 @@ import './LiveConfigPage.css';
 const LiveConfigPage = (props) => {
   // Twitch & Authentication stuff.
   const twitch = window.Twitch ? window.Twitch.ext : null;
-  const authentication = new Authentication();
 
   // State stuff.
   const [FinishedLoading, setFinishedLoading] = useState(false);
@@ -28,9 +27,12 @@ const LiveConfigPage = (props) => {
   // Initialize authentication & twitch stuff.
   useEffect(() => {
     if (twitch) {
+      twitch.onError((err) => {
+        console.log('Error', err);
+      });
+
       // Authentication setup
       twitch.onAuthorized((auth) => {
-        authentication.setToken(auth.token, auth.userId);
         if (!FinishedLoading) {
           setFinishedLoading(true);
         }
@@ -49,10 +51,13 @@ const LiveConfigPage = (props) => {
     return (
       <div
         // eslint-disable-next-line max-len
-        className={`LiveConfigPage ${Theme === 'light' ? 'LiveConfigPage-light' : 'LiveConfigPage-dark'}`}
+        className={`LiveConfigPage ${
+          Theme === 'light' ? 'LiveConfigPage-light' : 'LiveConfigPage-dark'
+        }`}
       >
         <SelectedMessageForm />
         <MatchupController />
+        <RejoinController />
         <QueueController />
       </div>
     );
