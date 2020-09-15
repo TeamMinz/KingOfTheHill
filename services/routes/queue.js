@@ -42,6 +42,13 @@ queue.post('/kick', isQueueOpen, (req, res) => {
     return;
   }
 
+  const champ = getChampion(channelId);
+
+  // Remove this person as champion if they're champ.
+  if (champ && champ.user.opaqueUserId == req.body.kickTarget) {
+    setChampion(channelId, null);
+  }
+
   currentQueue.remove(req.body.kickTarget);
   res.sendStatus(200);
 });
