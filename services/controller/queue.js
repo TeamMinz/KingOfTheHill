@@ -9,6 +9,7 @@ class Queue {
   constructor() {
     this._queue = [];
     this.hasUpdated = false;
+    this._isOpen = true;
   }
   /**
    * Determines whether a queue contains a specified person.
@@ -80,6 +81,31 @@ class Queue {
     });
     this.hasUpdated = true;
     return challenger;
+  }
+  /**
+   * Marks this queue as open.
+   */
+  openQueue() {
+    this._isOpen = true;
+    this.hasUpdated = true;
+  }
+
+  /**
+   * Mark this queue as closed, and clear the queue.
+   */
+  closeQueue() {
+    this._isOpen = false;
+    this._queue = [];
+    this.hasUpdated = true;
+  }
+
+  /**
+   * Checks if this queue is open.
+   *
+   * @returns true if open false otherwise.
+   */
+  isOpen() {
+    return this._isOpen;
   }
   /**
    * Get this queue represented as an array.
