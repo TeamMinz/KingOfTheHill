@@ -8,7 +8,6 @@ const config = require('./config.json');
 const {authorizeHeader} = require('./util/middleware');
 
 process.env.NODE_ENV = config.mode;
-
 if (process.env.NODE_ENV == 'development') {
   // We will be using self signed certs in development.
   // We need to make sure that we specifically allow that.

@@ -266,7 +266,7 @@ const QueueController = (props) => {
     return (
       <div className="Well">
         <Collapsible
-          trigger="QueueController"
+          trigger="Queue"
           triggerClassName="DropdownTrigger"
           triggerOpenedClassName="DropdownTrigger--open"
           easing="ease-out"
