@@ -1,5 +1,7 @@
 const {SECRET} = require('./options');
 const jwt = require('jsonwebtoken');
+const express = require('express');
+const {getQueue} = require('../controller/queue');
 // Create some middleware to help authorize the requests.
 
 /**
@@ -51,7 +53,20 @@ function isBroadcaster(req, res, next) {
   }
 }
 
+function isQueueOpen(req, res, next) {
+  const {channel_id: channelId} = req.twitch;
+  const currentQueue = getQueue(channelId);
+
+  if (!currentQueue.isOpen()) {
+    res.sendStatus(500);
+    return;
+  }
+
+  next();
+}
+
 module.exports = {
   authorizeHeader,
   isBroadcaster,
+  isQueueOpen,
 };

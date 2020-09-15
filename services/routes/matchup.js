@@ -5,8 +5,9 @@ const matchup = express.Router();
 const {getQueue} = require('../controller/queue');
 const {getChampion, setChampion} = require('../controller/champion');
 const {getMatchup, setMatchup} = require('../controller/matchup');
-const {isBroadcaster} = require('../util/middleware');
+const {isBroadcaster, isQueueOpen} = require('../util/middleware');
 const twitch = require('../util/twitch');
+
 const DEFAULT_MESSAGE = 'You\'re up! Connect to the match now!';
 
 const channelMessages = {};
@@ -104,7 +105,7 @@ matchup.get('/current/get', (req, res) => {
 });
 
 // Route for reporting the winner of the current mathcup
-matchup.post('/current/report', isBroadcaster, (req, res) => {
+matchup.post('/current/report', isBroadcaster, isQueueOpen, (req, res) => {
   const {channel_id: channelId, opaque_user_id: opaqueUserId} = req.twitch;
 
   // Error out if we don't have the required parameters.
@@ -144,7 +145,7 @@ matchup.post('/current/report', isBroadcaster, (req, res) => {
 });
 
 // Route for reporting a forfeit
-matchup.post('/current/forfeit', isBroadcaster, (req, res) => {
+matchup.post('/current/forfeit', isBroadcaster, isQueueOpen, (req, res) => {
   const {channel_id: channelId} = req.twitch;
   const matchup = getMatchup(channelId);
 
@@ -172,7 +173,7 @@ matchup.post('/current/forfeit', isBroadcaster, (req, res) => {
 });
 
 // Route for starting a new matchup.
-matchup.post('/start', isBroadcaster, (req, res) => {
+matchup.post('/start', isBroadcaster, isQueueOpen, (req, res) => {
   const {channel_id: channelId} = req.twitch;
   const currentMatchup = getMatchup(channelId);
 

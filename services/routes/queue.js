@@ -3,8 +3,9 @@ const queue = require('express').Router();
 const {broadcast} = require('../util/pubsub');
 const {resolveDisplayName} = require('../util/twitch');
 const {getQueue, getAllQueues} = require('../controller/queue');
-const {getMatchup} = require('../controller/matchup');
+const {getMatchup, setMatchup} = require('../controller/matchup');
 const {getChampion, setChampion} = require('../controller/champion');
+const {isBroadcaster, isQueueOpen} = require('../util/middleware');
 const queueUpdateIntervalMs = 1000;
 
 // Set up our routes.
@@ -14,10 +15,14 @@ queue.get('/get', function(req, res) {
   const currentQueue = getQueue(channelId);
   const currentPosition = currentQueue.getPosition(opaqueUserId);
 
-  res.send({queue: currentQueue.getAsArray(), position: currentPosition});
+  res.send({
+    queue: currentQueue.getAsArray(),
+    position: currentPosition,
+    isOpen: currentQueue.isOpen(),
+  });
 });
 
-queue.post('/kick', (req, res) => {
+queue.post('/kick', isQueueOpen, (req, res) => {
   const {channel_id: channelId, role} = req.twitch;
 
   const currentQueue = getQueue(channelId);
@@ -38,9 +43,10 @@ queue.post('/kick', (req, res) => {
   }
 
   currentQueue.remove(req.body.kickTarget);
+  res.sendStatus(200);
 });
 
-queue.post('/join', async (req, res) => {
+queue.post('/join', isQueueOpen, async (req, res) => {
   // Handles joining the queue.
   const {
     channel_id: channelId,
@@ -105,7 +111,7 @@ queue.post('/join', async (req, res) => {
   }); // All done.
 });
 
-queue.post('/leave', (req, res) => {
+queue.post('/leave', isQueueOpen, (req, res) => {
   // Handles leaving the queue.
   const {channel_id: channelId, opaque_user_id: opaqueUserId} = req.twitch;
 
@@ -138,6 +144,29 @@ queue.post('/leave', (req, res) => {
   });
 });
 
+queue.post('/open', isBroadcaster, (req, res) => {
+  const {channel_id: channelId} = req.twitch;
+
+  const queue = getQueue(channelId);
+
+  queue.openQueue();
+});
+
+queue.post('/close', isBroadcaster, (req, res) => {
+  const {channel_id: channelId} = req.twitch;
+
+  const queue = getQueue(channelId);
+  queue.closeQueue();
+
+  const matchup = getMatchup(channelId);
+
+  setChampion(channelId, null);
+
+  if (matchup) {
+    setMatchup(channelId, null);
+  }
+});
+
 module.exports = queue;
 
 // Check if each queue has changed, then if it has publish it.
@@ -152,7 +181,7 @@ setInterval(function() {
       if (queue.hasUpdated) {
         const message = {
           type: 'updateQueue',
-          message: queue.getAsArray(),
+          message: {queue: queue.getAsArray(), status: queue.isOpen()},
         };
         broadcast(channelId, message);
         queue.hasUpdated = false; // mark this so we don't update until a change
