@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import Collapsible from 'react-collapsible';
 import './RejoinController.css';
 /**
  * Rejoin Component for LiveConfig
@@ -51,23 +52,34 @@ const RejoinController = (props) => {
   }, [Position, AutoRejoin]);
 
   return (
-    <div className="RejoinController">
-      Automatically rejoin the queue?
-      <input
-        type="checkbox"
-        checked={AutoRejoin}
-        onChange={() => setAutoRejoin(!AutoRejoin)}
-      />
-      {AutoRejoin && (
-        <div>
-          Position to rejoin (leave blank to rejoin at the end):
+    <div className="Well">
+      <Collapsible
+        trigger="Rejoin Settings"
+        triggerClassName="DropdownTrigger"
+        triggerOpenedClassName="DropdownTrigger--open"
+        easing="ease-out"
+        open={true}
+        transitionTime={250}
+      >
+        <div className="RejoinController">
+          Automatically rejoin the queue?
           <input
-            type="number"
-            onChange={(e) => setPosition(e.target.value)}
-            value={Position}
+            type="checkbox"
+            checked={AutoRejoin}
+            onChange={() => setAutoRejoin(!AutoRejoin)}
           />
+          {AutoRejoin && (
+            <div>
+              Position to rejoin (leave blank to rejoin at the end):
+              <input
+                type="number"
+                onChange={(e) => setPosition(e.target.value)}
+                value={Position}
+              />
+            </div>
+          )}
         </div>
-      )}
+      </Collapsible>
     </div>
   );
 };
