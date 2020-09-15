@@ -91,18 +91,18 @@ queue.post('/join', isQueueOpen, async (req, res) => {
     }
   }
 
-  // Make sure this person isn't already in this queue.
   const currentQueue = getQueue(channelId);
 
+  // Lets grab this person's display name from twitch.
+  const displayName = await resolveDisplayName(userId);
+
+  // Make sure this person isn't already in this queue.
   if (currentQueue.contains(opaqueUserId)) {
     res.status(500).send({
       message: 'You are already in the queue.',
     });
     return;
   }
-
-  // Lets grab this person's display name from twitch.
-  const displayName = await resolveDisplayName(userId);
 
   // Okay time to actually put the user in the queue.
 
