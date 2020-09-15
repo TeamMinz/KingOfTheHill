@@ -1,6 +1,7 @@
 import Authentication from '../../../../util/Authentication/Authentication';
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useContext} from 'react';
 import Collapsible from 'react-collapsible';
+import QueueContext from '../../../../util/QueueContext';
 import '../../../App/App.css';
 import './QueueController.css';
 
@@ -20,9 +21,15 @@ const QueueController = (props) => {
   const [FinishedLoading, setFinishedLoading] = useState(false);
   const [ButtonText, setButtonText] = useState('Loading...');
   const [ButtonAction, setButtonAction] = useState(() => {});
-  const [Queue, setQueue] = useState([]);
+  // const [Queue, setQueue] = useState([]);
   const [opaqueUserId, setOpaqueID] = useState(null);
   const [queueIsOpen, setQueueOpen] = useState(true);
+
+  // Context
+
+  const ctx = useContext(QueueContext);
+
+  console.log(ctx);
 
   // helper functions
   /**
@@ -36,7 +43,7 @@ const QueueController = (props) => {
         resp.json().then((bodyData) => {
           const queue = bodyData.queue;
           setQueueOpen(bodyData.isOpen);
-          setQueue(queue);
+          // setQueue(queue);
         });
       }
     });
@@ -146,11 +153,11 @@ const QueueController = (props) => {
     function handleMessage(_target, _contentType, body) {
       const message = JSON.parse(body);
 
-      console.log(message);
+      // console.log(message);
 
       if (message.type == 'updateQueue') {
-        setQueue(message.message.queue);
-        setQueueOpen(message.message.status);
+        // setQueue(message.message.queue);
+        // setQueueOpen(message.message.status);
       }
     }
 
@@ -191,6 +198,7 @@ const QueueController = (props) => {
     }
 
     if (FinishedLoading) {
+      console.log('listening for broadcast');
       twitch.listen('broadcast', handleMessage);
 
       return function cleanup() {
@@ -203,7 +211,7 @@ const QueueController = (props) => {
   useEffect(() => {
     if (FinishedLoading) {
       if (
-        Queue.findIndex(
+        ctx.queue.findIndex(
             (challenger) => challenger.opaqueUserId == opaqueUserId,
         ) == -1
       ) {
@@ -214,20 +222,20 @@ const QueueController = (props) => {
         setButtonText('Leave the Queue');
       }
     }
-  }, [Queue]);
+  }, [ctx.queue]);
 
   // called when the component mounts.
-  useEffect(QueueEffect, [Queue, FinishedLoading]);
+  useEffect(QueueEffect, [ctx.queue, FinishedLoading]);
 
   if (FinishedLoading) {
-    const userEntry = Queue ?
-      Queue.findIndex((challenger) => {
+    const userEntry = ctx.queue ?
+      ctx.queue.findIndex((challenger) => {
         return challenger.opaqueUserId == opaqueUserId;
       }) :
       -1;
 
-    const queueEntries = Queue ?
-      Queue.map((challenger, index) => {
+    const queueEntries = ctx.queue ?
+      ctx.queue.map((challenger, index) => {
         return (
           <li key={index}>
             {challenger.displayName}
