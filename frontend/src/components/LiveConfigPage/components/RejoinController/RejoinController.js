@@ -14,6 +14,22 @@ const RejoinController = (props) => {
   const [AutoRejoin, setAutoRejoin] = useState(false);
   const [Position, setPosition] = useState('');
 
+  /**
+   * Saves settings configuration.
+   */
+  const updateSettings = () => {
+    if (FinishedLoading) {
+      twitch.configuration.set(
+          'broadcaster',
+          '0.2',
+          JSON.stringify({
+            rejoin: AutoRejoin,
+            position: Position,
+          }),
+      );
+    }
+  };
+
   // make sure we authorize when the page loads.
   useEffect(() => {
     twitch.onAuthorized((auth) => {
@@ -38,19 +54,6 @@ const RejoinController = (props) => {
     }
   }, [FinishedLoading]);
 
-  useEffect(() => {
-    if (FinishedLoading) {
-      twitch.configuration.set(
-          'broadcaster',
-          '0.2',
-          JSON.stringify({
-            rejoin: AutoRejoin,
-            position: Position,
-          }),
-      );
-    }
-  }, [Position, AutoRejoin]);
-
   return (
     <div className="Well">
       <Collapsible
@@ -62,22 +65,28 @@ const RejoinController = (props) => {
         transitionTime={250}
       >
         <div className="RejoinController">
-          Automatically rejoin the queue?
-          <input
-            type="checkbox"
-            checked={AutoRejoin}
-            onChange={() => setAutoRejoin(!AutoRejoin)}
-          />
-          {AutoRejoin && (
-            <div>
-              Position to rejoin (leave blank to rejoin at the end):
-              <input
-                type="number"
-                onChange={(e) => setPosition(e.target.value)}
-                value={Position}
-              />
-            </div>
-          )}
+          <div style={{display: 'block'}}>
+            Automatically rejoin the queue?
+            <input
+              type="checkbox"
+              checked={AutoRejoin}
+              onChange={() => setAutoRejoin(!AutoRejoin)}
+            />
+            {AutoRejoin && (
+              <div>
+                Position to rejoin (leave blank to rejoin at the end):
+                <input
+                  type="number"
+                  onChange={(e) => setPosition(e.target.value)}
+                  value={Position}
+                />
+              </div>
+            )}
+          </div>
+
+          <button className="DefaultButton" onClick={updateSettings}>
+            Save Changes
+          </button>
         </div>
       </Collapsible>
     </div>
