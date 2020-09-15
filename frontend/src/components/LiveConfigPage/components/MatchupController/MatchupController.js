@@ -103,9 +103,6 @@ const MatchupController = (props) => {
   });
 
   // Stuff for rendering.
-
-  const matchupView = null;
-
   const matchupController = (CurrentMatchup != null && FinishedLoading && (
     <div>
       <button
@@ -166,7 +163,7 @@ const MatchupController = (props) => {
 
   return <div className="Well">
     <Collapsible
-      trigger="Matchup Controller"
+      trigger="Matchup Controls"
       triggerClassName="DropdownTrigger"
       triggerOpenedClassName="DropdownTrigger--open"
       easing="ease-out"
