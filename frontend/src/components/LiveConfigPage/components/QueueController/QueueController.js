@@ -145,6 +145,9 @@ const QueueController = (props) => {
      */
     function handleMessage(_target, _contentType, body) {
       const message = JSON.parse(body);
+
+      console.log(message);
+
       if (message.type == 'updateQueue') {
         setQueue(message.message.queue);
         setQueueOpen(message.message.status);
