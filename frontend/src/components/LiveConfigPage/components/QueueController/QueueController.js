@@ -105,7 +105,7 @@ const QueueController = (props) => {
   // Controls the join / leave button
   useEffect(() => {
     if (ctx.finishedLoading && ctx.queue) {
-      console.log(ctx.queue);
+      // console.log(ctx.queue);
       if (
         ctx.queue.queue.findIndex(
             (challenger) => challenger.opaqueUserId == ctx.auth.getOpaqueId(),
@@ -123,7 +123,7 @@ const QueueController = (props) => {
   // called when the component mounts.
 
   if (ctx.finishedLoading && ctx.queue) {
-    console.log(ctx.queue);
+    // console.log(ctx.queue);
     const userEntry = ctx.queue ?
       ctx.queue.queue.findIndex((challenger) => {
         return challenger.opaqueUserId == ctx.auth.getOpaqueId();
