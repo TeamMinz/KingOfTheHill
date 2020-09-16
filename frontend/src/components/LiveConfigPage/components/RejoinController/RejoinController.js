@@ -1,5 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import Collapsible from 'react-collapsible';
+import QueueContext from '../../../../util/QueueContext';
 import './RejoinController.css';
 /**
  * Rejoin Component for LiveConfig
@@ -10,15 +11,17 @@ import './RejoinController.css';
  */
 const RejoinController = (props) => {
   const twitch = window.Twitch ? window.Twitch.ext : null;
-  const [FinishedLoading, setFinishedLoading] = useState(false);
+
   const [AutoRejoin, setAutoRejoin] = useState(false);
   const [Position, setPosition] = useState('');
+
+  const ctx = useContext(QueueContext);
 
   /**
    * Saves settings configuration.
    */
   const updateSettings = () => {
-    if (FinishedLoading) {
+    if (ctx.finishedLoading) {
       twitch.configuration.set(
           'broadcaster',
           '0.2',
@@ -30,17 +33,8 @@ const RejoinController = (props) => {
     }
   };
 
-  // make sure we authorize when the page loads.
   useEffect(() => {
-    twitch.onAuthorized((auth) => {
-      if (!FinishedLoading) {
-        setFinishedLoading(true);
-      }
-    });
-  });
-
-  useEffect(() => {
-    if (FinishedLoading) {
+    if (ctx.finishedLoading) {
       if (twitch.configuration.broadcaster) {
         try {
           const config = JSON.parse(twitch.configuration.broadcaster.content);
@@ -52,7 +46,7 @@ const RejoinController = (props) => {
         }
       }
     }
-  }, [FinishedLoading]);
+  }, [ctx.finishedLoading]);
 
   return (
     <div className="Well">

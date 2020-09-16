@@ -119,7 +119,7 @@ const QueueView = (_props) => {
       if (message.type == 'updateQueue') {
         // console.log(message.message);
         setQueue(message.message.queue);
-        setQueueOpen(message.message.status);
+        setQueueOpen(message.message.isOpen);
       }
     }
 

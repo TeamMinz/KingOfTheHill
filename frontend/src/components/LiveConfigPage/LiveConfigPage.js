@@ -7,7 +7,7 @@ import MatchupController from './components/MatchupController/MatchupController'
 import QueueController from './components/QueueController/QueueController';
 import RejoinController from './components/RejoinController/RejoinController';
 import QueueContext from '../../util/QueueContext';
-import Authentication from '../../util/Authentication';
+import Authentication from '../../util/Authentication/Authentication';
 
 import '../App/App.css';
 import './LiveConfigPage.css';
@@ -27,7 +27,34 @@ const LiveConfigPage = (props) => {
   // State stuff.
   const [FinishedLoading, setFinishedLoading] = useState(false);
   const [Theme, setTheme] = useState('light');
-  const [Queue, setQueue] = useState([]);
+  const [Queue, setQueue] = useState(null);
+  const [CurrentMatchup, setCurrentMatchup] = useState(null);
+
+  /**
+   * Fetches a bunch of info from the backend,
+   * and stores it for components to use.
+   */
+  const firstTimeSetup = () => {
+    // Update the queue.
+    authentication.makeCall('/queue/get', 'GET').then(function(resp) {
+      if (resp.ok) {
+        resp.json().then((queue) => {
+          setQueue(queue);
+        });
+      }
+    });
+
+    // Update the current matchup.
+    authentication.makeCall('/matchup/current/get').then((resp) => {
+      if (resp.ok) {
+        resp.json().then((resp) => {
+          setCurrentMatchup(resp.matchup);
+        });
+      } else {
+        // TODO: add logging.
+      }
+    });
+  };
 
   // Initialize authentication & twitch stuff.
   useEffect(() => {
@@ -38,7 +65,10 @@ const LiveConfigPage = (props) => {
 
       // Authentication setup
       twitch.onAuthorized((auth) => {
+        authentication.setToken(auth.token, auth.userId);
         if (!FinishedLoading) {
+          firstTimeSetup();
+
           setFinishedLoading(true);
         }
       });
@@ -66,11 +96,9 @@ const LiveConfigPage = (props) => {
       console.log(message);
 
       if (message.type == 'updateQueue') {
-        console.log('setting queue to:');
-        console.log(message.message.queue);
-
-        setQueue(message.message.queue);
-        // setQueueOpen(message.message.status);
+        setQueue(message.message);
+      } else if (message.type == 'updateMatchup') {
+        setCurrentMatchup(message.message);
       }
     }
 
@@ -93,7 +121,7 @@ const LiveConfigPage = (props) => {
       >
         <QueueContext.Provider value={{
           queue: Queue,
-          matchup: null,
+          currentMatchup: CurrentMatchup,
           finishedLoading: FinishedLoading,
           auth: authentication,
         }}>
