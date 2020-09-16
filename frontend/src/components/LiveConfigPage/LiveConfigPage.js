@@ -84,7 +84,7 @@ const LiveConfigPage = (props) => {
 
   useEffect(() => {
     /**
-     * Handles pubsub messages for 'updateQueue'
+     * Handles pubsub messages
      *
      * @param {string} _target target
      * @param {string} _contentType content type
