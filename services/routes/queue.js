@@ -188,7 +188,7 @@ setInterval(function() {
       if (queue.hasUpdated) {
         const message = {
           type: 'updateQueue',
-          message: {queue: queue.getAsArray(), status: queue.isOpen()},
+          message: {queue: queue.getAsArray(), isOpen: queue.isOpen()},
         };
         broadcast(channelId, message);
         queue.hasUpdated = false; // mark this so we don't update until a change

@@ -1,6 +1,6 @@
-import Authentication from '../../../../util/Authentication/Authentication';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import Collapsible from 'react-collapsible';
+import QueueContext from '../../../../util/QueueContext';
 import '../../LiveConfigPage.css';
 import './SelectedMessageForm.css';
 
@@ -29,13 +29,11 @@ const ErrorMessage = ({showError}) => {
  * @returns {Function} a cleanup function.
  */
 const SelectedMessageForm = (props) => {
-  const twitch = window.Twitch ? window.Twitch.ext : null;
-  const authentication = new Authentication();
+  const ctx = useContext(QueueContext);
 
   // State stuff.
   const [ShowError, setShowError] = useState(false);
-  const [SelectionMessage, setSelectionMessage] = useState('Loading...');
-  const [FinishedLoading, setFinishedLoading] = useState(false);
+  const [SelectionMessage, setSelectionMessage] = useState(null);
 
   /**
    * Called when the selection message should be updated.
@@ -45,8 +43,8 @@ const SelectedMessageForm = (props) => {
   const updateSelectionMessage = (event) => {
     event.preventDefault();
 
-    if (FinishedLoading) {
-      authentication
+    if (ctx.finishedLoading) {
+      ctx.auth
           .makeCall('/matchup/message/set', 'POST', {message: SelectionMessage})
           .then((resp) => {
             if (resp.ok) {
@@ -69,31 +67,18 @@ const SelectedMessageForm = (props) => {
     setSelectionMessage(event.target.value);
   };
 
+  // runs once when twitch api loads.
   useEffect(() => {
-    /**
-     * @param {object} auth auth object passed by twitch.
-     */
-    function handleAuthentication(auth) {
-      authentication.setToken(auth.token, auth.userId);
-
-      if (!FinishedLoading) {
-        authentication.makeCall('/matchup/message/get').then((resp) => {
-          if (resp.ok) {
-            resp.json().then((json) => {
-              setSelectionMessage(json.message);
-              setFinishedLoading(true);
-            });
-          }
+    if (ctx.finishedLoading) {
+      ctx.auth.makeCall('/matchup/message/get').then((resp) => {
+        resp.json().then((message) => {
+          setSelectionMessage(message.message);
         });
-      }
+      });
     }
+  }, [ctx.finishedLoading]);
 
-    if (twitch) {
-      twitch.onAuthorized(handleAuthentication);
-    }
-  });
-
-  if (FinishedLoading) {
+  if (ctx.finishedLoading && SelectionMessage) {
     return (
       <div className="Well">
         <Collapsible

@@ -1,8 +1,9 @@
-import React, {useState, useEffect} from 'react';
-import Authentication from '../../../../util/Authentication/Authentication';
+import React, {useState, useContext} from 'react';
+import QueueContext from '../../../../util/QueueContext';
+import Collapsible from 'react-collapsible';
 import './MatchupController.css';
 import '../../LiveConfigPage.css';
-import Collapsible from 'react-collapsible';
+
 
 /**
  * Matchup Component for Config
@@ -12,24 +13,21 @@ import Collapsible from 'react-collapsible';
  * @returns {string} html markup for Mathcup
  */
 const MatchupController = (props) => {
-  const twitch = window.Twitch ? window.Twitch.ext : null;
-  const authentication = new Authentication();
+  const ctx = useContext(QueueContext);
 
-  const [CurrentMatchup, setCurrentMatchup] = useState(null);
-  const [FinishedLoading, setFinishedLoading] = useState(false);
   const [ShowForfeitMenu, setShowForfeitMenu] = useState(false);
 
   /**
    * Sends request to start a new matchup
    */
   const startMatchup = () => {
-    if (FinishedLoading) {
+    if (ctx.finishedLoading) {
       console.log('sending request to start matchup');
-      authentication.makeCall('/matchup/start', 'POST').then((resp) => {
+      ctx.auth.makeCall('/matchup/start', 'POST').then((resp) => {
         if (resp.ok) {
           resp.json().then((resp) => {
             // console.log('started a matchup: ' + resp);
-            setCurrentMatchup(resp.matchup);
+            // setCurrentMatchup(resp.matchup);
           });
         } else {
           console.log('Error starting matchup.');
@@ -45,13 +43,13 @@ const MatchupController = (props) => {
    * @param {string} winner - champion or challenger
    */
   const declareWinner = (winner) => {
-    authentication
+    ctx.auth
         .makeCall('/matchup/current/report', 'POST', {
           winner,
         })
         .then((resp) => {
           if (resp.ok) {
-            setCurrentMatchup(null);
+            // setCurrentMatchup(null);
           // console.log(`${winner} has been declared the winner.`);
           } else {
           // TODO : add logging.
@@ -66,13 +64,13 @@ const MatchupController = (props) => {
    * @param {string} player the player to forefeit: 'challenger' or 'champion'
    */
   const forfeitPlayer = (player) => {
-    authentication
+    ctx.auth
         .makeCall('/matchup/current/forfeit', 'POST', {
           player,
         })
         .then((resp) => {
           if (resp.ok) {
-            setCurrentMatchup(null);
+            // setCurrentMatchup(null);
           } else {
           // TODO : add logging.
             console.log('there was an error processing the request.');
@@ -80,30 +78,8 @@ const MatchupController = (props) => {
         });
   };
 
-  // make sure we authorize when the page loads.
-  useEffect(() => {
-    if (twitch) {
-      twitch.onAuthorized((auth) => {
-        authentication.setToken(auth.token, auth.userId);
-        if (!FinishedLoading) {
-          authentication.makeCall('/matchup/current/get').then((resp) => {
-            if (resp.ok) {
-              resp.json().then((resp) => {
-                setCurrentMatchup(resp.matchup);
-              });
-            } else {
-              // TODO: add logging.
-            }
-          });
-
-          setFinishedLoading(true);
-        }
-      });
-    }
-  });
-
   // Stuff for rendering.
-  const matchupController = (CurrentMatchup != null && FinishedLoading && (
+  const matchupController = (ctx.finishedLoading && (ctx.currentMatchup && (
     <div>
       <button
         className="DefaultButton"
@@ -111,7 +87,7 @@ const MatchupController = (props) => {
           declareWinner('champion');
         }}
       >
-        {CurrentMatchup.champion.displayName}
+        {ctx.currentMatchup.champion.displayName}
       </button>
       vs
       <button
@@ -120,7 +96,7 @@ const MatchupController = (props) => {
           declareWinner('challenger');
         }}
       >
-        {CurrentMatchup.challenger.displayName}
+        {ctx.currentMatchup.challenger.displayName}
       </button>
       {(ShowForfeitMenu && (
         <div>
@@ -130,7 +106,7 @@ const MatchupController = (props) => {
               forfeitPlayer('champion');
             }}
           >
-            {CurrentMatchup.champion.displayName}
+            {ctx.currentMatchup.champion.displayName}
           </button>
           or
           <button
@@ -139,7 +115,7 @@ const MatchupController = (props) => {
               forfeitPlayer('challenger');
             }}
           >
-            {CurrentMatchup.challenger.displayName}
+            {ctx.currentMatchup.challenger.displayName}
           </button>
         </div>
       )) || (
@@ -155,11 +131,13 @@ const MatchupController = (props) => {
     </div>
   )) || (
     <div className="MatchupController">
-      <button className="DefaultButton" onClick={startMatchup}>
+      <button
+        className="DefaultButton"
+        onClick={startMatchup}>
         Start Matchup!
       </button>
     </div>
-  );
+  ));
 
   return <div className="Well">
     <Collapsible
