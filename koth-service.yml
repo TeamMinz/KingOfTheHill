@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: koth-service
+  namespace: koth
+  labels:
+    app: koth
+spec:
+  selector:
+    matchLabels:
+      run: koth-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: koth-service
+    spec:
+      containers:
+      - name: koth-service
+        image: 045032409977.dkr.ecr.us-east-2.amazonaws.com/kothservice:Latest
+        command: ["node", "backend.js"]
+        workingDir: /opt/koth

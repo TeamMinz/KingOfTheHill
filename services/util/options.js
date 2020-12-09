@@ -26,7 +26,7 @@ function getOption(option, envOption) {
     return process.env[envOption];
   }
   // Panic
-  throw new Error(`Missing required "${option}" environment variable.`);
+  throw new Error(`Missing required TESTSETESTETSET "${option}" environment variable.`);
 }
 
 const SECRET = Buffer.from(getOption('secret', 'EXT_SECRET'), 'base64');
