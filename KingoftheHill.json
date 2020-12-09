@@ -128,5 +128,6 @@
   "frontendCommand": "npm run start",
   "frontendFolderName": "frontend",
   "name": "King of the Hill",
-  "version": 2
+  "version": 3,
+  "usingRandomFrontendHostingPort": true
 }
