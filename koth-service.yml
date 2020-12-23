@@ -19,7 +19,7 @@ spec:
       - name: koth-service
         image: 045032409977.dkr.ecr.us-east-2.amazonaws.com/kothservice:Latest
         imagePullPolicy: Always
-        #command: ["node", "backend.js"]
+        command: ["node", "backend.js"]
         workingDir: /opt/koth
         env:
           - name: EXT_SECRET
