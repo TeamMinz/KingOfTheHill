@@ -20,6 +20,18 @@
       "isEphemeral": false,
       "isOrigin": true,
       "value": "https://localhost:8081"
+    },
+    {
+      "isAllowed": true,
+      "isEphemeral": false,
+      "isOrigin": false,
+      "value": "https://localhost/champion/get"
+    },
+    {
+      "isAllowed": true,
+      "isEphemeral": false,
+      "isOrigin": true,
+      "value": "https://localhost"
     }
   ],
   "extensionViews": [
@@ -54,7 +66,7 @@
     "canInstall": true,
     "configUrl": "https://localhost:8080/config.html",
     "configurationLocation": "hosted",
-    "description": "Allow your viewers to battle it out in a King of the Hill style match up!\nKeep track of the current king and their win streak!\n\nNeed help? Join our discord: https://discord.gg/9FwRsx6\nOr email our support email: support@teamminz.com\n\nChangelog:\n0.0.2 - \n\n\nFuture Plans:\n* Leaderboard support.\n* Subscriber only mode.\n* Bits support.\n* Further customization.",
+    "description": "Allow your viewers to battle it out in a King of the Hill style match up!\nKeep track of the current king and their win streak!\n\nNeed help or have suggestions? Join our discord: https://discord.gg/9FwRsx6\nOr email our support email: support@teamminz.com\n\nChangelog:\n0.0.2 - The broadcaster Update\n* Added the ability for broadcaster / moderator to remove people from the queue.\n* Added ability for the broadcaster to automatically rejoin the queue\n* Added the ability to forfeit a matchup instead of declaring a winner.\n* Added the ability for the broadcaster to enable / disable the queue.\n* Broadcaster can now control queue from live config page.\n* Working Mobile Support!\n* Bug Fixes\n\nFuture Plans:\n* Leaderboard support.\n* Subscriber only mode.\n* Bits support.\n* Further customization.",
     "eulaTosUrl": "",
     "hasChatSupport": false,
     "iconUrl": "https://extensions-discovery-images.twitch.tv/z1eskwyierovbt4gz8zbq1r45tne31/0.0.1/logo79644e4d-0d78-4a2b-8ae9-fda7c502b43e",
@@ -80,7 +92,7 @@
     "summary": "A queue extension that specializes in a King of the Hill style queue.",
     "supportEmail": "support@teamminz.com",
     "vendorCode": "",
-    "version": "0.0.2",
+    "version": "1.0.0",
     "viewerSummary": "Join the queue to compete for King of the Hill!",
     "viewerUrl": "https://localhost:8080/panel.html",
     "viewerUrls": {
