@@ -1,9 +1,9 @@
 version: '3'
 services:
   koth:
-    image: koth
+    image: koth:latest
     ports:
-      - "8081:8081"
+      - "8000:8000"
     environment: 
       - EXT_SECRET=$EXT_SECRET
       - EXT_CLIENT_ID=$EXT_CLIENT_ID
@@ -11,6 +11,7 @@ services:
   nginx:
     image: nginx:1.15-alpine
     ports:
+      - "8081:8081"
       - "80:80"
       - "443:443"
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
@@ -18,7 +19,6 @@ services:
       - ./nginx:/etc/nginx/conf.d
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
-      - ./conf:/etc/koth_dev
     depends_on: 
       - koth
   certbot:

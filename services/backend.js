@@ -1,5 +1,5 @@
 const fs = require('fs');
-const https = require('https');
+const http = require('http');
 const express = require('express');
 const cors = require('cors');
 const routes = require('./routes');
@@ -15,6 +15,12 @@ app.use(authorizeHeader);
 
 app.use('/', routes);
 
-app.listen(8081, () => {
-  console.log('EBS now listening.');
+//Route for testing connectivity.
+app.get('/ping', (req, res) => {
+    res.send('pong');
 });
+
+const HOST = '0.0.0.0';
+const PORT = 8000;
+
+app.listen(PORT, HOST);

@@ -1,10 +1,11 @@
 FROM node:erbium-buster-slim
 
-EXPOSE 8081
 ENV NODE_ENV=production
 
-COPY . /opt/koth
 WORKDIR /opt/koth
+COPY . . 
+
+EXPOSE 8000
 
 RUN npm ci
 
