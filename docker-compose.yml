@@ -1,7 +1,7 @@
 version: '3'
 services:
   koth:
-    image: koth:latest
+    image: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:production
     ports:
       - "8000:8000"
     environment: 
@@ -27,3 +27,9 @@ services:
     volumes:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
+  watchtower:
+    image: containerrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./watchtower/config.json:/config.json
+    command: --interval 60
