@@ -1,6 +1,17 @@
 import jwt from 'jsonwebtoken';
+import process from 'process';
 
-const BASE_URL = 'https://localhost';
+let BASE_URL;
+
+if (process.env.NODE_ENV == 'production') {
+  BASE_URL = 'https://prod.queue.teamminz.com';
+} else if (process.env.NODE_ENV == 'beta') {
+  BASE_URL = 'https://dev.queue.teamminz.com';
+} else {
+  BASE_URL = 'http://localhost:8000';
+}
+
+console.log('Using backend: ' + BASE_URL);
 
 /**
  * Helper class for authentication against an EBS service.
