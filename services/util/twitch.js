@@ -9,7 +9,9 @@ const {OWNER_ID, SECRET, CLIENT_ID} = require('./options');
 const serverTokenDurationSec = 30;
 
 /**
- * @param {string} channelId the channel id
+ * Builds an authenticaion payload, that authenticates
+ * requests to twitch's pubsub & configuration apis.
+ * @param {string} channelId the id of the broadcaster that this request comes from.
  * @returns {object} a signed authentication token.
  */
 const buildChannelAuth = (channelId) => {
