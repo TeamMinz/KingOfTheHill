@@ -1,7 +1,8 @@
 version: '3'
 services:
   koth:
-    image: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:production
+    restart: always
+    image: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:Latest
     ports:
       - "8000:8000"
     environment: 
@@ -28,8 +29,19 @@ services:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
   watchtower:
-    image: containerrr/watchtower
+    image: containrrr/watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./watchtower/config.json:/config.json
+      - ~/.docker/config.json:/config.json
+      - ~/.aws/:/.aws
+      - helper:/go/bin
+      - /usr/bin/:/usr/bin/
+      - /bin/:/bin/
+    environment:
+      - AWS_REGION=us-east-2 # this is required for docker-credential-ecr-login
+      - HOME=/
+      - PATH=$PATH:/usr/bin
     command: --interval 60
+volumes:
+  helper:
+    external: true

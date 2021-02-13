@@ -1,0 +1,17 @@
+{
+    "credHelpers": {
+    	"045032409977.dkr.ecr.us-east-2.amazonaws.com": "ecr-login"
+    }
+}
+{
+		"credsStore" : "ecr-login",
+		"HttpHeaders" : {			      
+				"User-Agent" : "Docker-Client/19.03.1 (XXXXXX)"
+		},
+		"auths" : {
+				"045032409977.dkr.ecr.us-east-2.amazonaws.com" : {}
+		},
+		"credHelpers": {				
+				"045032409977.dkr.ecr.us-east-2.amazonaws.com" : "ecr-login"
+		}
+}
