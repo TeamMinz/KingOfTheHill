@@ -51,8 +51,10 @@ async function resolveDisplayName(userId) {
 }
 
 /**
- * @param {*} channelId the channel to broadcast to
+ * Gets the configuration settings for the channelId.
  *
+ * @param {*} channelId the channel to broadcast to
+ * @returns {any} configuration settings.
  */
 const getbroadcasterConfig = async (channelId) => {
   try {
@@ -73,7 +75,7 @@ const getbroadcasterConfig = async (channelId) => {
       return {rejoin: false, position: ''};
     }
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return {rejoin: false, position: ''};
   }
 };

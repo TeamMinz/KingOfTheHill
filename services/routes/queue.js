@@ -155,7 +155,6 @@ queue.post('/open', isBroadcaster, (req, res) => {
   const {channel_id: channelId} = req.twitch;
 
   const queue = getQueue(channelId);
-
   queue.openQueue();
 });
 
