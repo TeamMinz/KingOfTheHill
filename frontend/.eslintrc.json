@@ -21,6 +21,7 @@
     "require-jsdoc": "off",
     "valid-jsdoc": "off",
     "no-undef": "error",
+    "max-len": ["error", { "code": 110 }],
     "jsdoc/require-jsdoc": [
       "warn",
       {

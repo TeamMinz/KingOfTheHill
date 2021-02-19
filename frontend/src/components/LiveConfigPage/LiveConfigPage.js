@@ -29,7 +29,7 @@ const LiveConfigPage = (props) => {
   const [Theme, setTheme] = useState('light');
   const [Queue, setQueue] = useState(null);
   const [CurrentMatchup, setCurrentMatchup] = useState(null);
-
+  const [ConfigSettings, setConfigSettings] = useState({});
   /**
    * Fetches a bunch of info from the backend,
    * and stores it for components to use.
@@ -54,6 +54,16 @@ const LiveConfigPage = (props) => {
         // TODO: add logging.
       }
     });
+
+    // Pull our config settings from twitch config service.
+    if (twitch.configuration.broadcaster && twitch.configuration.broadcaster.version == '1.0.0') {
+      try {
+        const config = JSON.parse(twitch.configuration.broadcaster.content);
+        setConfigSettings(config);
+      } catch (e) {
+        console.log(e);
+      }
+    }
   };
 
   // Initialize authentication & twitch stuff.
@@ -82,6 +92,7 @@ const LiveConfigPage = (props) => {
     }
   });
 
+  // Updates queue and stuff when we get appt pubsub messages and such.
   useEffect(() => {
     /**
      * Handles pubsub messages
@@ -109,6 +120,26 @@ const LiveConfigPage = (props) => {
     }
   }, [FinishedLoading]);
 
+  // Updates the twitch configuration settings when our ConfigSettings change.
+  useEffect(() => {
+    if (FinishedLoading) {
+      twitch.configuration.set(
+          'broadcaster',
+          '1.0.0',
+          JSON.stringify(ConfigSettings),
+      );
+    }
+  });
+
+  /**
+   * @param {object} rejoinSettings settings object for rejoin settings.
+   */
+  const setRejoinSettings = (rejoinSettings) => {
+    const config = Object.assign({}, ConfigSettings);
+    config.rejoinSettings = rejoinSettings;
+    setConfigSettings(config);
+  };
+
   if (FinishedLoading) {
     return (
       <div
@@ -125,7 +156,9 @@ const LiveConfigPage = (props) => {
         }}>
           <SelectedMessageForm />
           <MatchupController />
-          <RejoinController />
+          <RejoinController
+            settings={ConfigSettings}
+            onChange={setRejoinSettings} />
           <QueueController />
         </QueueContext.Provider>
       </div>

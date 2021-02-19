@@ -1,4 +1,4 @@
-FROM node:erbium-buster-slim
+FROM node:current-buster-slim
 
 ENV NODE_ENV=production
 
