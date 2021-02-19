@@ -3,6 +3,7 @@ const queue = require('express').Router();
 const {broadcast} = require('../util/pubsub');
 const {resolveDisplayName} = require('../util/twitch');
 const {getQueue, getAllQueues} = require('../controller/queue');
+const {getWatchdog} = require('../controller/watchdog');
 const {getMatchup, setMatchup} = require('../controller/matchup');
 const {getChampion, setChampion} = require('../controller/champion');
 const {isBroadcaster, isQueueOpen} = require('../util/middleware');
@@ -22,7 +23,7 @@ queue.get('/get', function(req, res) {
   });
 });
 
-queue.post('/kick', isQueueOpen, (req, res) => {
+queue.post('/kick', isQueueOpen, async (req, res) => {
   const {channel_id: channelId, role} = req.twitch;
 
   const currentQueue = getQueue(channelId);
@@ -37,19 +38,23 @@ queue.post('/kick', isQueueOpen, (req, res) => {
     return;
   }
 
-  if (currentQueue.getPosition(req.body.kickTarget) == -1) {
-    res.sendStatus(400);
+  const kickTarget = req.body.kickTarget;
+
+  if (currentQueue.getPosition(kickTarget) == -1) {
+    res.status(400).send('Cannot kick someone not in the queue.');
     return;
   }
 
   const champ = getChampion(channelId);
 
   // Remove this person as champion if they're champ.
-  if (champ && champ.user.opaqueUserId == req.body.kickTarget) {
+  if (champ &&
+    (champ.user.opaqueUserId == kickTarget ||
+      champ.user.userId == kickTarget)) {
     setChampion(channelId, null);
   }
 
-  currentQueue.remove(req.body.kickTarget);
+  currentQueue.remove(kickTarget);
   res.sendStatus(200);
 });
 
@@ -81,8 +86,8 @@ queue.post('/join', isQueueOpen, async (req, res) => {
 
   if (currentMatchup) {
     if (
-      currentMatchup.champion.opaqueUserId == opaqueUserId ||
-      currentMatchup.challenger.opaqueUserId == opaqueUserId
+      currentMatchup.champion.userId == userId ||
+      currentMatchup.challenger.userId == userId
     ) {
       res.status(500).send({
         message: 'You may not join the queue if you are in a current match.',
@@ -97,7 +102,7 @@ queue.post('/join', isQueueOpen, async (req, res) => {
   const displayName = await resolveDisplayName(userId);
 
   // Make sure this person isn't already in this queue.
-  if (currentQueue.contains(opaqueUserId)) {
+  if (currentQueue.contains(userId)) {
     res.status(500).send({
       message: 'You are already in the queue.',
     });
@@ -107,6 +112,7 @@ queue.post('/join', isQueueOpen, async (req, res) => {
   // Okay time to actually put the user in the queue.
 
   const challenger = {
+    userId,
     opaqueUserId,
     displayName,
   };
@@ -120,14 +126,19 @@ queue.post('/join', isQueueOpen, async (req, res) => {
 
 queue.post('/leave', isQueueOpen, (req, res) => {
   // Handles leaving the queue.
-  const {channel_id: channelId, opaque_user_id: opaqueUserId} = req.twitch;
+  const {channel_id: channelId, user_id: userId} = req.twitch;
 
   const currentQueue = getQueue(channelId);
 
   // Lets do some checks to make sure were not doing anything bad.
-
+  if (!userId) {
+    res.status(401).send({
+      message: 'You must share your identity to enter the queue.',
+    });
+    return;
+  }
   // Make sure this person is actually in this queue.
-  if (!currentQueue.contains(opaqueUserId)) {
+  if (!currentQueue.contains(userId)) {
     res.status(500).send({
       message: 'You cannot leave a queue you\'re not in.',
     });
@@ -139,30 +150,36 @@ queue.post('/leave', isQueueOpen, (req, res) => {
   const champ = getChampion(channelId);
   // console.log(champ);
   // console.log(opaqueUserId);
-  if (champ && champ.user.opaqueUserId == opaqueUserId) {
+  if (champ && champ.user.userId == userId) {
     setChampion(channelId, null);
   }
 
   // Okay. lets remove them from the queue.
-  currentQueue.remove(opaqueUserId);
+  currentQueue.remove(userId);
 
   res.send({
     message: 'You have been removed from the queue.',
   });
 });
 
-queue.post('/open', isBroadcaster, (req, res) => {
+queue.post('/open', isBroadcaster, async (req, res) => {
   const {channel_id: channelId} = req.twitch;
 
   const queue = getQueue(channelId);
   queue.openQueue();
+
+  const watchdog = getWatchdog(channelId);
+  await watchdog.activate();
 });
 
-queue.post('/close', isBroadcaster, (req, res) => {
+queue.post('/close', isBroadcaster, async (req, res) => {
   const {channel_id: channelId} = req.twitch;
 
   const queue = getQueue(channelId);
   queue.closeQueue();
+
+  const watchdog = getWatchdog(channelId);
+  await watchdog.deactivate();
 
   const matchup = getMatchup(channelId);
 

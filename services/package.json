@@ -28,7 +28,7 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "superagent": "^6.1.0",
-    "tmi.js": "^1.7.1",
+    "twitch-js": "^2.0.0-beta.42",
     "yargs": "^16.0.3"
   }
 }

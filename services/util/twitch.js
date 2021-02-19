@@ -1,17 +1,14 @@
-// const {buildClientAuth} = require('./auth');
 const superagent = require('superagent');
 const jwt = require('jsonwebtoken');
 const {OWNER_ID, SECRET, CLIENT_ID} = require('./options');
 
-// const messageQueues = {};
-// const channelCooldowns = {};
-// const channelCooldownMs = 1000;
 const serverTokenDurationSec = 30;
 
 /**
  * Builds an authenticaion payload, that authenticates
  * requests to twitch's pubsub & configuration apis.
- * @param {string} channelId the id of the broadcaster that this request comes from.
+ *
+ * @param {string} channelId the id of the broadcaster.
  * @returns {object} a signed authentication token.
  */
 const buildChannelAuth = (channelId) => {
@@ -41,6 +38,7 @@ async function resolveDisplayName(userId) {
         .set('Client-ID', CLIENT_ID)
         .set('Accept', 'application/vnd.twitchtv.v5+json');
     if (resp.ok) {
+      console.log(resp.body);
       return resp.body.display_name;
     } else {
       return 'anonymous';
@@ -50,6 +48,28 @@ async function resolveDisplayName(userId) {
   }
 }
 
+/**
+ * Resolves a channelId into the streamers name.
+ *
+ * @param {string | number} channelId the channeid to resolve into a name.
+ * @returns {null | string} Null if the resolution fails, otherwise the name.
+ */
+async function resolveChannelName(channelId) {
+  try {
+    const resp = await superagent
+        .get(`https://api.twitch.tv/kraken/channels/${channelId}`)
+        .set('Client-ID', CLIENT_ID)
+        .set('Accept', 'application/vnd.twitchtv.v5+json');
+
+    if (resp.ok) {
+      return resp.body.display_name;
+    } else {
+      return null;
+    }
+  } catch (e) {
+    return null;
+  }
+}
 /**
  * Gets the configuration settings for the channelId.
  *
@@ -80,4 +100,10 @@ const getbroadcasterConfig = async (channelId) => {
   }
 };
 
-module.exports = {buildChannelAuth, resolveDisplayName, getbroadcasterConfig};
+module.exports =
+  {
+    buildChannelAuth,
+    resolveDisplayName,
+    getbroadcasterConfig,
+    resolveChannelName,
+  };

@@ -6,6 +6,8 @@ const argv = yargs
     .describe('ownerid', 'The extension\'s owner id')
     .alias('o', 'ownerid')
     .describe('secret', 'The extension\'s secret')
+    .alias('t', 'oauth')
+    .describe('oauth', 'Oauth token for chatbot.')
     .alias('s', 'secret')
     .describe('clientid', 'The extension\'s clientId')
     .alias('c', 'clientid').argv;
@@ -32,9 +34,11 @@ function getOption(option, envOption) {
 const SECRET = Buffer.from(getOption('secret', 'EXT_SECRET'), 'base64');
 const OWNER_ID = getOption('ownerid', 'EXT_OWNER_ID');
 const CLIENT_ID = getOption('clientid', 'EXT_CLIENT_ID');
+const EXT_BOT_OAUTH = getOption('oauth', 'EXT_BOT_OAUTH');
 
 module.exports = {
   SECRET,
   OWNER_ID,
   CLIENT_ID,
+  EXT_BOT_OAUTH,
 };

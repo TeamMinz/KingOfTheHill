@@ -35,8 +35,7 @@ const reportWinner = async (channelId, winner, loser, broadcasterLost) => {
 
   const queue = getQueue(channelId);
 
-  console.log(broadcasterLost);
-  // If broadcaster lost set them back to their dedired position
+  // If broadcaster lost set them back to their desired position
   if (broadcasterLost) {
     const content = await twitch.getbroadcasterConfig(channelId);
     if (content.rejoin) {

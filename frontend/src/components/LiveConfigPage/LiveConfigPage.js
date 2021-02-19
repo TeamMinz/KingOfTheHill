@@ -93,8 +93,6 @@ const LiveConfigPage = (props) => {
     function handleMessage(_target, _contentType, body) {
       const message = JSON.parse(body);
 
-      console.log(message);
-
       if (message.type == 'updateQueue') {
         setQueue(message.message);
       } else if (message.type == 'updateMatchup') {

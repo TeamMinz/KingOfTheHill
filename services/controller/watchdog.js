@@ -1,22 +1,107 @@
-const tmi = require('tmi.js');
+const {Chat} = require('twitch-js');
+const {resolveChannelName} = require('../util/twitch');
+const {getQueue} = require('./queue');
+const {getMatchup} = require('./matchup');
+const {getChampion, setChampion} = require('./champion');
+const {EXT_BOT_OAUTH} = require('../util/options');
 
-const client = new tmi.Client({
-  options: {
-    debug: process.env.NODE_ENV != 'production',
-    connection: {
-      reconnect: true,
-    },
+
+const client = new Chat({
+  username: 'kingofthehillbot',
+  token: EXT_BOT_OAUTH,
+  log: {
+    level: 'warn',
   },
 });
 
-client.connect();
+client.connect()
+    .then((userstate) => {
+      console.log('Connected to twitch chat IRC backend.');
 
-client.on('message', (channel, userstate, message, _) => {
+      client.on('PRIVMSG', (message) => {
+        if (message.isSelf) return;
+        if (!(message.message == '!join' ||
+            message.message == '!leave' ||
+            message.message == '!position')) return;
 
-});
+        const senderId = message.tags.userId;
+        const senderName = message.username;
+        const channelId = message.tags.roomId;
+        const channel = message.channel;
+
+        console.log('Received command: ' + message.message);
+
+        /**
+         * @param {string} message Message to send to the command issuer.
+         */
+        const sendTargetedMessage = (message) => {
+          client.say(channel, `@${senderName} ${message}`)
+              .catch(console.error);
+        };
+
+        const queue = getQueue(channelId);
+        const matchup = getMatchup(channelId);
+
+        if (message.message == '!join') {
+          if (!queue.isOpen()) {
+            sendTargetedMessage('You cannot join a closed queue.');
+            return;
+          }
+
+          if (matchup) {
+            if (
+              matchup.champion.displayName == senderName ||
+              matchup.challenger.displayName == senderName
+            ) {
+              sendTargetedMessage(
+                  'You may not join the queue if you are currently in a match');
+              return;
+            }
+          }
+
+          if (queue.contains(senderId)) {
+            sendTargetedMessage('You are already in the queue.');
+            return;
+          }
+
+          const challenger = {
+            displayName: senderName,
+            userId: senderId,
+            // eslint-disable-next-line max-len
+            opaqueUserId: senderId, // TODO: this is done here for backwards compatibility.
+          }; // Remove that when 1.0.0 is relased.
+
+          const queuePosition = queue.enqueue(challenger);
+
+          sendTargetedMessage(`You are now #${queuePosition} in the queue.`);
+        } else if (message.message == '!leave') {
+          if (!queue.contains(senderId)) {
+            sendTargetedMessage('You cannot leave a queue you\'re not in.');
+            return;
+          }
+
+          const champ = getChampion(channelId);
+
+          if (champ && champ.user.userId == senderId) {
+            setChampion(channelId, null);
+          }
+
+          queue.remove(senderId);
+        } else if (message.message == '!position') {
+          if (!queue.contains(senderId)) {
+            sendTargetedMessage('You are not currently in the queue.');
+            return;
+          }
+
+          const queuePosition = queue.getPosition(senderId);
+          sendTargetedMessage(`You are in position: #${queuePosition + 1}.`);
+        }
+      });
+    })
+    .catch(console.error);
 
 /**
- *
+ * Watches chat for our commands, and executes them.
  */
 class Watchdog {
   /**
@@ -31,12 +116,23 @@ class Watchdog {
   /**
    * Activates the watchdog.
    */
-  async activate() {}
+  async activate() {
+    if (!this._channelName) {
+      this._channelName = await resolveChannelName(this._channelId);
+    }
+    await client.join(this._channelName);
+    this._isActive = true;
+    console.log(`Activated watchdog for channel: ${this._channelName}.`);
+  }
 
   /**
    * Deactivates the watchdog
    */
-  async deactivate() {}
+  async deactivate() {
+    await client.part(this._channelName);
+    this._isActive = false;
+    console.log(`Deactivated watchdog for channel: ${this._channelName}.`);
+  }
 
   /**
    * @returns {boolean} whether the watchdog is active.
@@ -63,3 +159,5 @@ function getWatchdog(channelId) {
 
   return watchdog;
 }
+
+module.exports = {getWatchdog};
