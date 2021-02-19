@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-const BASE_URL = 'https://localhost';
+const BASE_URL = 'http://localhost:8000';
 
 /**
  * Helper class for authentication against an EBS service.

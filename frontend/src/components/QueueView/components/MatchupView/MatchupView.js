@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
-import '../../../App/App.css';
-import './MatchupView.css';
+import '../../../App/App.scss';
+import './MatchupView.scss';
 import QueueContext from '../../../../util/QueueContext';
 
 /**
