@@ -5,17 +5,18 @@ phases:
     commands:
       - echo Logging into Docker Hub for build...
       - docker login --username jackbass --password $DOCKER_HUB_TOKEN
-      - echo Tagging image with $CODEBUILD_WEBHOOK_HEAD_REF
+      - export BRANCH_NAME=$(echo $CODEBUILD_WEBHOOK_HEAD_REF | sed 's:.*/::')
+      - echo Tagging image with $BRANCH_NAME
   build:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...          
-      - docker build -t $IMAGE_REPO_NAME:$CODEBUILD_WEBHOOK_HEAD_REF ./services
-      - docker tag $IMAGE_REPO_NAME:$CODEBUILD_WEBHOOK_HEAD_REF $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_WEBHOOK_HEAD_REF  
+      - docker build -t $IMAGE_REPO_NAME:$BRANCH_NAME ./services
+      - docker tag $IMAGE_REPO_NAME:$BRANCH_NAME $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$BRANCH_NAME 
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com 
       - echo Pushing the Docker image...
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_WEBHOOK_HEAD_REF
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$BRANCH_NAME
