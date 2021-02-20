@@ -159,13 +159,13 @@
         "aspectHeight": 0,
         "aspectRatioX": 300,
         "aspectRatioY": 400,
-        "scalePixels": 1024,
+        "scalePixels": 0,
         "targetHeight": 6500,
         "size": 0,
         "zoom": false,
         "zoomPixels": 0,
         "canLinkExternalContent": false,
-        "autoScale": true
+        "autoScale": false
       },
       "config": {
         "viewerUrl": "https://localhost:8080/config.html",

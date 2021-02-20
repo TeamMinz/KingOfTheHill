@@ -11,6 +11,7 @@ import Authentication from '../../util/Authentication/Authentication';
 
 import '../App/App.css';
 import './LiveConfigPage.css';
+import WatchdogController from './components/WatchdogController/WatchdogController';
 
 /**
  * Live config page react hook.
@@ -123,21 +124,36 @@ const LiveConfigPage = (props) => {
   // Updates the twitch configuration settings when our ConfigSettings change.
   useEffect(() => {
     if (FinishedLoading) {
+      console.log('Pushing updates!');
+      console.log(ConfigSettings);
       twitch.configuration.set(
           'broadcaster',
           '1.0.0',
           JSON.stringify(ConfigSettings),
       );
     }
-  });
+  }, [ConfigSettings]);
 
   /**
    * @param {object} rejoinSettings settings object for rejoin settings.
    */
   const setRejoinSettings = (rejoinSettings) => {
-    const config = Object.assign({}, ConfigSettings);
-    config.rejoinSettings = rejoinSettings;
-    setConfigSettings(config);
+    setConfigSettings((prevState) => {
+      const config = Object.assign({}, prevState);
+      config['rejoinSettings'] = rejoinSettings;
+      return config;
+    });
+  };
+
+  /**
+   * @param {object} watchdogSettings settings object for the watchdog settings.
+   */
+  const setWatchdogSettings = (watchdogSettings) => {
+    setConfigSettings((prevState) => {
+      const config = Object.assign({}, prevState);
+      config['watchdogSettings'] = watchdogSettings;
+      return config;
+    });
   };
 
   if (FinishedLoading) {
@@ -159,6 +175,9 @@ const LiveConfigPage = (props) => {
           <RejoinController
             settings={ConfigSettings}
             onChange={setRejoinSettings} />
+          <WatchdogController
+            settings={ConfigSettings}
+            onChange={setWatchdogSettings} />
           <QueueController />
         </QueueContext.Provider>
       </div>

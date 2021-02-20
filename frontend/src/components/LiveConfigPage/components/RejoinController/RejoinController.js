@@ -20,8 +20,6 @@ const RejoinController =
   const autoRejoin = ('autoRejoin' in rejoinSettings)? rejoinSettings.autoRejoin : false;
   const rejoinPosition = ('rejoinPosition' in rejoinSettings)? rejoinSettings.rejoinPosition : 5;
 
-  console.log('Rejoin controller re rendered');
-
   return (
     <div className="Well">
       <Collapsible

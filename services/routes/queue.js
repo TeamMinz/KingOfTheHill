@@ -1,7 +1,7 @@
 // eslint-disable-next-line new-cap
 const queue = require('express').Router();
 const {broadcast} = require('../util/pubsub');
-const {resolveDisplayName} = require('../util/twitch');
+const {resolveDisplayName, getBroadcasterConfig} = require('../util/twitch');
 const {getQueue, getAllQueues} = require('../controller/queue');
 const {getWatchdog} = require('../controller/watchdog');
 const {getMatchup, setMatchup} = require('../controller/matchup');
@@ -168,8 +168,18 @@ queue.post('/open', isBroadcaster, async (req, res) => {
   const queue = getQueue(channelId);
   queue.openQueue();
 
-  const watchdog = getWatchdog(channelId);
-  await watchdog.activate();
+  const {content} = await getBroadcasterConfig(channelId);
+
+  console.log(content);
+
+  if ('watchdogSettings' in content) {
+    const watchdogSettings = content.watchdogSettings;
+
+    if (watchdogSettings.enableWatchdog) {
+      const watchdog = getWatchdog(channelId);
+      await watchdog.activate();
+    }
+  }
 });
 
 queue.post('/close', isBroadcaster, async (req, res) => {
@@ -179,7 +189,10 @@ queue.post('/close', isBroadcaster, async (req, res) => {
   queue.closeQueue();
 
   const watchdog = getWatchdog(channelId);
-  await watchdog.deactivate();
+
+  if (watchdog.isActive()) {
+    await watchdog.deactivate();
+  }
 
   const matchup = getMatchup(channelId);
 

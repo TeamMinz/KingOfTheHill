@@ -38,7 +38,6 @@ async function resolveDisplayName(userId) {
         .set('Client-ID', CLIENT_ID)
         .set('Accept', 'application/vnd.twitchtv.v5+json');
     if (resp.ok) {
-      console.log(resp.body);
       return resp.body.display_name;
     } else {
       return 'anonymous';
@@ -76,7 +75,7 @@ async function resolveChannelName(channelId) {
  * @param {*} channelId the channel to broadcast to
  * @returns {any} configuration settings.
  */
-const getbroadcasterConfig = async (channelId) => {
+const getBroadcasterConfig = async (channelId) => {
   try {
     const resp = await superagent
         .get(
@@ -90,13 +89,14 @@ const getbroadcasterConfig = async (channelId) => {
       const content = JSON.parse(
           resp.body[`broadcaster:${channelId}`].record.content,
       );
-      return content;
+      const version = resp.body[`broadcaster:${channelId}`].record.verison;
+      return {version, content};
     } else {
-      return {rejoin: false, position: ''};
+      return {};
     }
   } catch (e) {
     console.error(e);
-    return {rejoin: false, position: ''};
+    return {};
   }
 };
 
@@ -104,6 +104,6 @@ module.exports =
   {
     buildChannelAuth,
     resolveDisplayName,
-    getbroadcasterConfig,
+    getBroadcasterConfig,
     resolveChannelName,
   };
