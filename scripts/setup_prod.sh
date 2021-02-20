@@ -1,5 +1,5 @@
 #!/bin/bash
-
+cd /etc/koth/QueueExtension
 export EXT_SECRET=$(aws secretsmanager get-secret-value --secret-id KOTH | jq -r '.SecretString | fromjson | .EXT_SECRET');
 export EXT_CLIENT_ID=$(aws secretsmanager get-secret-value --secret-id KOTH | jq -r '.SecretString | fromjson | .EXT_CLIENT_ID');
 export EXT_OWNER_ID=$(aws secretsmanager get-secret-value --secret-id KOTH | jq -r '.SecretString | fromjson | .EXT_OWNER_ID');
@@ -15,7 +15,17 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=(dev.queue.teamminz.com)
+if [ $CURRENT_BRANCH == "master"]; then
+  export DOMAIN=prod.queue.teamminz.com;
+  rm ./nginx/app.conf;
+  cp ./nginx/app.conf.prod ./nginx/app.conf;
+elif [ $CURRENT_BRANCH == "dev"]; then
+  export DOMAIN=dev.queue.teamminz.com
+  rm ./nginx/app.conf;
+  cp ./nginx/app.conf.dev ./nginx/app.conf;
+fi
+
+domains=($DOMAIN)
 rsa_key_size=4096
 data_path="./certbot"
 email="webmaster@teamminz.com" # Adding a valid address is strongly recommended
