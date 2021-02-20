@@ -1,11 +1,13 @@
 #!/bin/bash
 
-export EXT_SECRET=$(aws secretsmanager get-secret-value --secret-id KOTH-Dev | jq -r '.SecretString | fromjson | .EXT_SECRET');
-export EXT_CLIENT_ID=$(aws secretsmanager get-secret-value --secret-id KOTH-Dev | jq -r '.SecretString | fromjson | .EXT_CLIENT_ID');
-export EXT_OWNER_ID=$(aws secretsmanager get-secret-value --secret-id KOTH-Dev | jq -r '.SecretString | fromjson | .EXT_OWNER_ID');
+export EXT_SECRET=$(aws secretsmanager get-secret-value --secret-id KOTH | jq -r '.SecretString | fromjson | .EXT_SECRET');
+export EXT_CLIENT_ID=$(aws secretsmanager get-secret-value --secret-id KOTH | jq -r '.SecretString | fromjson | .EXT_CLIENT_ID');
+export EXT_OWNER_ID=$(aws secretsmanager get-secret-value --secret-id KOTH | jq -r '.SecretString | fromjson | .EXT_OWNER_ID');
 export AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r '.Account');
 export AWS_DEFAULT_REGION=$(aws configure get region);
 export IMAGE_REPO_NAME="kothservice";
+export CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD);
+export EXT_BOT_OAUTH=$(aws secretsmanager get-secret-value --secret-id KOTH | jq -r '.SecretString | fromjson | .EXT_BOT_OAUTH');
 $(aws ecr get-login --no-include-email);
 
 if ! [ -x "$(command -v docker-compose)" ]; then
@@ -13,7 +15,7 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=(prod.queue.teamminz.com)
+domains=(dev.queue.teamminz.com)
 rsa_key_size=4096
 data_path="./certbot"
 email="webmaster@teamminz.com" # Adding a valid address is strongly recommended

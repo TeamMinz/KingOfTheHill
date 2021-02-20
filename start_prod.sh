@@ -3,6 +3,7 @@
 export EXT_SECRET=$(aws secretsmanager get-secret-value --secret-id KOTH | jq -r '.SecretString | fromjson | .EXT_SECRET');
 export EXT_CLIENT_ID=$(aws secretsmanager get-secret-value --secret-id KOTH | jq -r '.SecretString | fromjson | .EXT_CLIENT_ID');
 export EXT_OWNER_ID=$(aws secretsmanager get-secret-value --secret-id KOTH | jq -r '.SecretString | fromjson | .EXT_OWNER_ID');
+export EXT_BOT_OAUTH=$(aws secretsmanager get-secret-value --secret-id KOTH | jq -r '.SecretString | fromjson | .EXT_BOT_OAUTH');
 export AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r '.Account');
 export AWS_DEFAULT_REGION=$(aws configure get region);
 export AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key);
