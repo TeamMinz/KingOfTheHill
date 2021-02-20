@@ -1,5 +1,5 @@
 #!/bin/bash
-cd /etc/koth/QueueExtension
+cd /opt/koth/QueueExtension
 export EXT_SECRET=$(aws secretsmanager get-secret-value --secret-id KOTH | jq -r '.SecretString | fromjson | .EXT_SECRET');
 export EXT_CLIENT_ID=$(aws secretsmanager get-secret-value --secret-id KOTH | jq -r '.SecretString | fromjson | .EXT_CLIENT_ID');
 export EXT_OWNER_ID=$(aws secretsmanager get-secret-value --secret-id KOTH | jq -r '.SecretString | fromjson | .EXT_OWNER_ID');
@@ -15,14 +15,16 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-if [ $CURRENT_BRANCH == "master"]; then
-  export DOMAIN=prod.queue.teamminz.com;
-  rm ./nginx/app.conf;
-  cp ./nginx/app.conf.prod ./nginx/app.conf;
-elif [ $CURRENT_BRANCH == "dev"]; then
+if [ "$CURRENT_BRANCH" = "master" ]; then
+  export DOMAIN=prod.queue.teamminz.com
+  rm ./nginx/app.conf
+  cp ./nginx/app.conf.prod ./nginx/app.conf
+  echo "Using production config"
+elif [ "$CURRENT_BRANCH" = "dev" ]; then
   export DOMAIN=dev.queue.teamminz.com
-  rm ./nginx/app.conf;
-  cp ./nginx/app.conf.dev ./nginx/app.conf;
+  rm ./nginx/app.conf
+  cp ./nginx/app.conf.dev ./nginx/app.conf
+  echo "Using development config"
 fi
 
 domains=($DOMAIN)
