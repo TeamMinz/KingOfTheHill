@@ -1,6 +1,6 @@
 {
   "allowHttpBackend": false,
-  "backendCommand": "node backend.js ",
+  "backendCommand": "nodemon backend.js ",
   "backendFolderName": "services",
   "certificateExceptions": [
     {
@@ -36,9 +36,9 @@
   ],
   "extensionViews": [
     {
-      "channelId": "265737932",
+      "channelId": "135887033",
       "configurationAnchor": "panel",
-      "displayChannelName": "tminz",
+      "displayChannelName": "bassjio",
       "features": {
         "isBitsEnabled": true,
         "isChatEnabled": false,
@@ -50,12 +50,56 @@
       },
       "id": "1",
       "isPopout": false,
-      "label": "Broadcaster",
+      "label": "",
       "linked": false,
       "linkedUserId": "",
       "orientation": "Portrait",
       "type": "component",
       "viewerType": "Broadcaster"
+    },
+    {
+      "channelId": "135887033",
+      "configurationAnchor": "panel",
+      "displayChannelName": "bassjio",
+      "features": {
+        "isBitsEnabled": true,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "frameSize": {
+        "width": 1280,
+        "height": 720
+      },
+      "id": "2",
+      "isPopout": false,
+      "label": "",
+      "linked": true,
+      "linkedUserId": "265737932",
+      "orientation": "Portrait",
+      "type": "dashboard",
+      "viewerType": "Broadcaster"
+    },
+    {
+      "channelId": "135887033",
+      "configurationAnchor": "panel",
+      "displayChannelName": "bassjio",
+      "features": {
+        "isBitsEnabled": true,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "frameSize": {
+        "width": 1280,
+        "height": 720
+      },
+      "id": "3",
+      "isPopout": false,
+      "label": "",
+      "linked": true,
+      "linkedUserId": "265737932",
+      "orientation": "Portrait",
+      "type": "component",
+      "viewerType": "Logged-In Viewer"
     }
   ],
   "manifest": {
@@ -115,13 +159,13 @@
         "aspectHeight": 0,
         "aspectRatioX": 300,
         "aspectRatioY": 400,
-        "scalePixels": 1024,
-        "targetHeight": 5500,
+        "scalePixels": 0,
+        "targetHeight": 6500,
         "size": 0,
         "zoom": false,
         "zoomPixels": 0,
         "canLinkExternalContent": false,
-        "autoScale": true
+        "autoScale": false
       },
       "config": {
         "viewerUrl": "https://localhost:8080/config.html",

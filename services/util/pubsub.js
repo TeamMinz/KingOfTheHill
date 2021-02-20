@@ -15,7 +15,6 @@ function broadcastMessage(channelId, message) {
     message: JSON.stringify(message),
     targets: ['broadcast'],
   };
-  console.log(CLIENT_ID);
   superagent
       .post(`https://api.twitch.tv/extensions/message/${channelId}`)
       .set('Client-ID', CLIENT_ID)
