@@ -5,12 +5,13 @@ phases:
     commands:
       - echo Logging into Docker Hub for build...
       - docker login --username jackbass --password $DOCKER_HUB_TOKEN
+      - echo Tagging image with $CODEBUILD_WEBHOOK_HEAD_REF
   build:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...          
-      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG ./services
-      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_WEBHOOK_HEAD_REF  
+      - docker build -t $IMAGE_REPO_NAME:$CODEBUILD_WEBHOOK_HEAD_REF ./services
+      - docker tag $IMAGE_REPO_NAME:$CODEBUILD_WEBHOOK_HEAD_REF $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_WEBHOOK_HEAD_REF  
   post_build:
     commands:
       - echo Build completed on `date`
