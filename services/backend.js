@@ -1,17 +1,14 @@
-const fs = require('fs');
-const http = require('http');
 const express = require('express');
 const cors = require('cors');
 const routes = require('./routes');
-const config = require('./config.json');
 
 const {authorizeHeader} = require('./util/middleware');
 
 const app = express();
 
-//Route for testing connectivity.
+// Route for testing connectivity.
 app.get('/ping', (req, res) => {
-    res.send('pong');
+  res.send('pong');
 });
 
 app.use(cors());

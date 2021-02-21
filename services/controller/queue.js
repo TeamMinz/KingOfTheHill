@@ -1,6 +1,8 @@
 /**
  * @typedef {object} Challenger
- * @property {string} opaqueUserId The opaque id of the user.
+ * @property {string} [opaqueUserId] The opaque id of the user.
+ * @property {string} displayName The display name of the user.
+ * @property {string | number} userId the id of the user.
  */
 class Queue {
   /**
@@ -9,26 +11,26 @@ class Queue {
   constructor() {
     this._queue = [];
     this.hasUpdated = false;
-    this._isOpen = true;
+    this._isOpen = false;
   }
   /**
    * Determines whether a queue contains a specified person.
    *
-   * @param {*} opaqueUserId The person to search for.
+   * @param {string | number} userId The person to search for.
    * @returns {boolean} true if person is in queue otherwise false.
    */
-  contains(opaqueUserId) {
-    return this.getPosition(opaqueUserId) != -1;
+  contains(userId) {
+    return this.getPosition(userId) != -1;
   }
   /**
    * Searches a queue for a person.
    *
-   * @param {*} opaqueUserId The user to search for.
+   * @param {string} userId The user to search for.
    * @returns {number} The current position in the queue or -1 if not in queue.
    */
-  getPosition(opaqueUserId) {
+  getPosition(userId) {
     return this._queue.findIndex((challenger) =>
-      (challenger.opaqueUserId == opaqueUserId));
+      (challenger.userId == userId || challenger.opaqueUserId == userId));
   }
   /**
    * Adds a challenger to the back of the queue.
@@ -55,8 +57,8 @@ class Queue {
    * Inserts user into specified spot in the queue,
    * shifting everyone after that spot back a space.
    *
-   * @param {*} pos the position to insert into the queue in.
-   * @param {*} user the user to insert into the queue.
+   * @param {number} pos the position to insert into the queue in.
+   * @param {Challenger} user the user to insert into the queue.
    */
   insert(pos, user) {
     this._queue.splice(pos, 0, user);
@@ -65,14 +67,14 @@ class Queue {
   /**
    * Removes the specified challenger from the queue.
    *
-   * @param {*} opaqueUserId The user to remove from the queue.
+   * @param {string | number} userId The user to remove from the queue.
    * @returns {object} The challenger that was removed.
    */
-  remove(opaqueUserId) {
+  remove(userId) {
     let challenger = null;
 
     this._queue = this._queue.filter((c) => {
-      if (c.opaqueUserId == opaqueUserId) {
+      if (c.userId == userId || c.opaqueUserId == userId) {
         challenger = c;
         return false;
       }
@@ -89,7 +91,6 @@ class Queue {
     this._isOpen = true;
     this.hasUpdated = true;
   }
-
   /**
    * Mark this queue as closed, and clear the queue.
    */
@@ -98,11 +99,10 @@ class Queue {
     this._queue = [];
     this.hasUpdated = true;
   }
-
   /**
    * Checks if this queue is open.
    *
-   * @returns true if open false otherwise.
+   * @returns {boolean} true if open false otherwise.
    */
   isOpen() {
     return this._isOpen;
@@ -130,7 +130,7 @@ const channelQueues = {};
  * Gets a channels queue, or creates one
  * if none exists.
  *
- * @param {*} channelId the channel who's queue to fetch.
+ * @param {string | number} channelId the channel who's queue to fetch.
  * @returns {Queue} the queue of the specified channel.
  */
 function getQueue(channelId) {

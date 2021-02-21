@@ -4,7 +4,7 @@ import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import PropTypes from 'prop-types';
 import QueueView from '../QueueView/QueueView';
 import QueueNotification from '../QueueNotification/QueueNotification';
-import './App.css';
+import './App.scss';
 
 /**
  * Base class for the React App. Sets up the scene
@@ -92,13 +92,13 @@ export default class App extends React.Component {
       return (
         <div className={`App ${this.props.format}`}>
           <div
-            className={this.state.theme === 'light' ? 'App-light' : 'App-dark'}
+            className={/*this.state.theme === 'light' ? 'App-light' :*/ 'App-dark'}
           >
             <QueueNotification />
             <Tabs>
               <TabList>
-                <Tab>Queue</Tab>
-                <Tab>Leaderboard</Tab>
+                <Tab>QUEUE</Tab>
+                <Tab>LEADERBOARD</Tab>
               </TabList>
               <TabPanel className="queue">
                 <QueueView />

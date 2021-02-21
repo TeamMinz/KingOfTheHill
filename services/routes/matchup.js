@@ -35,15 +35,28 @@ const reportWinner = async (channelId, winner, loser, broadcasterLost) => {
 
   const queue = getQueue(channelId);
 
-  console.log(broadcasterLost);
-  // If broadcaster lost set them back to their dedired position
+  // If broadcaster lost set them back to their desired position
   if (broadcasterLost) {
-    const content = await twitch.getbroadcasterConfig(channelId);
-    if (content.rejoin) {
-      if (content.position != '') {
-        queue.insert(content.position - 1, loser);
-      } else {
-        queue.enqueue(loser);
+    const {version, content} = await twitch.getBroadcasterConfig(channelId);
+
+    // Legacy support, can be removed after front end 1.0.0 is released.
+    if (version == '0.2') {
+      if (content.rejoin) {
+        if (content.position != '') {
+          queue.insert(content.position - 1, loser);
+        } else {
+          queue.enqueue(loser);
+        }
+      }
+    } else if (version == '1.0.0') {
+      if (content.rejoinSettings) {
+        if (content.rejoinSettings.rejoin) {
+          if (content.rejoinSettings.position) {
+            queue.insert(content.rejoinSettings.position - 1, loser);
+          } else {
+            queue.enqueue(loser);
+          }
+        }
       }
     }
   }

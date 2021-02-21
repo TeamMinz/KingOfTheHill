@@ -3,7 +3,7 @@
   flex: 1;
   flex-direction: column;
   padding: 0.5em;
-  border-bottom: solid 5px var(--not-selected-color);
+  border-bottom: solid 2px var(--not-selected-color);
 }
 
 .QueueComponent {

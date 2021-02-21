@@ -1,17 +1,14 @@
-// const {buildClientAuth} = require('./auth');
 const superagent = require('superagent');
 const jwt = require('jsonwebtoken');
 const {OWNER_ID, SECRET, CLIENT_ID} = require('./options');
 
-// const messageQueues = {};
-// const channelCooldowns = {};
-// const channelCooldownMs = 1000;
 const serverTokenDurationSec = 30;
 
 /**
  * Builds an authenticaion payload, that authenticates
  * requests to twitch's pubsub & configuration apis.
- * @param {string} channelId the id of the broadcaster that this request comes from.
+ *
+ * @param {string} channelId the id of the broadcaster.
  * @returns {object} a signed authentication token.
  */
 const buildChannelAuth = (channelId) => {
@@ -51,10 +48,34 @@ async function resolveDisplayName(userId) {
 }
 
 /**
- * @param {*} channelId the channel to broadcast to
+ * Resolves a channelId into the streamers name.
  *
+ * @param {string | number} channelId the channeid to resolve into a name.
+ * @returns {null | string} Null if the resolution fails, otherwise the name.
  */
-const getbroadcasterConfig = async (channelId) => {
+async function resolveChannelName(channelId) {
+  try {
+    const resp = await superagent
+        .get(`https://api.twitch.tv/kraken/channels/${channelId}`)
+        .set('Client-ID', CLIENT_ID)
+        .set('Accept', 'application/vnd.twitchtv.v5+json');
+
+    if (resp.ok) {
+      return resp.body.display_name;
+    } else {
+      return null;
+    }
+  } catch (e) {
+    return null;
+  }
+}
+/**
+ * Gets the configuration settings for the channelId.
+ *
+ * @param {*} channelId the channel to broadcast to
+ * @returns {any} configuration settings.
+ */
+const getBroadcasterConfig = async (channelId) => {
   try {
     const resp = await superagent
         .get(
@@ -68,14 +89,21 @@ const getbroadcasterConfig = async (channelId) => {
       const content = JSON.parse(
           resp.body[`broadcaster:${channelId}`].record.content,
       );
-      return content;
+      const version = resp.body[`broadcaster:${channelId}`].record.verison;
+      return {version, content};
     } else {
-      return {rejoin: false, position: ''};
+      return {};
     }
   } catch (e) {
-    console.log(e);
-    return {rejoin: false, position: ''};
+    console.error(e);
+    return {};
   }
 };
 
-module.exports = {buildChannelAuth, resolveDisplayName, getbroadcasterConfig};
+module.exports =
+  {
+    buildChannelAuth,
+    resolveDisplayName,
+    getBroadcasterConfig,
+    resolveChannelName,
+  };

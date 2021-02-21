@@ -4,7 +4,7 @@ upstream kothservice {
 
 server {
     listen 80;
-    server_name dev.queue.teamminz.com;    
+    server_name prod.queue.teamminz.com;    
     resolver 127.0.0.1;    
 
     location / {
@@ -18,9 +18,9 @@ server {
 
 server {
     listen 443 ssl;
-    server_name dev.queue.teamminz.com;
-    ssl_certificate /etc/letsencrypt/live/dev.queue.teamminz.com/fullchain.pem;    
-    ssl_certificate_key /etc/letsencrypt/live/dev.queue.teamminz.com/privkey.pem;
+    server_name prod.queue.teamminz.com;
+    ssl_certificate /etc/letsencrypt/live/prod.queue.teamminz.com/fullchain.pem;    
+    ssl_certificate_key /etc/letsencrypt/live/prod.queue.teamminz.com/privkey.pem;
     include /etc/letsencrypt/options-ssl-nginx.conf;
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
@@ -31,9 +31,9 @@ server {
 
 server {
     listen 8081 ssl;
-    server_name dev.queue.teamminz.com; 
-    ssl_certificate /etc/letsencrypt/live/dev.queue.teamminz.com/fullchain.pem;    
-    ssl_certificate_key /etc/letsencrypt/live/dev.queue.teamminz.com/privkey.pem;
+    server_name prod.queue.teamminz.com; 
+    ssl_certificate /etc/letsencrypt/live/prod.queue.teamminz.com/fullchain.pem;    
+    ssl_certificate_key /etc/letsencrypt/live/prod.queue.teamminz.com/privkey.pem;
     include /etc/letsencrypt/options-ssl-nginx.conf;
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
