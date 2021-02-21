@@ -26,6 +26,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "ioredis": "^4.22.0",
     "jsonwebtoken": "^8.5.1",
     "prop-types": "^15.7.2",
     "superagent": "^6.1.0",

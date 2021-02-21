@@ -125,7 +125,6 @@ const LiveConfigPage = (props) => {
   useEffect(() => {
     if (FinishedLoading) {
       console.log('Pushing updates!');
-      console.log(ConfigSettings);
       twitch.configuration.set(
           'broadcaster',
           '1.0.0',

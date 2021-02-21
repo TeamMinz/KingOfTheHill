@@ -32,6 +32,7 @@ const QueueView = (_props) => {
     authentication.makeCall('/queue/get', 'GET').then(function(resp) {
       if (resp.ok) {
         resp.json().then((queue) => {
+          console.log(queue);
           setQueue(queue);
         });
       }

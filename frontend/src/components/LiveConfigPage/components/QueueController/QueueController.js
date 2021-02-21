@@ -123,7 +123,6 @@ const QueueController = (props) => {
   // called when the component mounts.
 
   if (ctx.finishedLoading && ctx.queue) {
-    // console.log(ctx.queue);
     const userEntry = ctx.queue ?
       ctx.queue.queue.findIndex((challenger) => {
         return challenger.opaqueUserId == ctx.auth.getOpaqueId();

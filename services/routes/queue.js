@@ -10,14 +10,14 @@ const {isBroadcaster, isQueueOpen} = require('../util/middleware');
 const queueUpdateIntervalMs = 1000;
 
 // Set up our routes.
-queue.get('/get', function(req, res) {
+queue.get('/get', async function(req, res) {
   const {channel_id: channelId, opaque_user_id: opaqueUserId} = req.twitch;
 
   const currentQueue = getQueue(channelId);
   const currentPosition = currentQueue.getPosition(opaqueUserId);
 
   res.send({
-    queue: currentQueue.getAsArray(),
+    queue: await currentQueue.getAsArray(),
     position: currentPosition,
     isOpen: currentQueue.isOpen(),
   });
@@ -117,7 +117,7 @@ queue.post('/join', isQueueOpen, async (req, res) => {
     displayName,
   };
 
-  const queuePosition = currentQueue.enqueue(challenger);
+  const queuePosition = await currentQueue.enqueue(challenger);
 
   res.send({
     message: `You are now #${queuePosition} in the queue.`,
@@ -170,8 +170,6 @@ queue.post('/open', isBroadcaster, async (req, res) => {
 
   const {content} = await getBroadcasterConfig(channelId);
 
-  console.log(content);
-
   if ('watchdogSettings' in content) {
     const watchdogSettings = content.watchdogSettings;
 
@@ -208,7 +206,7 @@ module.exports = queue;
 // Check if each queue has changed, then if it has publish it.
 // TODO: we want to change this, so that instead of just sending out all
 // ... queues, we look for all live channels, then send out their queues.
-setInterval(function() {
+setInterval(async function() {
   const channelQueues = getAllQueues();
   for (const channelId in channelQueues) {
     if (Object.prototype.hasOwnProperty.call(channelQueues, channelId)) {
@@ -217,7 +215,7 @@ setInterval(function() {
       if (queue.hasUpdated) {
         const message = {
           type: 'updateQueue',
-          message: {queue: queue.getAsArray(), isOpen: queue.isOpen()},
+          message: {queue: await queue.getAsArray(), isOpen: queue.isOpen()},
         };
         broadcast(channelId, message);
         queue.hasUpdated = false; // mark this so we don't update until a change
