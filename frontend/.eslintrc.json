@@ -1,39 +1,18 @@
 {
   "env": {
     "browser": true,
-    "es2020": true
+    "es2021": true
   },
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:jsdoc/recommended",
-    "google"
-  ],
+  "extends": ["eslint:recommended", "plugin:react/recommended", "airbnb"],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
     },
-    "ecmaVersion": 2021,
+    "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["react", "jsdoc"],
+  "plugins": ["react"],
   "rules": {
-    "require-jsdoc": "off",
-    "valid-jsdoc": "off",
-    "no-undef": "error",
-    "max-len": ["error", { "code": 110 }],
-    "jsdoc/require-jsdoc": [
-      "warn",
-      {
-        "require": {
-          "ArrowFunctionExpression": true,
-          "ClassDeclaration": true,
-          "ClassExpression": true,
-          "FunctionDeclaration": true,
-          "FunctionExpression": true,
-          "MethodDefinition": true
-        }
-      }
-    ]
+    "react/jsx-props-no-spreading": 0
   }
 }

@@ -1,6 +1,6 @@
 {
   "allowHttpBackend": false,
-  "backendCommand": "nodemon backend.js ",
+  "backendCommand": "node backend.js",
   "backendFolderName": "services",
   "certificateExceptions": [
     {
@@ -108,7 +108,7 @@
     "authorName": "TeamMinz",
     "bitsEnabled": true,
     "canInstall": true,
-    "configUrl": "https://localhost:8080/config.html",
+    "configUrl": "http://localhost:3000/config",
     "configurationLocation": "hosted",
     "description": "Allow your viewers to battle it out in a King of the Hill style match up!\nKeep track of the current king and their win streak!\n\nNeed help or have suggestions? Join our discord: https://discord.gg/9FwRsx6\nOr email our support email: support@teamminz.com\n\nChangelog:\n0.0.2 - The broadcaster Update\n* Added the ability for broadcaster / moderator to remove people from the queue.\n* Added ability for the broadcaster to automatically rejoin the queue\n* Added the ability to forfeit a matchup instead of declaring a winner.\n* Added the ability for the broadcaster to enable / disable the queue.\n* Broadcaster can now control queue from live config page.\n* Working Mobile Support!\n* Bug Fixes\n\nFuture Plans:\n* Leaderboard support.\n* Subscriber only mode.\n* Bits support.\n* Further customization.",
     "eulaTosUrl": "",
@@ -121,7 +121,7 @@
     },
     "id": "z1eskwyierovbt4gz8zbq1r45tne31",
     "installationCount": -42,
-    "liveConfigUrl": "https://localhost:8080/live_config.html",
+    "liveConfigUrl": "http://localhost:3000/live_config",
     "name": "King of the Hill",
     "panelHeight": 500,
     "privacyPolicyUrl": "",
@@ -138,28 +138,28 @@
     "vendorCode": "",
     "version": "1.0.0",
     "viewerSummary": "Join the queue to compete for King of the Hill!",
-    "viewerUrl": "https://localhost:8080/panel.html",
+    "viewerUrl": "http://localhost:3000/panel",
     "viewerUrls": {
-      "mobile": "https://localhost:8080/mobile.html",
-      "panel": "https://localhost:8080/panel.html",
-      "component": "https://localhost:8080/video_component.html"
+      "mobile": "http://localhost:3000/mobile",
+      "panel": "http://localhost:3000/panel",
+      "component": "http://localhost:3000/video_component"
     },
     "views": {
       "mobile": {
-        "viewerUrl": "https://localhost:8080/mobile.html"
+        "viewerUrl": "http://localhost:3000/mobile"
       },
       "panel": {
-        "viewerUrl": "https://localhost:8080/panel.html",
+        "viewerUrl": "http://localhost:3000/panel",
         "height": 500,
         "canLinkExternalContent": false
       },
       "component": {
-        "viewerUrl": "https://localhost:8080/video_component.html",
+        "viewerUrl": "http://localhost:3000/video_component",
         "aspectWidth": 0,
         "aspectHeight": 0,
         "aspectRatioX": 300,
         "aspectRatioY": 400,
-        "scalePixels": 0,
+        "scalePixels": 1024,
         "targetHeight": 6500,
         "size": 0,
         "zoom": false,
@@ -168,11 +168,11 @@
         "autoScale": false
       },
       "config": {
-        "viewerUrl": "https://localhost:8080/config.html",
+        "viewerUrl": "http://localhost:3000/config",
         "canLinkExternalContent": true
       },
       "liveConfig": {
-        "viewerUrl": "https://localhost:8080/live_config.html",
+        "viewerUrl": "http://localhost:3000/live_config",
         "canLinkExternalContent": true
       }
     },
@@ -181,7 +181,7 @@
     ],
     "whitelistedPanelUrls": []
   },
-  "frontendCommand": "npm run start",
+  "frontendCommand": "yarn dev",
   "frontendFolderName": "frontend",
   "name": "King of the Hill",
   "version": 3,

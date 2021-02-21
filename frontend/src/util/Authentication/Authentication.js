@@ -3,15 +3,15 @@ import process from 'process';
 
 let BASE_URL;
 
-if (process.env.NODE_ENV == 'production') {
+if (process.env.NODE_ENV === 'production') {
   BASE_URL = 'https://prod.queue.teamminz.com';
-} else if (process.env.NODE_ENV == 'beta') {
+} else if (process.env.NODE_ENV === 'beta') {
   BASE_URL = 'https://dev.queue.teamminz.com';
 } else {
   BASE_URL = 'http://localhost:8000';
 }
 
-console.log('Using backend: ' + BASE_URL);
+console.log(`Using backend: ${BASE_URL}`);
 
 /**
  * Helper class for authentication against an EBS service.
@@ -42,7 +42,7 @@ export default class Authentication {
    * @returns {boolean} true if logged in, false otherwise.
    */
   isLoggedIn() {
-    return this.state.opaqueUserId[0] === 'U' ? true : false;
+    return this.state.opaqueUserId[0] === 'U';
   }
 
   /**
@@ -135,9 +135,8 @@ export default class Authentication {
   isAuthenticated() {
     if (this.state.token && this.state.opaqueUserId) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
 
   /**
@@ -153,12 +152,12 @@ export default class Authentication {
       if (this.isAuthenticated()) {
         const headers = {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.state.token}`,
+          Authorization: `Bearer ${this.state.token}`,
         };
 
         let bodyContent = null;
 
-        if (method != 'GET' && body != null) {
+        if (method !== 'GET' && body != null) {
           bodyContent = JSON.stringify(body);
         }
 
@@ -167,8 +166,8 @@ export default class Authentication {
           headers,
           body: bodyContent,
         })
-            .then((response) => resolve(response))
-            .catch((e) => reject(e));
+          .then((response) => resolve(response))
+          .catch((e) => reject(e));
       } else {
         reject(new Error('Unauthorized'));
       }

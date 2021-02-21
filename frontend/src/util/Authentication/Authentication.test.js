@@ -1,10 +1,8 @@
 import Authentication from './Authentication';
 import 'isomorphic-fetch';
 
-const normalToken =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjU5NzMxOTAsIm9wYXF1ZV91c2VyX2lkIjoiVVJpZ0FCQzEyIiwiY2hhbm5lbF9pZCI6ImRlbW9fY2hhbm5lbCIsInJvbGUiOiJ2aWV3ZXIiLCJwdWJzdWJfcGVybXMiOnsibGlzdGVuIjpbImJyb2FkY2FzdCIsImdsb2JhbCJdLCJzZW5kIjpbImJyb2FkY2FzdCJdfSwidXNlcl9pZCI6Inh4eHh4eHh4eCIsImlhdCI6MTUzNDQzNzE5MH0.O2gmsiVIUegWVMwS_mbRU1SF6cdBmHJ5E7JLmsV9AcY';
-const modToken =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjU5NzMxOTAsIm9wYXF1ZV91c2VyX2lkIjoiVVJpZ0FCQzEyIiwiY2hhbm5lbF9pZCI6ImRlbW9fY2hhbm5lbCIsInJvbGUiOiJicm9hZGNhc3RlciIsInB1YnN1Yl9wZXJtcyI6eyJsaXN0ZW4iOlsiYnJvYWRjYXN0IiwiZ2xvYmFsIl0sInNlbmQiOlsiYnJvYWRjYXN0Il19LCJ1c2VyX2lkIjoieHh4eHh4eHh4IiwiaWF0IjoxNTM0NDM3MTkwfQ.KhwwsrhcsPanRyaPL6dO2knTD0JMXcP38oVqDgjt5Mk';
+const normalToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjU5NzMxOTAsIm9wYXF1ZV91c2VyX2lkIjoiVVJpZ0FCQzEyIiwiY2hhbm5lbF9pZCI6ImRlbW9fY2hhbm5lbCIsInJvbGUiOiJ2aWV3ZXIiLCJwdWJzdWJfcGVybXMiOnsibGlzdGVuIjpbImJyb2FkY2FzdCIsImdsb2JhbCJdLCJzZW5kIjpbImJyb2FkY2FzdCJdfSwidXNlcl9pZCI6Inh4eHh4eHh4eCIsImlhdCI6MTUzNDQzNzE5MH0.O2gmsiVIUegWVMwS_mbRU1SF6cdBmHJ5E7JLmsV9AcY';
+const modToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjU5NzMxOTAsIm9wYXF1ZV91c2VyX2lkIjoiVVJpZ0FCQzEyIiwiY2hhbm5lbF9pZCI6ImRlbW9fY2hhbm5lbCIsInJvbGUiOiJicm9hZGNhc3RlciIsInB1YnN1Yl9wZXJtcyI6eyJsaXN0ZW4iOlsiYnJvYWRjYXN0IiwiZ2xvYmFsIl0sInNlbmQiOlsiYnJvYWRjYXN0Il19LCJ1c2VyX2lkIjoieHh4eHh4eHh4IiwiaWF0IjoxNTM0NDM3MTkwfQ.KhwwsrhcsPanRyaPL6dO2knTD0JMXcP38oVqDgjt5Mk';
 
 const auth = new Authentication();
 
@@ -25,9 +23,7 @@ describe('makeCall tests', () => {
 
   test('rejects when no credentials', () => {
     auth.setToken('', '');
-    return expect(auth.makeCall('https://twitch.tv/')).rejects.toEqual(
-        'Unauthorized',
-    );
+    return expect(auth.makeCall('https://twitch.tv/')).rejects.toEqual('Unauthorized');
   });
 
   test('rejects on invalid response', () => {
@@ -35,9 +31,7 @@ describe('makeCall tests', () => {
     return expect(auth.makeCall('htts://api')).rejects.toBeDefined();
   });
 
-  test('rejecsts on bad credentials', async () => {
-    return expect(auth.makeCall('https://google.com')).rejects.toBeDefined();
-  });
+  test('rejecsts on bad credentials', async () => expect(auth.makeCall('https://google.com')).rejects.toBeDefined());
 });
 
 describe('moderator tests', () => {
