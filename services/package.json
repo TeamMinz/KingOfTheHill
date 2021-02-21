@@ -1,6 +1,7 @@
 {
   "name": "services",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "private": true,
   "description": "The Extension Backend Service (EBS) for the King of the Hill app.",
   "main": "index.js",
   "repository": {
@@ -14,14 +15,14 @@
   "author": "Team Minz",
   "license": "SEE LICENSE IN ../LICENSE",
   "devDependencies": {
-    "cross-env": "^7.0.2",
-    "eslint": "^7.9.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^7.20.0",
     "eslint-config-google": "^0.14.0",
-    "eslint-plugin-jsdoc": "^30.4.2",
+    "eslint-plugin-jsdoc": "^32.1.0",
     "eslint-plugin-node": "^11.1.0",
+    "nodemon": "^2.0.7",
     "prettier": "^2.1.1",
-    "prettier-eslint": "^11.0.0",
-    "nodemon": "^2.0.7"
+    "prettier-eslint": "^12.0.0"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -31,6 +32,6 @@
     "prop-types": "^15.7.2",
     "superagent": "^6.1.0",
     "twitch-js": "^2.0.0-beta.42",
-    "yargs": "^16.0.3"
+    "yargs": "^16.2.0"
   }
 }
