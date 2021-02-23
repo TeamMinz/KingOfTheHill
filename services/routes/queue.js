@@ -19,7 +19,7 @@ queue.get('/get', async function(req, res) {
   res.send({
     queue: await currentQueue.getAsArray(),
     position: currentPosition,
-    isOpen: currentQueue.isOpen(),
+    isOpen: await currentQueue.isOpen(),
   });
 });
 
@@ -60,6 +60,9 @@ queue.post('/kick', isQueueOpen, async (req, res) => {
 
 queue.post('/join', isQueueOpen, async (req, res) => {
   // Handles joining the queue.
+
+  console.log('joining queue');
+
   const {
     channel_id: channelId,
     opaque_user_id: opaqueUserId,
@@ -102,7 +105,7 @@ queue.post('/join', isQueueOpen, async (req, res) => {
   const displayName = await resolveDisplayName(userId);
 
   // Make sure this person isn't already in this queue.
-  if (currentQueue.contains(userId)) {
+  if (await currentQueue.contains(userId)) {
     res.status(500).send({
       message: 'You are already in the queue.',
     });
@@ -118,7 +121,7 @@ queue.post('/join', isQueueOpen, async (req, res) => {
   };
 
   const queuePosition = await currentQueue.enqueue(challenger);
-
+  console.log(queuePosition);
   res.send({
     message: `You are now #${queuePosition} in the queue.`,
   }); // All done.
@@ -148,8 +151,6 @@ queue.post('/leave', isQueueOpen, (req, res) => {
   // Lets check to see if the person thats leaving is the current champion,
   // then remove them as champion.
   const champ = getChampion(channelId);
-  // console.log(champ);
-  // console.log(opaqueUserId);
   if (champ && champ.user.userId == userId) {
     setChampion(channelId, null);
   }
@@ -215,7 +216,10 @@ setInterval(async function() {
       if (queue.hasUpdated) {
         const message = {
           type: 'updateQueue',
-          message: {queue: await queue.getAsArray(), isOpen: queue.isOpen()},
+          message: {
+            queue: await queue.getAsArray(),
+            isOpen: await queue.isOpen(),
+          },
         };
         broadcast(channelId, message);
         queue.hasUpdated = false; // mark this so we don't update until a change

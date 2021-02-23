@@ -13,7 +13,6 @@ class Queue {
    * @param {string} channelId the channel that this queue belongs to.
    */
   constructor(channelId) {
-    this._queue = [];
     this._model = new QueueModel(channelId);
     this._channelId = channelId;
     this.hasUpdated = false;
@@ -54,10 +53,10 @@ class Queue {
    *
    * @returns {Challenger} The challenger pulled from the queue.
    */
-  dequeue() {
-    // const challenger = this._queue.shift();
-    // this.hasUpdated = true;
-    // return challenger;
+  async dequeue() {
+    const challenger = await this._model.shift();
+    this.hasUpdated = true;
+    return challenger;
   }
   /**
    * Inserts user into specified spot in the queue,
@@ -66,9 +65,9 @@ class Queue {
    * @param {number} pos the position to insert into the queue in.
    * @param {Challenger} user the user to insert into the queue.
    */
-  insert(pos, user) {
-    // this._queue.splice(pos, 0, user);
-    // this.hasUpdated = true;
+  async insert(pos, user) {
+    await this._model.insertAt(user, pos);
+    this.hasUpdated = true;
   }
   /**
    * Removes the specified challenger from the queue.
@@ -82,36 +81,24 @@ class Queue {
     challengerIndex = await this.getPosition(userId);
 
     if (challengerIndex != -1) {
+      this.hasUpdated = true;
       return await this._model.removeAt(challengerIndex);
     }
 
     return null;
-    /* let challenger = null;
-
-    this._queue = this._queue.filter((c) => {
-      if (c.userId == userId || c.opaqueUserId == userId) {
-        challenger = c;
-        return false;
-      }
-
-      return true;
-    });
-    this.hasUpdated = true;
-    return challenger;*/
   }
   /**
    * Marks this queue as open.
    */
-  openQueue() {
-    this._isOpen = true;
+  async openQueue() {
+    await this._model.setOpen();
     this.hasUpdated = true;
   }
   /**
    * Mark this queue as closed, and clear the queue.
    */
-  closeQueue() {
-    this._isOpen = false;
-    // this._queue = [];
+  async closeQueue() {
+    await this._model.setClosed();
     this.hasUpdated = true;
   }
   /**
@@ -119,8 +106,8 @@ class Queue {
    *
    * @returns {boolean} true if open false otherwise.
    */
-  isOpen() {
-    return this._isOpen;
+  async isOpen() {
+    return await this._model.isOpen();
   }
   /**
    * Get this queue represented as an array.
