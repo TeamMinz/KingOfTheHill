@@ -80,7 +80,7 @@ client.connect()
             return;
           }
 
-          const champ = getChampion(channelId);
+          const champ = await getChampion(channelId);
 
           if (champ && champ.user.userId == senderId) {
             setChampion(channelId, null);

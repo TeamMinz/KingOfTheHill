@@ -45,7 +45,7 @@ queue.post('/kick', isQueueOpen, async (req, res) => {
     return;
   }
 
-  const champ = getChampion(channelId);
+  const champ = await getChampion(channelId);
 
   // Remove this person as champion if they're champ.
   if (champ &&
@@ -146,7 +146,7 @@ queue.post('/leave', isQueueOpen, async (req, res) => {
 
   // Lets check to see if the person thats leaving is the current champion,
   // then remove them as champion.
-  const champ = getChampion(channelId);
+  const champ = await getChampion(channelId);
   if (champ && champ.user.userId == userId) {
     setChampion(channelId, null);
   }

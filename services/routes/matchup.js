@@ -19,7 +19,7 @@ const twitch = require('../util/twitch');
  */
 const reportWinner = async (channelId, winner, loser, broadcasterLost) => {
   // Record this win.
-  const champ = getChampion(channelId);
+  const champ = await getChampion(channelId);
   if (champ && champ.user.opaqueUserId == winner.opaqueUserId) {
     champ.winStreak++;
     setChampion(channelId, champ);
@@ -222,7 +222,7 @@ matchup.post('/start', isBroadcaster, isQueueOpen, async (req, res) => {
     challenger,
   };
 
-  if (!getChampion(channelId)) {
+  if (!(await getChampion(channelId))) {
     setChampion(channelId, {
       winStreak: 0,
       user: champion,
