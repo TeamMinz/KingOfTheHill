@@ -73,19 +73,16 @@ class Queue {
    * Removes the specified challenger from the queue.
    *
    * @param {string | number} userId The user to remove from the queue.
-   * @returns {object | null} The challenger that was removed Null if not found.
+   * @returns {object | null} The challenger that was removed. Null if not found.
    */
   async remove(userId) {
-    let challengerIndex = -1;
+    const resp = await this._model.remove(userId);
 
-    challengerIndex = await this.getPosition(userId);
-
-    if (challengerIndex != -1) {
+    if (resp) {
       this.hasUpdated = true;
-      return await this._model.removeAt(challengerIndex);
     }
 
-    return null;
+    return resp;
   }
   /**
    * Marks this queue as open.

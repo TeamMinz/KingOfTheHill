@@ -18,7 +18,7 @@ client.connect()
     .then((userstate) => {
       console.log('Connected to twitch chat IRC backend.');
 
-      client.on('PRIVMSG', (message) => {
+      client.on('PRIVMSG', async (message) => {
         if (message.isSelf) return;
         if (!(message.message == '!join' ||
             message.message == '!leave' ||
@@ -59,7 +59,7 @@ client.connect()
             }
           }
 
-          if (queue.contains(senderId)) {
+          if (await queue.contains(senderId)) {
             sendTargetedMessage('You are already in the queue.');
             return;
           }
@@ -71,11 +71,11 @@ client.connect()
             opaqueUserId: senderId, // TODO: this is done here for backwards compatibility.
           }; // Remove that when 1.0.0 is relased.
 
-          const queuePosition = queue.enqueue(challenger);
+          const queuePosition = await queue.enqueue(challenger);
 
           sendTargetedMessage(`You are now #${queuePosition} in the queue.`);
         } else if (message.message == '!leave') {
-          if (!queue.contains(senderId)) {
+          if (!await queue.contains(senderId)) {
             sendTargetedMessage('You cannot leave a queue you\'re not in.');
             return;
           }
@@ -86,14 +86,14 @@ client.connect()
             setChampion(channelId, null);
           }
 
-          queue.remove(senderId);
+          await queue.remove(senderId);
         } else if (message.message == '!position') {
-          if (!queue.contains(senderId)) {
+          if (!await queue.contains(senderId)) {
             sendTargetedMessage('You are not currently in the queue.');
             return;
           }
 
-          const queuePosition = queue.getPosition(senderId);
+          const queuePosition = await queue.getPosition(senderId);
           sendTargetedMessage(`You are in position: #${queuePosition + 1}.`);
         }
       });

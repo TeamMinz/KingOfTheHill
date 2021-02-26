@@ -26,6 +26,7 @@ test('Can I enqueue and dequeue people from the queue?', async () => {
     displayName: 'Test_channel_two',
   };
 
+  await model.setClosed();
   await model.setOpen();
 
   await model.push(testChannelOne);
@@ -63,6 +64,7 @@ test('Can I remove a specific user from the queue?', async () => {
 
   const queue = new QueueModel(testChannelId);
 
+  await queue.setClosed();
   await queue.setOpen();
 
   await queue.push(testChannelOne);
@@ -74,6 +76,11 @@ test('Can I remove a specific user from the queue?', async () => {
   const resp = await queue.remove(testChannelTwo.userId);
 
   expect(resp).toEqual(testChannelTwo);
+  expect(await queue.getValue()).toEqual([testChannelOne, testChannelThree]);
+
+  const respTwo = await queue.remove('SomeIDNOTinthequeue');
+
+  expect(respTwo).toEqual(null);
   expect(await queue.getValue()).toEqual([testChannelOne, testChannelThree]);
 
   await queue.setClosed();
@@ -105,6 +112,7 @@ test('Can I insert a user into a specific position in the queue?', async () => {
   };
 
   const queue = new QueueModel(testChannelId);
+  await queue.setClosed();
   await queue.setOpen();
 
   await queue.push(testChannelOne);

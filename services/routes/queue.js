@@ -40,7 +40,7 @@ queue.post('/kick', isQueueOpen, async (req, res) => {
 
   const kickTarget = req.body.kickTarget;
 
-  if (currentQueue.getPosition(kickTarget) == -1) {
+  if (await currentQueue.getPosition(kickTarget) == -1) {
     res.status(400).send('Cannot kick someone not in the queue.');
     return;
   }
@@ -54,15 +54,12 @@ queue.post('/kick', isQueueOpen, async (req, res) => {
     setChampion(channelId, null);
   }
 
-  currentQueue.remove(kickTarget);
+  await currentQueue.remove(kickTarget);
   res.sendStatus(200);
 });
 
 queue.post('/join', isQueueOpen, async (req, res) => {
   // Handles joining the queue.
-
-  console.log('joining queue');
-
   const {
     channel_id: channelId,
     opaque_user_id: opaqueUserId,
@@ -121,13 +118,12 @@ queue.post('/join', isQueueOpen, async (req, res) => {
   };
 
   const queuePosition = await currentQueue.enqueue(challenger);
-  console.log(queuePosition);
   res.send({
     message: `You are now #${queuePosition} in the queue.`,
   }); // All done.
 });
 
-queue.post('/leave', isQueueOpen, (req, res) => {
+queue.post('/leave', isQueueOpen, async (req, res) => {
   // Handles leaving the queue.
   const {channel_id: channelId, user_id: userId} = req.twitch;
 
@@ -141,7 +137,7 @@ queue.post('/leave', isQueueOpen, (req, res) => {
     return;
   }
   // Make sure this person is actually in this queue.
-  if (!currentQueue.contains(userId)) {
+  if (!await currentQueue.contains(userId)) {
     res.status(500).send({
       message: 'You cannot leave a queue you\'re not in.',
     });
@@ -156,7 +152,7 @@ queue.post('/leave', isQueueOpen, (req, res) => {
   }
 
   // Okay. lets remove them from the queue.
-  currentQueue.remove(userId);
+  await currentQueue.remove(userId);
 
   res.send({
     message: 'You have been removed from the queue.',
