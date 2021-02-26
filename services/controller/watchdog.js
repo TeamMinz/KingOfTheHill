@@ -40,7 +40,7 @@ client.connect()
         };
 
         const queue = getQueue(channelId);
-        const matchup = getMatchup(channelId);
+        const matchup = await getMatchup(channelId);
 
         if (message.message == '!join') {
           if (!queue.isOpen()) {

@@ -1,14 +1,18 @@
 const {broadcast} = require('../util/pubsub');
+const {MatchupModel, SelectionMessageModel} = require('../models/matchup');
 
 const channelMatchups = {};
+const channelMessages = {};
+
+const DEFAULT_MESSAGE = 'You\'re up! Connect to the match now!';
 
 /**
  * @param {*} channelId the id of the channel who's matchup to broadcast.
  */
-function broadcastMatchup(channelId) {
+async function broadcastMatchup(channelId) {
   const message = {
     type: 'updateMatchup',
-    message: getMatchup(channelId),
+    message: await getMatchup(channelId),
   };
 
   broadcast(channelId, message);
@@ -20,8 +24,12 @@ function broadcastMatchup(channelId) {
  * @param {*} channelId the channel who's matchup to get
  * @returns {object} The current matchup, null if none.
  */
-function getMatchup(channelId) {
-  return channelMatchups[channelId] || null;
+async function getMatchup(channelId) {
+  if (!(channelId in channelMatchups)) {
+    channelMatchups[channelId] = new MatchupModel(channelId);
+  }
+
+  return await channelMatchups[channelId].getValue() || null;
 }
 
 /**
@@ -30,12 +38,42 @@ function getMatchup(channelId) {
  * @param {*} channelId the channel who's matchup to set.
  * @param {*} matchup the matchup to set.
  */
-function setMatchup(channelId, matchup) {
-  channelMatchups[channelId] = matchup;
+async function setMatchup(channelId, matchup) {
+  if (!(channelId in channelMatchups)) {
+    channelMatchups[channelId] = new MatchupModel(channelId);
+  }
+
+  await channelMatchups[channelId].setValue(matchup);
+
   broadcastMatchup(channelId);
+}
+
+/**
+ * @param channelId
+ * @param message
+ */
+async function setSelectionMessage(channelId, message) {
+  if (!(channelId in channelMessages)) {
+    channelMessages[channelId] = new SelectionMessageModel(channelId);
+  }
+
+  await channelMessages[channelId].setValue(message);
+}
+
+/**
+ * @param channelId The channel whos selection message to update.
+ */
+async function getSelectionMessage(channelId) {
+  if (!(channelId in channelMessages)) {
+    channelMessages[channelId] = new SelectionMessageModel(channelId);
+  }
+
+  return (await channelMessages[channelId].getValue()) || DEFAULT_MESSAGE;
 }
 
 module.exports = {
   getMatchup,
   setMatchup,
+  setSelectionMessage,
+  getSelectionMessage,
 };

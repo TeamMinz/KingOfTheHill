@@ -82,7 +82,7 @@ queue.post('/join', isQueueOpen, async (req, res) => {
     return;
   }
 
-  const currentMatchup = getMatchup(channelId);
+  const currentMatchup = await getMatchup(channelId);
 
   if (currentMatchup) {
     if (
@@ -181,7 +181,7 @@ queue.post('/close', isBroadcaster, async (req, res) => {
   const {channel_id: channelId} = req.twitch;
 
   const queue = getQueue(channelId);
-  queue.closeQueue();
+  await queue.closeQueue();
 
   const watchdog = getWatchdog(channelId);
 
@@ -189,7 +189,7 @@ queue.post('/close', isBroadcaster, async (req, res) => {
     await watchdog.deactivate();
   }
 
-  const matchup = getMatchup(channelId);
+  const matchup = await getMatchup(channelId);
 
   setChampion(channelId, null);
 

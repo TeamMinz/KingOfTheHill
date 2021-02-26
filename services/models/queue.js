@@ -1,36 +1,15 @@
-const Redis = require('ioredis');
-const fs = require('fs');
+const {getRedis, loadScript} = require('../util/database');
 
-const redis = new Redis();
+const redis = getRedis();
 
-/**
- * @param {string} name The name to cache the script under
- * @param {string} path The path to the script file.
- */
-const loadScript = (name, path) => {
-  const src = fs.readFileSync(`${__dirname}/${path}`);
-
-  redis.defineCommand(name, {
-    lua: src,
-    numberOfKeys: 1,
-  });
-};
-
-redis.connect(() => {
+redis.on('connect', () => {
   // Load our redis query scripts
   loadScript('removeUser', 'redis/remove_user.lua');
   loadScript('insertAt', 'redis/insert_at.lua');
 });
 
 /**
- * Public function to close the redis connection.
- */
-const cleanupRedis = () => {
-  redis.disconnect();
-};
-
-/**
- *
+ * The data structure responsible for interfacing with redis and storing / retreiving the state of the queue.
  */
 class QueueModel {
   /**
@@ -57,7 +36,7 @@ class QueueModel {
   /**
    * Removes the first challenger from the queue.
    *
-   * @returns the challenger removed from the queue.
+   * @returns {any} the challenger removed from the queue.
    */
   async shift() {
     const resp =
@@ -141,5 +120,4 @@ class QueueModel {
 
 module.exports = {
   QueueModel,
-  cleanupRedis,
 };

@@ -1,4 +1,4 @@
-const {cleanupRedis} = require('./models/queue');
+const {cleanupRedis} = require('./util/database');
 
 afterAll(() => {
   cleanupRedis();
