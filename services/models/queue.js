@@ -4,8 +4,8 @@ const fs = require('fs');
 const redis = new Redis();
 
 /**
- * @param name
- * @param path
+ * @param {string} name The name to cache the script under
+ * @param {string} path The path to the script file.
  */
 const loadScript = (name, path) => {
   const src = fs.readFileSync(`${__dirname}/${path}`);
@@ -18,9 +18,16 @@ const loadScript = (name, path) => {
 
 redis.connect(() => {
   // Load our redis query scripts
-  loadScript('removeAt', 'redis/remove_at.lua');
+  loadScript('removeUser', 'redis/remove_user.lua');
   loadScript('insertAt', 'redis/insert_at.lua');
 });
+
+/**
+ * Public function to close the redis connection.
+ */
+const cleanupRedis = () => {
+  redis.disconnect();
+};
 
 /**
  *
@@ -35,6 +42,7 @@ class QueueModel {
 
   /**
    * @param {any} challenger challenger
+   * @returns {number | string} the current length of the queue.
    */
   async push(challenger) {
     const resp =
@@ -43,12 +51,13 @@ class QueueModel {
                 `${this._channelId}_queue_content`,
                 JSON.stringify(challenger),
             );
-    console.log(resp);
     return resp;
   }
 
   /**
+   * Removes the first challenger from the queue.
    *
+   * @returns the challenger removed from the queue.
    */
   async shift() {
     const resp =
@@ -57,17 +66,22 @@ class QueueModel {
   }
 
   /**
-   * @param {number} index index of the element to remove.
+   * Removes the element at a specific index from the queue.
+   *
+   * @param {string} userId the id of the challenger to remove.
+   * @returns {import('../controller/queue').Challenger | null} The challenger removed, or null if none.
    */
-  async removeAt(index) {
+  async remove(userId) {
     const resp =
-      await redis.removeAt(`${this._channelId}_queue_content`, index);
+      await redis.removeUser(`${this._channelId}_queue_content`, userId);
 
     return JSON.parse(resp);
   }
 
   /**
    * Returns the contents of this QueueModel.
+   *
+   * @returns {Array<any>} The current state of the queue as an array.
    */
   async getValue() {
     const resp = await redis.lrange(`${this._channelId}_queue_content`, 0, -1);
@@ -78,18 +92,26 @@ class QueueModel {
   }
 
   /**
-   * @param challenger
-   * @param index
+   * Inserts the challenger at a specific index.
+   *
+   * @param {Challenger} challenger The challenger to insert
+   * @param {number} index The index at which the challenger is to be inserted. Must be > 0
    */
   async insertAt(challenger, index) {
-    console.log('Insert: ' + await redis
+    if (index < 0) {
+      return;
+    }
+
+    await redis
         .insertAt(`${this._channelId}_queue_content`,
             index,
-            JSON.stringify(challenger)));
+            JSON.stringify(challenger));
   }
 
   /**
+   * Gets whether the queue is opened.
    *
+   * @returns {boolean} true if open, false if closed.
    */
   async isOpen() {
     const resp = await redis.get(`${this._channelId}_queue_is_open`);
@@ -102,14 +124,14 @@ class QueueModel {
   }
 
   /**
-   *
+   * Sets the queue as open.
    */
   async setOpen() {
     await redis.set(`${this._channelId}_queue_is_open`, 'true');
   }
 
   /**
-   *
+   * Sets the queue as closed.
    */
   async setClosed() {
     await redis.set(`${this._channelId}_queue_is_open`, 'false');
@@ -117,4 +139,7 @@ class QueueModel {
   }
 }
 
-module.exports = QueueModel;
+module.exports = {
+  QueueModel,
+  cleanupRedis,
+};

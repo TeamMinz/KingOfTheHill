@@ -1,4 +1,4 @@
-const QueueModel = require('../models/queue');
+const {QueueModel} = require('../models/queue');
 
 /**
  * @typedef {object} Challenger
