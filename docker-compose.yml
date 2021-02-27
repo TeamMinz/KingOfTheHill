@@ -2,13 +2,14 @@ version: '3'
 services:
   koth:
     restart: always
-    image: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:Latest
+    image: $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CURRENT_BRANCH
     ports:
       - "8000:8000"
     environment: 
       - EXT_SECRET=$EXT_SECRET
       - EXT_CLIENT_ID=$EXT_CLIENT_ID
       - EXT_OWNER_ID=$EXT_OWNER_ID
+      - EXT_BOT_OAUTH=$EXT_BOT_OAUTH
   nginx:
     image: nginx:1.15-alpine
     ports:

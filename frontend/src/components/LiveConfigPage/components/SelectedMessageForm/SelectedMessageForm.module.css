@@ -1,0 +1,28 @@
+.SelectedMessageForm {
+  display:block;
+  font-size: medium;
+  padding: 5px;
+}
+
+.MessageTextBox {
+  display: block;
+  color: var(--text-color);
+  background-color: var(--background-color);
+
+  max-width: 95%;
+  
+  border-color: #7D5BBE;
+  border-width: 2px;
+  border-radius: 4px;
+
+  resize: none;
+
+  margin-left: auto;
+  margin-right: auto;
+
+}
+
+.MessageTextBox:focus {
+  outline: none;
+  border-color: #c2a0ff;
+}

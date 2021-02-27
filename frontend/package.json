@@ -1,77 +1,43 @@
 {
-  "name": "react-frontend",
-  "version": "0.0.1",
-  "description": "The React frontend for the King of the Hill app.",
-  "main": "index.js",
+  "name": "koth",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The Frontend for the King of the Hill app.",
   "repository": {
     "type": "git",
     "url": "https://github.com/TeamMinz/QueueExtension",
     "directory": "frontend"
   },
   "scripts": {
-    "test": "jest",
-    "build": "webpack --mode production",
-    "start": "webpack-dev-server --mode development",
-    "cert": "./bin/generate_cert.sh server",
-    "host": "webpack-dev-server --mode development --devrig"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@babel/cli": "^7.11.6",
-    "@babel/core": "^7.11.6",
-    "@babel/preset-env": "^7.11.5",
-    "@babel/preset-react": "^7.10.4",
-    "babel-loader": "^8.1.0",
-    "clean-webpack-plugin": "^3.0.0",
-    "css-loader": "^4.3.0",
-    "enzyme": "^3.11.0",
-    "enzyme-adapter-react-16": "^1.15.4",
-    "eslint": "^7.9.0",
-    "eslint-config-google": "^0.14.0",
-    "eslint-plugin-jsdoc": "^30.4.2",
-    "eslint-plugin-react": "^7.20.6",
-    "file-loader": "^6.1.0",
-    "html-webpack-plugin": "^4.4.1",
-    "isomorphic-fetch": "^2.2.1",
-    "jest": "^26.4.2",
-    "prettier": "^2.1.1",
-    "prettier-eslint": "^11.0.0",
-    "regenerator-runtime": "^0.13.7",
-    "sass-loader": "^10.0.2",
-    "style-loader": "^1.2.1",
-    "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "prerelease": "rm -rf .next out",
+    "release": "NODE_ENV=production next build && next export && cd out && zip -qr bundle.zip *"
   },
   "dependencies": {
-    "core-js": "^3.6.5",
+    "babel-plugin-styled-components": "^1.12.0",
     "jsonwebtoken": "^8.5.1",
+    "next": "^10.0.7",
     "prop-types": "^15.7.2",
-    "react": "^16.13.1",
-    "react-collapsible": "^2.8.0",
-    "react-dom": "^16.13.1",
+    "react": "^17.0.1",
+    "react-collapsible": "^2.8.3",
+    "react-dom": "^17.0.1",
+    "react-is": "^17.0.1",
     "react-notification-system": "^0.4.0",
-    "react-tabs": "^3.1.1",
-    "sass": "^1.32.8"
+    "react-tabs": "^3.2.0",
+    "sass": "^1.32.8",
+    "styled-components": "^5.2.1"
   },
-  "babel": {
-    "presets": [
-      "@babel/preset-env",
-      "@babel/preset-react"
-    ]
-  },
-  "jest": {
-    "setupFiles": [
-      "<rootDir>/test/jestsetup.js"
-    ],
-    "transform": {
-      "^.+\\.js?$": "babel-jest"
-    },
-    "moduleNameMapper": {
-      "\\.(scss|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
-      "\\.(css|sccss|less)$": "<rootDir>/__mocks__/styleMock.js"
-    }
+  "devDependencies": {
+    "enzyme": "^3.11.0",
+    "eslint": "^7.20.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "isomorphic-fetch": "^3.0.0",
+    "prettier": "^2.2.1"
   }
 }
