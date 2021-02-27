@@ -1,7 +1,20 @@
+const {REDIS_HOST} = require('../util/options');
 const Redis = require('ioredis');
 const fs = require('fs');
 
-const redis = new Redis();
+const redis = new Redis({
+  lazyConnect: true,
+  host: REDIS_HOST,
+});
+
+
+const production = process.env.NODE_ENV == 'production';
+
+console.log('Running in production mode: ' + production);
+
+if (production) {
+  redis.connect();
+}
 
 
 /**

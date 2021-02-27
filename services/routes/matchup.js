@@ -231,7 +231,7 @@ matchup.post('/start', isBroadcaster, isQueueOpen, async (req, res) => {
 
   console.log(
       // eslint-disable-next-line max-len
-      `Starting match between ${matchup.champion} and ${matchup.challenger}`,
+      `Starting match between ${JSON.stringify(matchup.champion)} and ${JSON.stringify(matchup.challenger)}`,
   );
 
   await setMatchup(channelId, matchup);

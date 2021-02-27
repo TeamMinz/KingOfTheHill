@@ -2,30 +2,42 @@ const {getRedis} = require('../util/database');
 
 const redis = getRedis();
 
+const production = process.env.NODE_ENV == 'production';
+
 /**
  *
  */
 class SelectionMessageModel {
   /**
-   * @param channelId
+   * @param channelId The channel that this selection model is for.
    */
   constructor(channelId) {
     this._channelId = channelId;
+    this._debugValue = {};
+    this._key = `${this._channelId}_selection_message`;
   }
 
   /**
-   * @param {string} selectionMessage
+   * @param {string} selectionMessage The selection message to set.
    */
   async setValue(selectionMessage) {
-    await redis.set(`${this._channelId}_selection_message`, selectionMessage);
+    if (production) {
+      await redis.set(this._key, selectionMessage);
+    } else {
+      this._debugValue[this._key] = selectionMessage;
+    }
   }
 
   /**
    * @returns {string} selection message.
    */
   async getValue() {
-    const resp = await redis.get(`${this._channelId}_selection_message`);
-    return resp;
+    if (production) {
+      const resp = await redis.get(`${this._channelId}_selection_message`);
+      return resp;
+    } else {
+      return this._debugValue[this._key];
+    }
   }
 }
 
@@ -38,15 +50,23 @@ class MatchupModel {
    */
   constructor(channelId) {
     this._channelId = channelId;
+    this._champKey = `${this._channelId}_matchup_champion`;
+    this._challKey = `${this._channelId}_matchup_challenger`;
+    this._debugValue = {};
   }
 
   /**
-   * @param matchup
+   * @param {any} matchup The matchup to set
    */
   async setValue(matchup) {
     if (!matchup) {
-      await redis.del(`${this._channelId}_matchup_champion`);
-      await redis.del(`${this._channelId}_matchup_challenger`);
+      if (production) {
+        await redis.del(this._champKey);
+        await redis.del(this._challKey);
+      } else {
+        this._debugValue[this._champKey] = undefined;
+        this._debugValue[this._challKey] = undefined;
+      }
       return;
     }
 
@@ -55,8 +75,13 @@ class MatchupModel {
     const champStr = JSON.stringify(champion);
     const challStr = JSON.stringify(challenger);
 
-    await redis.set(`${this._channelId}_matchup_champion`, champStr);
-    await redis.set(`${this._channelId}_matchup_challenger`, challStr);
+    if (production) {
+      await redis.set(this._champKey, champStr);
+      await redis.set(this._challKey, challStr);
+    } else {
+      this._debugValue[this._champKey] = champStr;
+      this._debugValue[this._challKey] = challStr;
+    }
   }
 
   /**
@@ -67,19 +92,33 @@ class MatchupModel {
   async getValue() {
     const matchup = {};
 
-    const champStr = await redis.get(`${this._channelId}_matchup_champion`);
-    const challStr = await redis.get(`${this._channelId}_matchup_challenger`);
+    if (production) {
+      const champStr = await redis.get(this._champKey);
+      const challStr = await redis.get(this._challKey);
 
-    if (!champStr || !challStr) {
-      return null;
+      if (!champStr || !challStr) {
+        return null;
+      }
+
+      const champ = JSON.parse(champStr);
+      const challenger = JSON.parse(challStr);
+
+      matchup.champion = champ;
+      matchup.challenger = challenger;
+    } else {
+      const champStr = this._debugValue[this._champKey];
+      const challStr = this._debugValue[this._challKey];
+
+      if (!champStr || !challStr) {
+        return null;
+      }
+
+      const champ = JSON.parse(champStr);
+      const challenger = JSON.parse(challStr);
+
+      matchup.champion = champ;
+      matchup.challenger = challenger;
     }
-
-    const champ = JSON.parse(champStr);
-    const challenger = JSON.parse(challStr);
-
-    matchup.champion = champ;
-    matchup.challenger = challenger;
-
     return matchup;
   }
 }

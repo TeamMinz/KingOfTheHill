@@ -2,11 +2,15 @@ const {getRedis, loadScript} = require('../util/database');
 
 const redis = getRedis();
 
-redis.on('connect', () => {
-  // Load our redis query scripts
-  loadScript('removeUser', 'redis/remove_user.lua');
-  loadScript('insertAt', 'redis/insert_at.lua');
-});
+const production = process.env.NODE_ENV == 'production';
+
+if (production) {
+  redis.on('connect', () => {
+    // Load our redis query scripts
+    loadScript('removeUser', 'redis/remove_user.lua');
+    loadScript('insertAt', 'redis/insert_at.lua');
+  });
+}
 
 /**
  * The data structure responsible for interfacing with redis and storing / retreiving the state of the queue.
@@ -17,6 +21,9 @@ class QueueModel {
    */
   constructor(channelId) {
     this._channelId = channelId;
+    this._key = `${this._channelId}_queue_content`;
+    this._openKey = `${this._channelId}_queue_is_open`;
+    this._debugValue = [];
   }
 
   /**
@@ -24,13 +31,17 @@ class QueueModel {
    * @returns {number | string} the current length of the queue.
    */
   async push(challenger) {
-    const resp =
+    if (production) {
+      const resp =
         await redis
             .rpush(
-                `${this._channelId}_queue_content`,
+                this._key,
                 JSON.stringify(challenger),
             );
-    return resp;
+      return resp;
+    } else {
+      return this._debugValue.push(JSON.stringify(challenger));
+    }
   }
 
   /**
@@ -39,9 +50,14 @@ class QueueModel {
    * @returns {any} the challenger removed from the queue.
    */
   async shift() {
-    const resp =
-      await redis.lpop(`${this._channelId}_queue_content`);
-    return JSON.parse(resp);
+    if (production) {
+      const resp =
+        await redis.lpop(this._key);
+      return JSON.parse(resp);
+    } else {
+      const resp = this._debugValue.pop();
+      return JSON.parse(resp);
+    }
   }
 
   /**
@@ -51,10 +67,24 @@ class QueueModel {
    * @returns {import('../controller/queue').Challenger | null} The challenger removed, or null if none.
    */
   async remove(userId) {
-    const resp =
-      await redis.removeUser(`${this._channelId}_queue_content`, userId);
+    if (production) {
+      const resp =
+        await redis.removeUser(this._key, userId);
 
-    return JSON.parse(resp);
+      return JSON.parse(resp);
+    } else {
+      let resp = null;
+      this._debugValue = this._debugValue.filter((element) => {
+        const c = JSON.parse(element);
+        if (c.userId == userId || c.opaqueUserId == userId) {
+          resp = c;
+          return false;
+        }
+
+        return true;
+      });
+      return resp;
+    }
   }
 
   /**
@@ -63,11 +93,17 @@ class QueueModel {
    * @returns {Array<any>} The current state of the queue as an array.
    */
   async getValue() {
-    const resp = await redis.lrange(`${this._channelId}_queue_content`, 0, -1);
+    if (production) {
+      const resp = await redis.lrange(this._key, 0, -1);
 
-    return resp.map((str) => {
-      return JSON.parse(str);
-    });
+      return resp.map((str) => {
+        return JSON.parse(str);
+      });
+    } else {
+      return this._debugValue.map((str) => {
+        return JSON.parse(str);
+      });
+    }
   }
 
   /**
@@ -81,10 +117,14 @@ class QueueModel {
       return;
     }
 
-    await redis
-        .insertAt(`${this._channelId}_queue_content`,
-            index,
-            JSON.stringify(challenger));
+    if (production) {
+      await redis
+          .insertAt(this._key,
+              index,
+              JSON.stringify(challenger));
+    } else {
+      this._debugValue.splice(index, 0, JSON.stringify(challenger));
+    }
   }
 
   /**
@@ -93,28 +133,41 @@ class QueueModel {
    * @returns {boolean} true if open, false if closed.
    */
   async isOpen() {
-    const resp = await redis.get(`${this._channelId}_queue_is_open`);
+    if (production) {
+      const resp = await redis.get(this._openKey);
 
-    if (!resp) {
-      return false;
+      if (!resp) {
+        return false;
+      }
+
+      return resp === 'true';
+    } else {
+      return this._debugValue[this._openKey] === 'true';
     }
-
-    return resp === 'true';
   }
 
   /**
    * Sets the queue as open.
    */
   async setOpen() {
-    await redis.set(`${this._channelId}_queue_is_open`, 'true');
+    if (production) {
+      await redis.set(this._openKey, 'true');
+    } else {
+      this._debugValue[this._openKey] = 'true';
+    }
   }
 
   /**
    * Sets the queue as closed.
    */
   async setClosed() {
-    await redis.set(`${this._channelId}_queue_is_open`, 'false');
-    await redis.del(`${this._channelId}_queue_content`);
+    if (production) {
+      await redis.set(this._openKey, 'false');
+      await redis.del(this._key);
+    } else {
+      this._debugValue[this._openKey] = 'false';
+      this._debugValue[this._key] = null;
+    }
   }
 }
 
