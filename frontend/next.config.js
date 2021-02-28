@@ -14,6 +14,7 @@ module.exports = {
       '/panel': { page: '/panel' },
       '/live_config': { page: '/live_config' },
       '/config': { page: '/config' },
+      '/video_overlay': { page: '/video_overlay' },
     }
     : defaultPathMap),
   webpack(config, options) {
