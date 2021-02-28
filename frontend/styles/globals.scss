@@ -4,8 +4,8 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
+    Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
 a {
@@ -52,7 +52,7 @@ a {
   --border-color: #232127;
   --background-color: #232127;
   --not-selected-color: #3b383f;
-  --well-color:red;
+  --well-color: red;
   background-color: var(--background-color);
   border-color: var(--border-color);
   color: var(--text-color);
@@ -106,7 +106,7 @@ a {
 }
 
 .react-tabs__tab:focus:after {
-  content: "";
+  content: '';
   position: absolute;
   height: 5px;
   left: -4px;

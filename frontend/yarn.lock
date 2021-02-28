@@ -3165,13 +3165,12 @@ fsevents@~2.3.1:
     prettier: ^2.2.1
     prettier-eslint: ^12.0.0
     prop-types: ^15.7.2
-    re-resizable: ^6.9.0
     react: ^17.0.1
     react-collapsible: ^2.8.3
     react-dom: ^17.0.1
-    react-draggable: ^4.4.3
     react-is: ^17.0.1
     react-notification-system: ^0.4.0
+    react-rnd: ^10.2.4
     react-tabs: ^3.2.0
     sass: ^1.32.8
     styled-components: ^5.2.1
@@ -4454,7 +4453,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"re-resizable@npm:^6.9.0":
+"re-resizable@npm:6.9.0":
   version: 6.9.0
   resolution: "re-resizable@npm:6.9.0"
   dependencies:
@@ -4489,7 +4488,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-draggable@npm:^4.4.3":
+"react-draggable@npm:4.4.3":
   version: 4.4.3
   resolution: "react-draggable@npm:4.4.3"
   dependencies:
@@ -4530,6 +4529,17 @@ fsevents@~2.3.1:
   version: 0.8.3
   resolution: "react-refresh@npm:0.8.3"
   checksum: 38f06df8e0a20701b96e5d680838a3528d66cfb53db79843d30cb9517df3262ec596607147439975267bf0634bee77101db37298ea79b5742cc28664632f3c76
+  languageName: node
+  linkType: hard
+
+"react-rnd@npm:^10.2.4":
+  version: 10.2.4
+  resolution: "react-rnd@npm:10.2.4"
+  dependencies:
+    re-resizable: 6.9.0
+    react-draggable: 4.4.3
+    tslib: 2.0.3
+  checksum: da6ade10a0f6e9fa71138e83b50f8d52dbea41edc1346fb6e1ee1f02d2430246aa1943d84158c3dd60641938e789da08c6b1d0d4440a7842868142490759441a
   languageName: node
   linkType: hard
 
@@ -5479,6 +5489,13 @@ fsevents@~2.3.1:
     minimist: ^1.2.0
     strip-bom: ^3.0.0
   checksum: 5383ba626b3ac70e08094b9dfd1e30ce82878407b6c8db8cd84279cc7c7340d5f53f67dbeb8174a233c082a068322a6b00ec8514b96d9a80a453e0476dc116d2
+  languageName: node
+  linkType: hard
+
+"tslib@npm:2.0.3":
+  version: 2.0.3
+  resolution: "tslib@npm:2.0.3"
+  checksum: 447bfca5deaa157806c3f77eaba74d05dd0b38b014e47ce79d98b5c77ce7d91b00a687ba13ca1b5a74d35ca1098ac7a072c0a97fad06f0266612f2a03a6c8e8f
   languageName: node
   linkType: hard
 
