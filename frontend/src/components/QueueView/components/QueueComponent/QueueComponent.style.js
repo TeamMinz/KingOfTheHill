@@ -16,7 +16,6 @@ export const StyledQueueComponent = styled.div`
 `;
 
 export const StyledJoin = styled.div`
-  height: 10vh;
   display: inline-block;
   text-align: center;
   padding: 0.5em;
@@ -24,13 +23,32 @@ export const StyledJoin = styled.div`
 
 export const StyledQueueButton = styled.button`
   font-size: 1em;
+  padding: 0.3em 0.6em;
   background-color: var(--not-selected-color);
   border: none;
+  outline: none;
   color: var(--text-color);
-  padding: 15px 32px;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
+  font-family: Raleway;
+
+  opacity: 0.8;
+  box-shadow: black 0rem 0rem 0px;
+
+  transition: 0.2s all;
+
+  &:active {
+    transform: translateY(0rem) !important;
+    box-shadow: black 0rem 0rem 0px !important;
+  }
+
+  &:hover {
+    transform: translateY(-0.2rem);
+    box-shadow: black 0.0rem 0.2rem 0px;
+    opacity: 1;
+  }
+
   &:disabled {
     color: var(--border-color);
   }

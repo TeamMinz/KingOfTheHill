@@ -3,5 +3,6 @@ import styled from 'styled-components';
 import { TabPanel } from 'react-tabs';
 
 export const StyledQueuePanel = styled(TabPanel)`
-  height: 100%;
+  flex-grow: 1;
+  display: flex;
 `;
