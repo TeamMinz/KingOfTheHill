@@ -32,7 +32,6 @@ export const StyledButton = styled.div`
   align-items: center;
   opacity: 50%;
   background: grey;
-  color: white;
   height: 50px;
   border-radius: 0px 5px 5px 0px;
   padding-left: 10px;

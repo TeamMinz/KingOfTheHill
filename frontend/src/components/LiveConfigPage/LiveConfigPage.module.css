@@ -11,8 +11,9 @@
 
 :root .LiveConfigPage-dark {
   --text-color: #e5e3e8;
-  --border-color: #9b9a9a;
-  --background-color: #232127;
+  --border-color: #6441A4;
+  
+  --background-color: #201c2b;
   --not-selected-color: #3b383f;
   --well-color: #15151a;
   background-color: var(--background-color);

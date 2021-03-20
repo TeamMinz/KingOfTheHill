@@ -51,9 +51,10 @@ a {
 
 :root .App-dark {
   --text-color: #e5e3e8;
-  --border-color: #232127;
+  --border-color: #6441A4;
   --background-color: #232127;
-  --not-selected-color: #3b383f;
+  --disabled-background: #3b383f;
+  --disabled-foreground: #9c9a9e;
   --well-color: red;
   background-color: var(--background-color);
   border-color: var(--border-color);
@@ -88,23 +89,25 @@ div#__next {
 .react-tabs__tab {
   display: block;
   border: 1px solid transparent;
-  border-bottom: 2px solid white;
+  border-bottom: 2px solid  var(--border-color);
   bottom: -1px;
   position: relative;
   list-style: none;
   padding: 6px 12px;
   cursor: pointer;
   flex-grow: 1;
-  background: var(selected-color);
+  background: var(--disabled-background);
+  color: var(--disabled-foreground);
   text-align: center;
 }
 
 .react-tabs__tab--selected {
   background: var(--background-color);
-  border-color: var(--border-color);
+  // border-color: var(--border-color);
   color: var(--text-color);
   border-radius: 5px 5px 0 0;
   border-bottom: 2px solid white;
+  cursor: default;
 }
 
 .react-tabs__tab--disabled {

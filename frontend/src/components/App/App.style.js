@@ -4,5 +4,5 @@ import { TabPanel } from 'react-tabs';
 
 export const StyledQueuePanel = styled(TabPanel)`
   flex-grow: 1;
-  display: flex;
+  display: flex !important;
 `;
