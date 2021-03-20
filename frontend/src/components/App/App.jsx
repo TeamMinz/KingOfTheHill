@@ -88,8 +88,8 @@ export default class App extends React.Component {
             <QueueNotification />
             <Tabs>
               <TabList>
-                <Tab>QUEUE</Tab>
-                <Tab>LEADERBOARD</Tab>
+                <Tab>Queue</Tab>
+                <Tab>Leaderboard</Tab>
               </TabList>
               <StyledQueuePanel>
                 <QueueView />
