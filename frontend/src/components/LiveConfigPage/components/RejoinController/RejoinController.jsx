@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Collapsible from 'react-collapsible';
+import Collapsible from '../Collapsible/Collapsible';
+import { StyledRejoinController } from './RejoinController.style';
+import { Well } from '../../LiveConfigPage.style';
 /**
  * Rejoin Component for LiveConfig
  * Handles readding the broadcaster to the queue
@@ -16,17 +18,10 @@ const RejoinController = ({ settings = {}, onChange = () => {} }) => {
   const rejoinPosition = 'rejoinPosition' in rejoinSettings ? rejoinSettings.rejoinPosition : 5;
 
   return (
-    <div className="Well">
-      <Collapsible
-        trigger="Rejoin Settings"
-        triggerClassName="DropdownTrigger"
-        triggerOpenedClassName="DropdownTrigger--open"
-        easing="ease-out"
-        open
-        transitionTime={250}
-      >
-        <div className="RejoinController">
-          <div style={{ display: 'block' }}>
+    <Well>
+      <Collapsible title="Rejoin Settings" isOpen>
+        <StyledRejoinController>
+          <div>
             Automatically rejoin the queue?
             <input
               type="checkbox"
@@ -52,9 +47,9 @@ const RejoinController = ({ settings = {}, onChange = () => {} }) => {
               </div>
             )}
           </div>
-        </div>
+        </StyledRejoinController>
       </Collapsible>
-    </div>
+    </Well>
   );
 };
 

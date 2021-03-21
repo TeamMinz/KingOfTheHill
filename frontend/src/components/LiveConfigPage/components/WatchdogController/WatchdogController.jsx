@@ -1,6 +1,8 @@
 import React from 'react';
-import Collapsible from 'react-collapsible';
 import PropTypes from 'prop-types';
+import Collapsible from '../Collapsible/Collapsible';
+import { Well } from '../../LiveConfigPage.style';
+import { StyledWatchdogController } from './WatchdogController.style';
 
 /**
  *  Watchdog controller component for the liveconfig.
@@ -16,16 +18,9 @@ const WatchdogController = ({ settings = {}, onChange = () => {} }) => {
   const enableWatchdog = 'enableWatchdog' in watchdogSettings ? watchdogSettings.enableWatchdog : false;
 
   return (
-    <div className="Well">
-      <Collapsible
-        trigger="Chatbot Settings"
-        triggerClassName="DropdownTrigger"
-        triggerOpenedClassName="DropdownTrigger--open"
-        easing="ease-out"
-        open
-        transitionTime={250}
-      >
-        <div className="WatchdogController">
+    <Well>
+      <Collapsible title="Chatbot Settings" isOpen>
+        <StyledWatchdogController>
           <div style={{ display: 'block' }}>
             <label htmlFor="ChatCommandsCheckBox">
               Enable chat commands?
@@ -39,9 +34,9 @@ const WatchdogController = ({ settings = {}, onChange = () => {} }) => {
               />
             </label>
           </div>
-        </div>
+        </StyledWatchdogController>
       </Collapsible>
-    </div>
+    </Well>
   );
 };
 

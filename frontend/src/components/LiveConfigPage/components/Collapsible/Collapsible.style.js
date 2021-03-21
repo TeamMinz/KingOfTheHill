@@ -4,7 +4,7 @@ export const CollapsibleHeader = styled.div`
     text-align: left;
     display: flex;
     border-bottom: solid 1px var(--border-color);
-    background-color: var(--secondary-background)
+    background-color: var(--secondary-background-color);
 `;
 
 export const CollapsibleTitle = styled.span`
