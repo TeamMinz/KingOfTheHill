@@ -24,7 +24,7 @@ export const StyledJoin = styled.div`
 export const StyledQueueButton = styled.button`
   font-size: 1em;
   padding: 0.3em 0.6em;
-  background-color: var(--disabled-background);
+  background-color: var(--border-color);
   border: none;
   outline: none;
   color: var(--text-color);
@@ -51,7 +51,7 @@ export const StyledQueueButton = styled.button`
 
   &:disabled {
     color: var(--disabled-foreground);
-    background-color: var(--background-color);
+    background-color: var(--disabled-background);
     cursor: not-allowed;
     transform: translateY(0rem) !important;
     box-shadow: black 0rem 0rem 0px !important;

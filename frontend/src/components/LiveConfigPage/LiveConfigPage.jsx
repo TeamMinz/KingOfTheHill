@@ -155,7 +155,7 @@ const LiveConfigPage = () => {
       <div
         // eslint-disable-next-line max-len
         className={`LiveConfigPage ${
-          Theme === 'light' ? 'LiveConfigPage-light' : 'LiveConfigPage-dark'
+          Theme === 'light' ? 'LiveConfigPage-dark' : 'LiveConfigPage-dark'
         }`}
       >
         <QueueContext.Provider

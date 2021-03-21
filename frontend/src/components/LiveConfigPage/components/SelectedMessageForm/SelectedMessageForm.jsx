@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
-import Collapsible from 'react-collapsible';
+import Collapsible from '../Collapsible/Collapsible';
 import QueueContext from '../../../../util/QueueContext';
+import { LiveConfigForm, Well } from '../../LiveConfigPage.style';
 import './SelectedMessageForm.module.css';
 
 /**
@@ -73,16 +74,13 @@ const SelectedMessageForm = () => {
 
   if (ctx.finishedLoading && SelectionMessage) {
     return (
-      <div className="Well">
-        <Collapsible
-          trigger="Selection Message"
-          triggerClassName="DropdownTrigger"
-          triggerOpenedClassName="DropdownTrigger--open"
-          easing="ease-out"
-          open
-          transitionTime={250}
-        >
-          <form method="POST" className="SelectedMessageForm" onSubmit={updateSelectionMessage}>
+      <Well>
+        <Collapsible title="Selection Message" isOpen>
+          <LiveConfigForm
+            method="POST"
+            className="SelectedMessageForm"
+            onSubmit={updateSelectionMessage}
+          >
             <ErrorMessage showError={ShowError} />
             <textarea
               className="MessageTextBox"
@@ -94,9 +92,9 @@ const SelectedMessageForm = () => {
               onChange={storeSelectionMessage}
             />
             <input className="DefaultButton" type="submit" value="Update Message" />
-          </form>
+          </LiveConfigForm>
         </Collapsible>
-      </div>
+      </Well>
     );
   }
   return null;
