@@ -122,6 +122,28 @@
       "orientation": "Portrait",
       "type": "video_overlay",
       "viewerType": "Broadcaster"
+    },
+    {
+      "channelId": "135887033",
+      "configurationAnchor": "panel",
+      "displayChannelName": "bassjio",
+      "features": {
+        "isBitsEnabled": true,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "frameSize": {
+        "width": 375,
+        "height": 822
+      },
+      "id": "5",
+      "isPopout": false,
+      "label": "",
+      "linked": false,
+      "linkedUserId": "",
+      "orientation": "Portrait",
+      "type": "mobile",
+      "viewerType": "Broadcaster"
     }
   ],
   "manifest": {

@@ -33,18 +33,18 @@ export const ToggleButton = styled.button`
     font-family: Raleway;
 
     opacity: 0.8;
-    box-shadow: black 0rem 0rem 0px;
+    box-shadow: #4b317a 0rem 0rem 0px;
 
     transition: 0.2s all;
 
     &:active {
         transform: translateY(0rem) !important;
-        box-shadow: black 0rem 0rem 0px !important;
+        box-shadow: #4b317a 0rem 0rem 0px !important;
     }
 
     &:hover {
         transform: translateY(-0.2rem);
-        box-shadow: black 0.0rem 0.2rem 0px;
+        box-shadow: #4b317a 0.0rem 0.2rem 0px;
         opacity: 1;
     }
 
@@ -53,7 +53,7 @@ export const ToggleButton = styled.button`
         background-color: var(--background-color);
         cursor: not-allowed;
         transform: translateY(0rem) !important;
-        box-shadow: black 0rem 0rem 0px !important;
+        box-shadow: #4b317a 0rem 0rem 0px !important;
         opacity: 0.8 !important;
   }
 `;

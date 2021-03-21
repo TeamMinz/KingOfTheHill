@@ -7,7 +7,7 @@ import QueueContext from '../../util/QueueContext';
 import Authentication from '../../util/Authentication/Authentication';
 
 import WatchdogController from './components/WatchdogController/WatchdogController';
-import './LiveConfigPage.module.css';
+import { StyledLiveConfigPage } from './LiveConfigPage.style';
 
 /**
  * Live config page react hook.
@@ -150,14 +150,9 @@ const LiveConfigPage = () => {
     });
   };
 
-  if (/* FinishedLoading */ true) {
+  if (FinishedLoading) {
     return (
-      <div
-        // eslint-disable-next-line max-len
-        className={`LiveConfigPage ${
-          Theme === 'light' ? 'LiveConfigPage-dark' : 'LiveConfigPage-dark'
-        }`}
-      >
+      <StyledLiveConfigPage theme={Theme}>
         <QueueContext.Provider
           value={{
             queue: Queue,
@@ -172,10 +167,10 @@ const LiveConfigPage = () => {
           <WatchdogController settings={ConfigSettings} onChange={setWatchdogSettings} />
           <QueueController />
         </QueueContext.Provider>
-      </div>
+      </StyledLiveConfigPage>
     );
   }
-  return <div className="LiveConfigPage"> Not authenticated yet</div>;
+  return <StyledLiveConfigPage> Not authenticated yet</StyledLiveConfigPage>;
 };
 
 export default LiveConfigPage;

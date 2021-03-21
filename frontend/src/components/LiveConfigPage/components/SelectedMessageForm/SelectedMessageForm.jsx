@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect } from 'react';
 import Collapsible from '../Collapsible/Collapsible';
 import QueueContext from '../../../../util/QueueContext';
 import { LiveConfigForm, Well } from '../../LiveConfigPage.style';
-import './SelectedMessageForm.module.css';
 
 /**
  * Component that displays an error.

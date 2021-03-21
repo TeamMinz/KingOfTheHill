@@ -2,7 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Collapsible from '../Collapsible/Collapsible';
 import { StyledRejoinController } from './RejoinController.style';
-import { Well } from '../../LiveConfigPage.style';
+import {
+  Well,
+  StyledCheckbox,
+  StyledFormRow,
+  StyledNumberSpinner,
+} from '../../LiveConfigPage.style';
 /**
  * Rejoin Component for LiveConfig
  * Handles readding the broadcaster to the queue
@@ -21,32 +26,32 @@ const RejoinController = ({ settings = {}, onChange = () => {} }) => {
     <Well>
       <Collapsible title="Rejoin Settings" isOpen>
         <StyledRejoinController>
-          <div>
+          <StyledFormRow>
             Automatically rejoin the queue?
-            <input
+            <StyledCheckbox
               type="checkbox"
               checked={autoRejoin}
               onChange={() => {
                 onChange({ autoRejoin: !autoRejoin, rejoinPosition });
               }}
             />
-            {autoRejoin && (
-              <div>
-                Position to rejoin (leave blank to rejoin at the end):
-                <input
-                  type="number"
-                  min="1"
-                  onChange={(e) => {
-                    onChange({
-                      autoRejoin,
-                      rejoinPosition: e.target.value,
-                    });
-                  }}
-                  value={rejoinPosition}
-                />
-              </div>
-            )}
-          </div>
+          </StyledFormRow>
+          {autoRejoin && (
+            <StyledFormRow>
+              Position to rejoin (leave blank to rejoin at the end):
+              <StyledNumberSpinner
+                type="number"
+                min="1"
+                onChange={(e) => {
+                  onChange({
+                    autoRejoin,
+                    rejoinPosition: e.target.value,
+                  });
+                }}
+                value={rejoinPosition}
+              />
+            </StyledFormRow>
+          )}
         </StyledRejoinController>
       </Collapsible>
     </Well>
