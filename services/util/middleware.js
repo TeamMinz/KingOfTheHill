@@ -59,11 +59,11 @@ function isBroadcaster(req, res, next) {
  * @param {express.Response} res response
  * @param {express.NextFunction} next next function
  */
-function isQueueOpen(req, res, next) {
+async function isQueueOpen(req, res, next) {
   const {channel_id: channelId} = req.twitch;
   const currentQueue = getQueue(channelId);
 
-  if (!currentQueue.isOpen()) {
+  if (!(await currentQueue.isOpen())) {
     res.sendStatus(500);
     return;
   }

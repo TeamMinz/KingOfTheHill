@@ -1,23 +1,43 @@
 const {broadcast} = require('../util/pubsub');
+const {ChampionModel} = require('../models/champion');
 
 const channelChampions = {};
 
-function broadcastChampion(channelId) {
+/**
+ * @param channelId
+ */
+async function broadcastChampion(channelId) {
+  const champion = await channelChampions[channelId].getValue();
+
   const message = {
     type: 'updateChampion',
-    message: channelChampions[channelId] ? channelChampions[channelId] : null,
+    message: champion,
   };
 
   broadcast(channelId, message);
 }
 
-function getChampion(channelId) {
-  return channelChampions[channelId] || null;
+/**
+ * @param channelId
+ */
+async function getChampion(channelId) {
+  if (!(channelId in channelChampions)) {
+    channelChampions[channelId] = new ChampionModel(channelId);
+  }
+
+  return await channelChampions[channelId].getValue();
 }
 
-function setChampion(channelId, champion) {
-  channelChampions[channelId] = champion;
-  broadcastChampion(channelId);
+/**
+ * @param channelId
+ * @param champion
+ */
+async function setChampion(channelId, champion) {
+  if (!(channelId in channelChampions)) {
+    channelChampions[channelId] = new ChampionModel(channelId);
+  }
+  await channelChampions[channelId].setValue(champion);
+  await broadcastChampion(channelId);
 }
 
 module.exports = {

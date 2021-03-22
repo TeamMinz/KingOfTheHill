@@ -4,9 +4,9 @@ const champion = require('express').Router();
 
 const {getChampion} = require('../controller/champion');
 
-champion.get('/get', (req, res) => {
+champion.get('/get', async (req, res) => {
   const {channel_id: channelId} = req.twitch;
-  const champ = getChampion(channelId);
+  const champ = await getChampion(channelId);
   res.json(champ);
 });
 

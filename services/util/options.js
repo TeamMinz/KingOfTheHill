@@ -5,10 +5,12 @@ const yargs = require('yargs');
 const argv = yargs
     .describe('ownerid', 'The extension\'s owner id')
     .alias('o', 'ownerid')
-    .describe('secret', 'The extension\'s secret')
-    .alias('t', 'oauth')
     .describe('oauth', 'Oauth token for chatbot.')
+    .alias('t', 'oauth')
+    .describe('secret', 'The extension\'s secret')
     .alias('s', 'secret')
+    .describe('redis', 'A URI representing the location of the redis backend.')
+    .alias('r', 'redis')
     .describe('clientid', 'The extension\'s clientId')
     .alias('c', 'clientid').argv;
 
@@ -35,10 +37,23 @@ const SECRET = Buffer.from(getOption('secret', 'EXT_SECRET'), 'base64');
 const OWNER_ID = getOption('ownerid', 'EXT_OWNER_ID');
 const CLIENT_ID = getOption('clientid', 'EXT_CLIENT_ID');
 const EXT_BOT_OAUTH = getOption('oauth', 'EXT_BOT_OAUTH');
+const REDIS_HOST = (() =>{
+  if (process.env.NODE_ENV == 'production') {
+    try {
+      const uri = getOption('redis', 'REDIS_URI');
+      return uri;
+    } catch (_e) {
+      return '127.0.0.1';
+    }
+  } else {
+    return null;
+  }
+})();
 
 module.exports = {
   SECRET,
   OWNER_ID,
   CLIENT_ID,
   EXT_BOT_OAUTH,
+  REDIS_HOST,
 };

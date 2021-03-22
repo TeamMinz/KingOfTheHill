@@ -1,3 +1,5 @@
+const {QueueModel} = require('../models/queue');
+
 /**
  * @typedef {object} Challenger
  * @property {string} [opaqueUserId] The opaque id of the user.
@@ -7,9 +9,12 @@
 class Queue {
   /**
    * Constructor
+   *
+   * @param {string} channelId the channel that this queue belongs to.
    */
-  constructor() {
-    this._queue = [];
+  constructor(channelId) {
+    this._model = new QueueModel(channelId);
+    this._channelId = channelId;
     this.hasUpdated = false;
     this._isOpen = false;
   }
@@ -19,8 +24,8 @@ class Queue {
    * @param {string | number} userId The person to search for.
    * @returns {boolean} true if person is in queue otherwise false.
    */
-  contains(userId) {
-    return this.getPosition(userId) != -1;
+  async contains(userId) {
+    return (await this.getPosition(userId)) != -1;
   }
   /**
    * Searches a queue for a person.
@@ -28,8 +33,8 @@ class Queue {
    * @param {string} userId The user to search for.
    * @returns {number} The current position in the queue or -1 if not in queue.
    */
-  getPosition(userId) {
-    return this._queue.findIndex((challenger) =>
+  async getPosition(userId) {
+    return (await this._model.getValue()).findIndex((challenger) =>
       (challenger.userId == userId || challenger.opaqueUserId == userId));
   }
   /**
@@ -38,18 +43,18 @@ class Queue {
    * @param {Challenger} challenger The challenger to add to the queue.
    * @returns {number} The position of the element inserted into the queue.
    */
-  enqueue(challenger) {
-    this._queue.push(challenger);
+  async enqueue(challenger) {
+    const resp = await this._model.push(challenger);
     this.hasUpdated = true;
-    return this._queue.length;
+    return resp;
   }
   /**
    * Removes the top challenger from the queue.
    *
    * @returns {Challenger} The challenger pulled from the queue.
    */
-  dequeue() {
-    const challenger = this._queue.shift();
+  async dequeue() {
+    const challenger = await this._model.shift();
     this.hasUpdated = true;
     return challenger;
   }
@@ -60,43 +65,37 @@ class Queue {
    * @param {number} pos the position to insert into the queue in.
    * @param {Challenger} user the user to insert into the queue.
    */
-  insert(pos, user) {
-    this._queue.splice(pos, 0, user);
+  async insert(pos, user) {
+    await this._model.insertAt(user, pos);
     this.hasUpdated = true;
   }
   /**
    * Removes the specified challenger from the queue.
    *
    * @param {string | number} userId The user to remove from the queue.
-   * @returns {object} The challenger that was removed.
+   * @returns {object | null} The challenger that was removed. Null if not found.
    */
-  remove(userId) {
-    let challenger = null;
+  async remove(userId) {
+    const resp = await this._model.remove(userId);
 
-    this._queue = this._queue.filter((c) => {
-      if (c.userId == userId || c.opaqueUserId == userId) {
-        challenger = c;
-        return false;
-      }
+    if (resp) {
+      this.hasUpdated = true;
+    }
 
-      return true;
-    });
-    this.hasUpdated = true;
-    return challenger;
+    return resp;
   }
   /**
    * Marks this queue as open.
    */
-  openQueue() {
-    this._isOpen = true;
+  async openQueue() {
+    await this._model.setOpen();
     this.hasUpdated = true;
   }
   /**
    * Mark this queue as closed, and clear the queue.
    */
-  closeQueue() {
-    this._isOpen = false;
-    this._queue = [];
+  async closeQueue() {
+    await this._model.setClosed();
     this.hasUpdated = true;
   }
   /**
@@ -104,24 +103,24 @@ class Queue {
    *
    * @returns {boolean} true if open false otherwise.
    */
-  isOpen() {
-    return this._isOpen;
+  async isOpen() {
+    return await this._model.isOpen();
   }
   /**
    * Get this queue represented as an array.
    *
    * @returns {Array} the array representation of this queue.
    */
-  getAsArray() {
-    return this._queue;
+  async getAsArray() {
+    return await this._model.getValue();
   }
   /**
    * Get the number of people currently in this queue.
    *
    * @returns {number} the number of people in the queue.
    */
-  getSize() {
-    return this._queue.length;
+  async getSize() {
+    return (await this._model.getValue()).length;
   }
 }
 
@@ -135,7 +134,7 @@ const channelQueues = {};
  */
 function getQueue(channelId) {
   if (!channelQueues[channelId]) {
-    channelQueues[channelId] = new Queue();
+    channelQueues[channelId] = new Queue(channelId);
   }
 
   return channelQueues[channelId];

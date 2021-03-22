@@ -20,4 +20,5 @@ export const StyledChallenger = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: center;
 `;

@@ -129,6 +129,7 @@ const QueueComponent = () => {
   if (
     queueEntries.length > 0
     && ctx.currentChampion
+    && ctx.currentChampion.winStreak
     && ctx.queue.queue[0].opaqueUserId === ctx.currentChampion.user.opaqueUserId
   ) {
     queueEntries.shift();

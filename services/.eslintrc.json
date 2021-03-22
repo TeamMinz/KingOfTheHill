@@ -3,7 +3,8 @@
   "env": {
     "browser": true,
     "commonjs": true,
-    "es2020": true
+    "es2020": true,
+    "jest/globals": true
   },
   "extends": [
     "eslint:recommended",
@@ -14,11 +15,12 @@
   "parserOptions": {
     "ecmaVersion": 2021
   },
-  "plugins": ["jsdoc", "node"],
+  "plugins": ["jsdoc", "node", "jest"],
   "rules": {
     "require-jsdoc": "off",
     "valid-jsdoc": "off",
     "no-undef": "error",
+    "max-len": ["error", { "code": 110 }],
     "jsdoc/require-jsdoc": [
       "warn",
       {

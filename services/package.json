@@ -10,7 +10,7 @@
     "directory": "services"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "Team Minz",
   "license": "SEE LICENSE IN ../LICENSE",
@@ -20,7 +20,7 @@
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-jsdoc": "^32.1.0",
     "eslint-plugin-node": "^11.1.0",
-    "nodemon": "^2.0.7",
+    "jest": "^26.6.3",
     "prettier": "^2.1.1",
     "prettier-eslint": "^12.0.0"
   },
@@ -28,6 +28,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "ioredis": "^4.22.0",
     "jsonwebtoken": "^8.5.1",
     "prop-types": "^15.7.2",
     "superagent": "^6.1.0",

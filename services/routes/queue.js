@@ -10,16 +10,16 @@ const {isBroadcaster, isQueueOpen} = require('../util/middleware');
 const queueUpdateIntervalMs = 1000;
 
 // Set up our routes.
-queue.get('/get', function(req, res) {
+queue.get('/get', async function(req, res) {
   const {channel_id: channelId, opaque_user_id: opaqueUserId} = req.twitch;
 
   const currentQueue = getQueue(channelId);
   const currentPosition = currentQueue.getPosition(opaqueUserId);
 
   res.send({
-    queue: currentQueue.getAsArray(),
+    queue: await currentQueue.getAsArray(),
     position: currentPosition,
-    isOpen: currentQueue.isOpen(),
+    isOpen: await currentQueue.isOpen(),
   });
 });
 
@@ -40,21 +40,21 @@ queue.post('/kick', isQueueOpen, async (req, res) => {
 
   const kickTarget = req.body.kickTarget;
 
-  if (currentQueue.getPosition(kickTarget) == -1) {
+  if (await currentQueue.getPosition(kickTarget) == -1) {
     res.status(400).send('Cannot kick someone not in the queue.');
     return;
   }
 
-  const champ = getChampion(channelId);
+  const champ = await getChampion(channelId);
 
   // Remove this person as champion if they're champ.
   if (champ &&
     (champ.user.opaqueUserId == kickTarget ||
       champ.user.userId == kickTarget)) {
-    setChampion(channelId, null);
+    await setChampion(channelId, null);
   }
 
-  currentQueue.remove(kickTarget);
+  await currentQueue.remove(kickTarget);
   res.sendStatus(200);
 });
 
@@ -82,7 +82,7 @@ queue.post('/join', isQueueOpen, async (req, res) => {
     return;
   }
 
-  const currentMatchup = getMatchup(channelId);
+  const currentMatchup = await getMatchup(channelId);
 
   if (currentMatchup) {
     if (
@@ -102,7 +102,7 @@ queue.post('/join', isQueueOpen, async (req, res) => {
   const displayName = await resolveDisplayName(userId);
 
   // Make sure this person isn't already in this queue.
-  if (currentQueue.contains(userId)) {
+  if (await currentQueue.contains(userId)) {
     res.status(500).send({
       message: 'You are already in the queue.',
     });
@@ -117,14 +117,13 @@ queue.post('/join', isQueueOpen, async (req, res) => {
     displayName,
   };
 
-  const queuePosition = currentQueue.enqueue(challenger);
-
+  const queuePosition = await currentQueue.enqueue(challenger);
   res.send({
     message: `You are now #${queuePosition} in the queue.`,
   }); // All done.
 });
 
-queue.post('/leave', isQueueOpen, (req, res) => {
+queue.post('/leave', isQueueOpen, async (req, res) => {
   // Handles leaving the queue.
   const {channel_id: channelId, user_id: userId} = req.twitch;
 
@@ -138,7 +137,7 @@ queue.post('/leave', isQueueOpen, (req, res) => {
     return;
   }
   // Make sure this person is actually in this queue.
-  if (!currentQueue.contains(userId)) {
+  if (!await currentQueue.contains(userId)) {
     res.status(500).send({
       message: 'You cannot leave a queue you\'re not in.',
     });
@@ -147,15 +146,13 @@ queue.post('/leave', isQueueOpen, (req, res) => {
 
   // Lets check to see if the person thats leaving is the current champion,
   // then remove them as champion.
-  const champ = getChampion(channelId);
-  // console.log(champ);
-  // console.log(opaqueUserId);
+  const champ = await getChampion(channelId);
   if (champ && champ.user.userId == userId) {
-    setChampion(channelId, null);
+    await setChampion(channelId, null);
   }
 
   // Okay. lets remove them from the queue.
-  currentQueue.remove(userId);
+  await currentQueue.remove(userId);
 
   res.send({
     message: 'You have been removed from the queue.',
@@ -169,8 +166,6 @@ queue.post('/open', isBroadcaster, async (req, res) => {
   queue.openQueue();
 
   const {content} = await getBroadcasterConfig(channelId);
-
-  console.log(content);
 
   if ('watchdogSettings' in content) {
     const watchdogSettings = content.watchdogSettings;
@@ -186,7 +181,7 @@ queue.post('/close', isBroadcaster, async (req, res) => {
   const {channel_id: channelId} = req.twitch;
 
   const queue = getQueue(channelId);
-  queue.closeQueue();
+  await queue.closeQueue();
 
   const watchdog = getWatchdog(channelId);
 
@@ -194,12 +189,12 @@ queue.post('/close', isBroadcaster, async (req, res) => {
     await watchdog.deactivate();
   }
 
-  const matchup = getMatchup(channelId);
+  const matchup = await getMatchup(channelId);
 
-  setChampion(channelId, null);
+  await setChampion(channelId, null);
 
   if (matchup) {
-    setMatchup(channelId, null);
+    await setMatchup(channelId, null);
   }
 });
 
@@ -208,7 +203,7 @@ module.exports = queue;
 // Check if each queue has changed, then if it has publish it.
 // TODO: we want to change this, so that instead of just sending out all
 // ... queues, we look for all live channels, then send out their queues.
-setInterval(function() {
+setInterval(async function() {
   const channelQueues = getAllQueues();
   for (const channelId in channelQueues) {
     if (Object.prototype.hasOwnProperty.call(channelQueues, channelId)) {
@@ -217,7 +212,10 @@ setInterval(function() {
       if (queue.hasUpdated) {
         const message = {
           type: 'updateQueue',
-          message: {queue: queue.getAsArray(), isOpen: queue.isOpen()},
+          message: {
+            queue: await queue.getAsArray(),
+            isOpen: await queue.isOpen(),
+          },
         };
         broadcast(channelId, message);
         queue.hasUpdated = false; // mark this so we don't update until a change
