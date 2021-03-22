@@ -7,3 +7,7 @@ export const StyledKickButton = styled.button`
   border: none;
   margin-right: 1rem;
 `;
+
+export const StyledQueueController = styled.div`
+  margin: 0.5rem;
+`;

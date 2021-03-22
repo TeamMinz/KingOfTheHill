@@ -1,6 +1,8 @@
 import React, { useState, useContext } from 'react';
-import Collapsible from 'react-collapsible';
+import Collapsible from '../Collapsible/Collapsible';
 import QueueContext from '../../../../util/QueueContext';
+import { Well } from '../../LiveConfigPage.style';
+import { MatchupContainer } from './MatchupController.style';
 
 /**
  * Matchup Component for Config
@@ -77,7 +79,7 @@ const MatchupController = () => {
 
   // Stuff for rendering.
   const matchupController = (ctx.finishedLoading && ctx.currentMatchup && (
-    <div>
+    <MatchupContainer>
       <button
         type="button"
         className="DefaultButton"
@@ -130,28 +132,21 @@ const MatchupController = () => {
           Forfeit a player
         </button>
       )}
-    </div>
+    </MatchupContainer>
   )) || (
-    <div className="MatchupController">
+    <MatchupContainer>
       <button type="button" className="DefaultButton" onClick={startMatchup}>
         Start Matchup!
       </button>
-    </div>
+    </MatchupContainer>
   );
 
   return (
-    <div className="Well">
-      <Collapsible
-        trigger="Matchup Controls"
-        triggerClassName="DropdownTrigger"
-        triggerOpenedClassName="DropdownTrigger--open"
-        easing="ease-out"
-        open
-        transitionTime={250}
-      >
+    <Well>
+      <Collapsible title="Matchup Controller" open>
         {matchupController}
       </Collapsible>
-    </div>
+    </Well>
   );
 };
 

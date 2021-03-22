@@ -1,6 +1,8 @@
 import React from 'react';
-import Collapsible from 'react-collapsible';
 import PropTypes from 'prop-types';
+import Collapsible from '../Collapsible/Collapsible';
+import { StyledCheckbox, StyledFormRow, Well } from '../../LiveConfigPage.style';
+import { StyledWatchdogController, StyledWatchdogLabel } from './WatchdogController.style';
 
 /**
  *  Watchdog controller component for the liveconfig.
@@ -16,32 +18,25 @@ const WatchdogController = ({ settings = {}, onChange = () => {} }) => {
   const enableWatchdog = 'enableWatchdog' in watchdogSettings ? watchdogSettings.enableWatchdog : false;
 
   return (
-    <div className="Well">
-      <Collapsible
-        trigger="Chatbot Settings"
-        triggerClassName="DropdownTrigger"
-        triggerOpenedClassName="DropdownTrigger--open"
-        easing="ease-out"
-        open
-        transitionTime={250}
-      >
-        <div className="WatchdogController">
-          <div style={{ display: 'block' }}>
-            <label htmlFor="ChatCommandsCheckBox">
+    <Well>
+      <Collapsible title="Chatbot Settings" isOpen>
+        <StyledWatchdogController>
+          <StyledFormRow>
+            <StyledWatchdogLabel htmlFor="ChatCommandsCheckBox">
               Enable chat commands?
-              <input
-                id="ChatCommandsCheckBox"
-                type="checkbox"
-                checked={enableWatchdog}
-                onChange={() => {
-                  onChange({ enableWatchdog: !enableWatchdog });
-                }}
-              />
-            </label>
-          </div>
-        </div>
+            </StyledWatchdogLabel>
+            <StyledCheckbox
+              id="ChatCommandsCheckBox"
+              type="checkbox"
+              checked={enableWatchdog}
+              onChange={() => {
+                onChange({ enableWatchdog: !enableWatchdog });
+              }}
+            />
+          </StyledFormRow>
+        </StyledWatchdogController>
       </Collapsible>
-    </div>
+    </Well>
   );
 };
 

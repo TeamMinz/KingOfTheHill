@@ -1,8 +1,6 @@
 import React from 'react';
 import Authentication from '../../util/Authentication/Authentication';
 
-import './Config.module.css';
-
 export default class ConfigPage extends React.Component {
   constructor(props) {
     super(props);

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import Collapsible from 'react-collapsible';
+import Collapsible from '../Collapsible/Collapsible';
 import QueueContext from '../../../../util/QueueContext';
-import { StyledKickButton } from './QueueController.style';
+import { StyledKickButton, StyledQueueController } from './QueueController.style';
+import { Well } from '../../LiveConfigPage.style';
 
 /**
  * Component that shows your current position in queue,
@@ -135,7 +136,7 @@ const QueueController = () => {
               kickPlayer(challenger.opaqueUserId);
             }}
           >
-            &times;
+            X
           </StyledKickButton>
           )}
         </li>
@@ -162,30 +163,25 @@ const QueueController = () => {
     );
 
     return (
-      <div className="Well">
-        <Collapsible
-          trigger="Queue"
-          triggerClassName="DropdownTrigger"
-          triggerOpenedClassName="DropdownTrigger--open"
-          easing="ease-out"
-          open
-          transitionTime={250}
-        >
-          {ctx.queue.isOpen && (
-            <button type="button" className="DefaultButton" onClick={closeQueue}>
-              Close the Queue
-            </button>
-          )}
+      <Well>
+        <Collapsible title="Queue" isOpen>
+          <StyledQueueController>
+            {ctx.queue.isOpen && (
+              <button type="button" className="DefaultButton" onClick={closeQueue}>
+                Close the Queue
+              </button>
+            )}
 
-          {ctx.queue.isOpen && queueView}
+            {ctx.queue.isOpen && queueView}
 
-          {!ctx.queue.isOpen && (
-            <button type="button" className="DefaultButton" onClick={openQueue}>
-              Open the Queue
-            </button>
-          )}
+            {!ctx.queue.isOpen && (
+              <button type="button" className="DefaultButton" onClick={openQueue}>
+                Open the Queue
+              </button>
+            )}
+          </StyledQueueController>
         </Collapsible>
-      </div>
+      </Well>
     );
   }
   return null;

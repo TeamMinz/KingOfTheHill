@@ -1,4 +1,6 @@
 import React from 'react';
 import App from '../src/components/App/App';
 
-export default () => <App format="mobile" />;
+const Mobile = () => <App format="mobile" />;
+
+export default Mobile;
