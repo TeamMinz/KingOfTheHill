@@ -51,7 +51,7 @@ queue.post('/kick', isQueueOpen, async (req, res) => {
   if (champ &&
     (champ.user.opaqueUserId == kickTarget ||
       champ.user.userId == kickTarget)) {
-    setChampion(channelId, null);
+    await setChampion(channelId, null);
   }
 
   await currentQueue.remove(kickTarget);
@@ -148,7 +148,7 @@ queue.post('/leave', isQueueOpen, async (req, res) => {
   // then remove them as champion.
   const champ = await getChampion(channelId);
   if (champ && champ.user.userId == userId) {
-    setChampion(channelId, null);
+    await setChampion(channelId, null);
   }
 
   // Okay. lets remove them from the queue.
@@ -191,10 +191,10 @@ queue.post('/close', isBroadcaster, async (req, res) => {
 
   const matchup = await getMatchup(channelId);
 
-  setChampion(channelId, null);
+  await setChampion(channelId, null);
 
   if (matchup) {
-    setMatchup(channelId, null);
+    await setMatchup(channelId, null);
   }
 });
 

@@ -23,7 +23,7 @@ class QueueModel {
     this._channelId = channelId;
     this._key = `${this._channelId}_queue_content`;
     this._openKey = `${this._channelId}_queue_is_open`;
-    this._debugValue = [];
+    this._debugValue = {};
   }
 
   /**
@@ -40,7 +40,7 @@ class QueueModel {
             );
       return resp;
     } else {
-      return this._debugValue.push(JSON.stringify(challenger));
+      return this._debugValue[this._key].push(JSON.stringify(challenger));
     }
   }
 
@@ -55,7 +55,7 @@ class QueueModel {
         await redis.lpop(this._key);
       return JSON.parse(resp);
     } else {
-      const resp = this._debugValue.pop();
+      const resp = this._debugValue[this._key].pop();
       return JSON.parse(resp);
     }
   }
@@ -74,7 +74,7 @@ class QueueModel {
       return JSON.parse(resp);
     } else {
       let resp = null;
-      this._debugValue = this._debugValue.filter((element) => {
+      this._debugValue[this._key] = this._debugValue[this._key].filter((element) => {
         const c = JSON.parse(element);
         if (c.userId == userId || c.opaqueUserId == userId) {
           resp = c;
@@ -96,11 +96,15 @@ class QueueModel {
     if (production) {
       const resp = await redis.lrange(this._key, 0, -1);
 
+      if (!resp) return [];
+
       return resp.map((str) => {
         return JSON.parse(str);
       });
     } else {
-      return this._debugValue.map((str) => {
+      if (!this._debugValue[this._key]) return [];
+
+      return this._debugValue[this._key].map((str) => {
         return JSON.parse(str);
       });
     }
@@ -123,7 +127,7 @@ class QueueModel {
               index,
               JSON.stringify(challenger));
     } else {
-      this._debugValue.splice(index, 0, JSON.stringify(challenger));
+      this._debugValue[this._key].splice(index, 0, JSON.stringify(challenger));
     }
   }
 
@@ -154,6 +158,7 @@ class QueueModel {
       await redis.set(this._openKey, 'true');
     } else {
       this._debugValue[this._openKey] = 'true';
+      this._debugValue[this._key] = [];
     }
   }
 
@@ -166,7 +171,7 @@ class QueueModel {
       await redis.del(this._key);
     } else {
       this._debugValue[this._openKey] = 'false';
-      this._debugValue[this._key] = null;
+      this._debugValue[this._key] = [];
     }
   }
 }

@@ -13,8 +13,9 @@ const MatchupView = () => {
   return (
     <StyledMatchup>
       <StyledChampion>
-        {!ctx.currentChampion && '👑 No Champion Yet!'}
+        {(!ctx.currentChampion || ctx.currentChampion.winStreak == 0) && '👑 No Champion Yet!'}
         {ctx.currentChampion
+          && ctx.currentChampion.winStreak != 0
           && `👑: (${ctx.currentChampion.winStreak})
           ${ctx.currentChampion.user.displayName}`}
       </StyledChampion>

@@ -83,7 +83,7 @@ client.connect()
           const champ = await getChampion(channelId);
 
           if (champ && champ.user.userId == senderId) {
-            setChampion(channelId, null);
+            await setChampion(channelId, null);
           }
 
           await queue.remove(senderId);

@@ -22,9 +22,9 @@ const reportWinner = async (channelId, winner, loser, broadcasterLost) => {
   const champ = await getChampion(channelId);
   if (champ && champ.user.opaqueUserId == winner.opaqueUserId) {
     champ.winStreak++;
-    setChampion(channelId, champ);
+    await setChampion(channelId, champ);
   } else {
-    setChampion(channelId, {
+    await setChampion(channelId, {
       winStreak: 1,
       user: winner,
     });
@@ -175,11 +175,11 @@ matchup.post('/current/forfeit',
       if (matchup) {
         const queue = getQueue(channelId);
 
-        if (req.body.player == 'challenger') {
+        if (req.body.player == 'challenger') { // Forfeit the challenger.
           await queue.insert(0, matchup.champion);
         } else {
           await queue.insert(0, matchup.challenger);
-          setChampion(channelId, null);
+          await setChampion(channelId, null);
         }
         // reset the matchup
         await setMatchup(channelId, null);
@@ -223,7 +223,7 @@ matchup.post('/start', isBroadcaster, isQueueOpen, async (req, res) => {
   };
 
   if (!(await getChampion(channelId))) {
-    setChampion(channelId, {
+    await setChampion(channelId, {
       winStreak: 0,
       user: champion,
     });
