@@ -100,6 +100,50 @@
       "orientation": "Portrait",
       "type": "component",
       "viewerType": "Logged-In Viewer"
+    },
+    {
+      "channelId": "26898606",
+      "configurationAnchor": "panel",
+      "displayChannelName": "tminz",
+      "features": {
+        "isBitsEnabled": true,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "frameSize": {
+        "width": 1280,
+        "height": 720
+      },
+      "id": "4",
+      "isPopout": false,
+      "label": "",
+      "linked": false,
+      "linkedUserId": "",
+      "orientation": "Portrait",
+      "type": "video_overlay",
+      "viewerType": "Broadcaster"
+    },
+    {
+      "channelId": "135887033",
+      "configurationAnchor": "panel",
+      "displayChannelName": "bassjio",
+      "features": {
+        "isBitsEnabled": true,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "frameSize": {
+        "width": 375,
+        "height": 822
+      },
+      "id": "5",
+      "isPopout": false,
+      "label": "",
+      "linked": false,
+      "linkedUserId": "",
+      "orientation": "Portrait",
+      "type": "mobile",
+      "viewerType": "Broadcaster"
     }
   ],
   "manifest": {
@@ -142,6 +186,7 @@
     "viewerUrls": {
       "mobile": "http://localhost:3000/mobile",
       "panel": "http://localhost:3000/panel",
+      "videoOverlay": "http://localhost:3000/video_overlay",
       "component": "http://localhost:3000/video_component"
     },
     "views": {
@@ -151,6 +196,10 @@
       "panel": {
         "viewerUrl": "http://localhost:3000/panel",
         "height": 500,
+        "canLinkExternalContent": false
+      },
+      "videoOverlay": {
+        "viewerUrl": "http://localhost:3000/video_overlay",
         "canLinkExternalContent": false
       },
       "component": {

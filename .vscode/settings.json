@@ -1,0 +1,16 @@
+{
+  "eslint.packageManager": "yarn",
+  "prettier.packageManager": "yarn",
+  "npm.packageManager": "yarn",
+  "npm-intellisense.packageSubfoldersIntellisense": true,
+  "editor.formatOnSave": true,
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  },
+  "search.exclude": {
+    "**/.yarn": true,
+    "**/.pnp.*": true
+  },
+  "eslint.nodePath": "frontend/.yarn/sdks",
+  "prettier.prettierPath": "frontend/.yarn/sdks/prettier/index.js"
+}

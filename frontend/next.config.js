@@ -1,6 +1,7 @@
 const isProduction = process.env.NODE_ENV === 'production';
+const withImages = require('next-images');
 
-module.exports = {
+module.exports = withImages({
   assetPrefix: './',
   env: {
     STATIC_PREFIX: isProduction ? './static' : '/static',
@@ -14,10 +15,11 @@ module.exports = {
       '/panel': { page: '/panel' },
       '/live_config': { page: '/live_config' },
       '/config': { page: '/config' },
+      '/video_overlay': { page: '/video_overlay' },
     }
     : defaultPathMap),
   webpack(config, options) {
     config.optimization.minimize = false;
     return config;
   },
-};
+});

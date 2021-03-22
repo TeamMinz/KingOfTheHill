@@ -4,6 +4,7 @@ import {
   StyledQueue,
   StyledQueueComponent,
   StyledJoin,
+  StyledListContainer,
   StyledQueueButton,
   KickButton,
   StyledList,
@@ -101,19 +102,21 @@ const QueueComponent = () => {
    */
   const createUserEntry = (challenger, index) => (
     <li key={index}>
-      {challenger.displayName}
-      {ctx.auth.isModerator() && (
-        <KickButton
-          type="button"
-          className="KickButton"
-          style={{ float: 'right' }}
-          onClick={() => {
-            kickPlayer(challenger.opaqueUserId);
-          }}
-        >
-          &times;
-        </KickButton>
-      )}
+      <StyledListContainer>
+        {challenger.displayName}
+        {ctx.auth.isModerator() && (
+          <KickButton
+            type="button"
+            className="KickButton"
+            style={{ float: 'right' }}
+            onClick={() => {
+              kickPlayer(challenger.opaqueUserId);
+            }}
+          >
+            X
+          </KickButton>
+        )}
+      </StyledListContainer>
     </li>
   );
 
