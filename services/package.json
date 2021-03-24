@@ -10,7 +10,8 @@
     "directory": "services"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "dev": "node backend.js"
   },
   "author": "Team Minz",
   "license": "SEE LICENSE IN ../LICENSE",
