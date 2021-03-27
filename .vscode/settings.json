@@ -1,6 +1,5 @@
 {
   "eslint.packageManager": "yarn",
-  "prettier.packageManager": "yarn",
   "npm.packageManager": "yarn",
   "npm-intellisense.packageSubfoldersIntellisense": true,
   "editor.formatOnSave": true,
