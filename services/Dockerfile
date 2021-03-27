@@ -7,6 +7,6 @@ COPY . .
 
 EXPOSE 8000
 
-RUN npm ci
+RUN yarn install --frozen-lockfile
 
 CMD [ "node", "backend.js" ]
