@@ -7,6 +7,6 @@ COPY . .
 
 EXPOSE 8000
 
-RUN yarn install --frozen-lockfile
+RUN yarn install --immutable
 
 CMD [ "node", "backend.js" ]
