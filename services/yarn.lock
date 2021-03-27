@@ -5295,7 +5295,7 @@ fsevents@^2.1.2:
   languageName: node
   linkType: hard
 
-"pino-pretty@npm:^4.2.1, pino-pretty@npm:^4.7.1":
+"pino-pretty@npm:^4.2.1":
   version: 4.7.1
   resolution: "pino-pretty@npm:4.7.1"
   dependencies:
@@ -5999,7 +5999,6 @@ fsevents@^2.1.2:
     ioredis: ^4.22.0
     jest: ^26.6.3
     jsonwebtoken: ^8.5.1
-    pino-pretty: ^4.7.1
     prettier: ^2.1.1
     prettier-eslint: ^12.0.0
     prop-types: ^15.7.2
