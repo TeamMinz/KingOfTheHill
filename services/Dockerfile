@@ -9,4 +9,4 @@ EXPOSE 8000
 
 RUN yarn install --immutable
 
-CMD [ "node", "backend.js" ]
+CMD [ "yarn", "run", "prod" ]
