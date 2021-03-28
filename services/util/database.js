@@ -13,6 +13,7 @@ const production = process.env.NODE_ENV == 'production';
 console.log('Running in production mode: ' + production);
 
 if (production) {
+  console.log(`Redis Host: ${REDIS_HOST}`);
   redis.connect();
 }
 
