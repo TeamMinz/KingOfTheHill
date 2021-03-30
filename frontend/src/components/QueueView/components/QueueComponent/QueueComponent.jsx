@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import QueueContext from '../../../../util/QueueContext';
+import QueueContext from '@util/QueueContext';
 import {
   StyledQueue,
   StyledQueueComponent,

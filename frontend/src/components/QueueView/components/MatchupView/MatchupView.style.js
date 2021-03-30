@@ -1,24 +1,53 @@
 import styled from 'styled-components';
 
+export const StyledMatchupContainer = styled.div`
+  font-family: 'Nunito Sans';
+  width: 100%;
+`;
+
 export const StyledMatchup = styled.div`
-  height: fit-content;
-  display: inline-block;
-  text-align: left;
-  padding: 0.5em;
-  //padding-top: 10px;
-  border-bottom: solid 2px var(--border-color);
-`;
+  font-family: 'Roboto';
+  font-style: normal;
 
-export const StyledChampion = styled.div`
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-align:center;
-`;
+  background-color: var(--secondary-background-color);
+  color: var(--secondary-text-color);
+  
+  user-select: none;
 
-export const StyledChallenger = styled.div`
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   text-align: center;
+
+  padding: 0.3rem;
+
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.5);
+`;
+
+export const StyledHeader = styled.div`
+  font-family: 'Nunito Sans';
+  font-size: 1.2em;
+  font-weight: 900;
+
+  user-select: none;
+
+  color: var(--text-color);
+
+  text-align: center;
+
+  padding: 0.3rem;
+  
+  text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.5);
+`;
+
+export const MatchupCTA = styled.div`
+  margin-top: 0.7rem;
+`;
+
+export const MatchupChampion = styled.div`
+  font-weight: bold;
+  
+`;
+
+export const MatchupChallenger = styled.div``;
+
+export const MatchupVersus = styled.div`
+  font-style: italic;
 `;

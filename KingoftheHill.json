@@ -1,6 +1,6 @@
 {
   "allowHttpBackend": false,
-  "backendCommand": "node backend.js",
+  "backendCommand": "yarn run dev",
   "backendFolderName": "services",
   "certificateExceptions": [
     {

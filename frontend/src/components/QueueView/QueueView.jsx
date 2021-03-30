@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
+import Authentication from '@util/Authentication/Authentication';
+import QueueContext from '@util/QueueContext';
 import MatchupView from './components/MatchupView/MatchupView';
 import QueueComponent from './components/QueueComponent/QueueComponent';
-import QueueContext from '../../util/QueueContext';
-import Authentication from '../../util/Authentication/Authentication';
 import { StyledQueueView } from './QueueView.style';
 
 /**
@@ -91,8 +91,6 @@ const QueueView = () => {
      */
     function handleMessage(_target, _contentType, body) {
       const message = JSON.parse(body);
-
-      // console.log(message);
 
       if (message.type === 'updateQueue') {
         setQueue(message.message);
