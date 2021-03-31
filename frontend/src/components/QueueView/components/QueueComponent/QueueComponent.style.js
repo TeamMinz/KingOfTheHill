@@ -4,8 +4,6 @@ export const StyledQueue = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 0.5em;
-  border-bottom: solid 2px var(--border-color);
 `;
 
 export const StyledQueueComponent = styled.div`
@@ -88,13 +86,62 @@ export const KickButton = styled.button`
   }
 `;
 
-export const StyledList = styled.ol`
-  margin: 0px;
-  height: fit-content;
-  overflow: hidden;
-  padding-left: 1.2em;
+export const StyledSoftEdges = styled.div`
+  position:absolute;
+  top: 0;
+  left: 2px;
+  width: calc(100% - 2px);
+  height: 100%;
+
+  box-shadow: inset 0px 4px 4px 4px black;
 `;
 
 export const StyledListContainer = styled.div`
-  display:flex;
+  position: relative;
+  margin-top: 1em;
+  margin-left: 4px;
+  margin-right: 4px;
+`;
+
+export const StyledList = styled.div`
+  position: relative;
+  height: 30vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  color: var(--primary-text-color);
+  -ms-overflow-style: none;  
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+export const HighlightedUserEntry = styled.div`
+  position: sticky;
+  top: 0;
+  bottom: 0;
+  font-family: 'Roboto';
+  display: flex;
+  flex-direction: row;
+  padding: 0.1em 1.5em;
+  margin-bottom: 2px;
+  font-weight: 400;
+  background-color: var(--secondary-background-color);
+  color: var(--secondary-text-color);
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+`;
+
+export const StyledUserEntry = styled.div`
+  font-family: 'Roboto';
+  display: flex;
+  flex-direction: row;
+  padding: 0.1em 1.5em;
+  font-weight: 400;
+  text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.5);
+`;
+
+export const StyledUserIndex = styled.span`
+  font-weight: 700;
+  margin-right: 0.25em;
 `;

@@ -4,10 +4,14 @@ import {
   StyledQueue,
   StyledQueueComponent,
   StyledJoin,
-  StyledListContainer,
+  StyledUserEntry,
+  StyledUserIndex,
+  StyledSoftEdges,
+  HighlightedUserEntry,
   StyledQueueButton,
   KickButton,
   StyledList,
+  StyledListContainer,
 } from './QueueComponent.style';
 
 /**
@@ -91,8 +95,6 @@ const QueueComponent = () => {
     }
   }, [ctx.queue]);
 
-  // console.log(authentication);
-
   /**
    * Creates the li element for each queue member
    *
@@ -100,31 +102,46 @@ const QueueComponent = () => {
    * @param {number} index index of challenger.
    * @returns {any} rendered html.
    */
-  const createUserEntry = (challenger, index) => (
-    <li key={index}>
-      <StyledListContainer>
+  const createUserEntry = (challenger, index) => {
+    const indexComp = (
+      <StyledUserIndex>
+        {index + 1}
+        .
+      </StyledUserIndex>
+    );
+
+    const kickButton = ctx.auth.isModerator() && (
+      <KickButton
+        type="button"
+        className="KickButton"
+        style={{ float: 'right' }}
+        onClick={() => {
+          kickPlayer(challenger.opaqueUserId);
+        }}
+      >
+        X
+      </KickButton>
+    );
+
+    if (challenger.opaqueUserId == ctx.auth.getOpaqueId()) {
+      return (
+        <HighlightedUserEntry key={index}>
+          {indexComp}
+          {challenger.displayName}
+          {kickButton}
+        </HighlightedUserEntry>
+      );
+    }
+    return (
+      <StyledUserEntry key={index}>
+        {indexComp}
         {challenger.displayName}
-        {ctx.auth.isModerator() && (
-          <KickButton
-            type="button"
-            className="KickButton"
-            style={{ float: 'right' }}
-            onClick={() => {
-              kickPlayer(challenger.opaqueUserId);
-            }}
-          >
-            X
-          </KickButton>
-        )}
-      </StyledListContainer>
-    </li>
-  );
+        {kickButton}
+      </StyledUserEntry>
+    );
+  };
 
   const queueEntries = ctx.queue ? ctx.queue.queue.map(createUserEntry) : [];
-
-  const userEntry = ctx.queue
-    ? ctx.queue.queue.findIndex((challenger) => challenger.opaqueUserId === ctx.auth.getOpaqueId())
-    : -1;
 
   if (
     queueEntries.length > 0
@@ -139,30 +156,10 @@ const QueueComponent = () => {
     <StyledQueueComponent>
       <StyledQueue>
         {queueEntries && queueEntries.length > 0 && (
-          <div>
-            <StyledList>{queueEntries.slice(0, 5)}</StyledList>
-            {userEntry > 4 && (
-              <div>
-                ...
-                <br />
-                <StyledList start={userEntry + 1}>
-                  {createUserEntry(ctx.queue.queue[userEntry], userEntry)}
-                </StyledList>
-              </div>
-            )}
-            {userEntry <= 4 && ctx.queue.queue.length > 5 && (
-              <div>
-                ...
-                <br />
-                <StyledList start={ctx.queue.queue.length}>
-                  {createUserEntry(
-                    ctx.queue.queue[ctx.queue.queue.length - 1],
-                    ctx.queue.queue.length - 1,
-                  )}
-                </StyledList>
-              </div>
-            )}
-          </div>
+          <StyledListContainer>
+            <StyledSoftEdges />
+            <StyledList>{queueEntries}</StyledList>
+          </StyledListContainer>
         )}
       </StyledQueue>
       <StyledJoin>

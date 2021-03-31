@@ -22,8 +22,8 @@ const MatchupView = () => {
     if (!ctx.currentChampion) {
       return (
         <StyledMatchup>
-          <div>No Champion Yet.</div>
-          <MatchupCTA>Come claim your throne.</MatchupCTA>
+          <div>No Champion</div>
+          <MatchupCTA>Come claim your throne</MatchupCTA>
         </StyledMatchup>
       );
     }

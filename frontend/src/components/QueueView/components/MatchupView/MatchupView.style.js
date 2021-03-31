@@ -16,7 +16,7 @@ export const StyledMatchup = styled.div`
 
   text-align: center;
 
-  padding: 0.3rem;
+  padding: 0.3em;
 
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.5);
 `;
@@ -32,13 +32,13 @@ export const StyledHeader = styled.div`
 
   text-align: center;
 
-  padding: 0.3rem;
+  padding: 0.3em;
   
   text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.5);
 `;
 
 export const MatchupCTA = styled.div`
-  margin-top: 0.7rem;
+  margin-top: 0.7em;
 `;
 
 export const MatchupChampion = styled.div`
