@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import QueueContext from '@util/QueueContext';
-import { StyledQueueButton } from './QueueController.style';
+import ShoppingCart from '@assets/shopping-cart-2-fill.svg';
+import {
+  StyledQueueButton,
+  StyledControllerContainer,
+  StyledShopButton,
+} from './QueueController.style';
 
 const QueueButton = () => {
   const ctx = useContext(QueueContext);
@@ -57,9 +62,13 @@ const QueueButton = () => {
 };
 
 const QueueController = () => (
-  <div>
+  <StyledControllerContainer>
+    <StyledShopButton>
+      <ShoppingCart />
+    </StyledShopButton>
     <QueueButton />
-  </div>
+    <button>leaderboard</button>
+  </StyledControllerContainer>
 );
 
 export default QueueController;
