@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import QueueContext from '@util/QueueContext';
+import { StyledQueueButton } from './QueueController.style';
 
 const QueueButton = () => {
   const ctx = useContext(QueueContext);
@@ -16,7 +17,7 @@ const QueueButton = () => {
       if (resp.ok) {
         // eslint-disable-next-line no-use-before-define
         setButtonAction(() => leaveQueue);
-        setButtonText('Leave the Queue');
+        setButtonText('Leave The Queue');
       }
     });
   };
@@ -28,7 +29,7 @@ const QueueButton = () => {
     ctx.auth.makeCall('/queue/leave', 'POST').then((resp) => {
       if (resp.ok) {
         setButtonAction(() => joinQueue);
-        setButtonText('Join the Queue');
+        setButtonText('Join The Queue');
       }
     });
   };
@@ -44,15 +45,15 @@ const QueueButton = () => {
         ) === -1
       ) {
         setButtonAction(() => joinQueue);
-        setButtonText('Join the Queue');
+        setButtonText('Join The Queue');
       } else {
         setButtonAction(() => leaveQueue);
-        setButtonText('Leave the Queue');
+        setButtonText('Leave The Queue');
       }
     }
   }, [ctx.queue]);
 
-  return <button onClick={ButtonAction}>{ButtonText}</button>;
+  return <StyledQueueButton onClick={ButtonAction}>{ButtonText}</StyledQueueButton>;
 };
 
 const QueueController = () => (
