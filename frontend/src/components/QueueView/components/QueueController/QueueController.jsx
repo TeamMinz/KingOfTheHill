@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import QueueContext from '@util/QueueContext';
 import ShoppingCart from '@assets/shopping-cart-2-fill.svg';
+import Crown from '@assets/vip-crown-2-fill.svg';
 import {
   StyledQueueButton,
   StyledControllerContainer,
   StyledShopButton,
+  StyledLeaderboardButton,
 } from './QueueController.style';
 
 const QueueButton = () => {
@@ -67,7 +69,9 @@ const QueueController = () => (
       <ShoppingCart />
     </StyledShopButton>
     <QueueButton />
-    <button>leaderboard</button>
+    <StyledLeaderboardButton>
+      <Crown />
+    </StyledLeaderboardButton>
   </StyledControllerContainer>
 );
 

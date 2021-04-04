@@ -2,6 +2,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 const withImages = require('next-images');
 
 module.exports = withImages({
+  exclude: /\.svg$/,
   assetPrefix: './',
   env: {
     STATIC_PREFIX: isProduction ? './static' : '/static',
@@ -20,6 +21,10 @@ module.exports = withImages({
     : defaultPathMap),
   webpack(config, options) {
     config.optimization.minimize = false;
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ["@svgr/webpack"]
+    });
     return config;
   },
 });
