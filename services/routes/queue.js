@@ -1,5 +1,6 @@
 // eslint-disable-next-line new-cap
 const queue = require('express').Router();
+const {ReasonPhrases, StatusCodes} = require('http-status-codes');
 const {broadcast} = require('../util/pubsub');
 const {resolveDisplayName, getBroadcasterConfig} = require('../util/twitch');
 const {getQueue, getAllQueues} = require('../controller/queue');
@@ -29,19 +30,19 @@ queue.post('/kick', isQueueOpen, async (req, res) => {
   const currentQueue = getQueue(channelId);
 
   if (!(role == 'broadcaster' || role == 'moderator')) {
-    res.sendStatus(401);
+    res.sendStatus(StatusCodes.UNAUTHORIZED);
     return;
   }
 
   if (!req.body.kickTarget) {
-    res.sendStatus(400);
+    res.sendStatus(StatusCodes.BAD_REQUEST);
     return;
   }
 
   const kickTarget = req.body.kickTarget;
 
   if (await currentQueue.getPosition(kickTarget) == -1) {
-    res.status(400).send('Cannot kick someone not in the queue.');
+    res.status(StatusCodes.BAD_REQUEST).send('Cannot kick someone not in the queue.');
     return;
   }
 
@@ -55,7 +56,7 @@ queue.post('/kick', isQueueOpen, async (req, res) => {
   }
 
   await currentQueue.remove(kickTarget);
-  res.sendStatus(200);
+  res.sendStatus(StatusCodes.OK);
 });
 
 queue.post('/join', isQueueOpen, async (req, res) => {
@@ -67,7 +68,7 @@ queue.post('/join', isQueueOpen, async (req, res) => {
   } = req.twitch;
 
   if (!userId) {
-    res.status(401).send({
+    res.status(StatusCodes.UNAUTHORIZED).send({
       message: 'You must share your identity to enter the queue.',
     });
     return;
@@ -76,7 +77,7 @@ queue.post('/join', isQueueOpen, async (req, res) => {
   // Some checks to make sure we're not doing anything bad ...
   // If the user is not signed into twitch, they cannot join the queue.
   if (opaqueUserId.startsWith('A')) {
-    res.status(401).send({
+    res.status(StatusCodes.UNAUTHORIZED).send({
       message: 'You must sign in to join the queue.',
     });
     return;
@@ -89,7 +90,7 @@ queue.post('/join', isQueueOpen, async (req, res) => {
       currentMatchup.champion.userId == userId ||
       currentMatchup.challenger.userId == userId
     ) {
-      res.status(500).send({
+      res.status(StatusCodes.BAD_REQUEST).send({
         message: 'You may not join the queue if you are in a current match.',
       });
       return;
@@ -103,7 +104,7 @@ queue.post('/join', isQueueOpen, async (req, res) => {
 
   // Make sure this person isn't already in this queue.
   if (await currentQueue.contains(userId)) {
-    res.status(500).send({
+    res.status(StatusCodes.BAD_REQUEST).send({
       message: 'You are already in the queue.',
     });
     return;
@@ -131,14 +132,14 @@ queue.post('/leave', isQueueOpen, async (req, res) => {
 
   // Lets do some checks to make sure were not doing anything bad.
   if (!userId) {
-    res.status(401).send({
+    res.status(StatusCodes.UNAUTHORIZED).send({
       message: 'You must share your identity to enter the queue.',
     });
     return;
   }
   // Make sure this person is actually in this queue.
   if (!await currentQueue.contains(userId)) {
-    res.status(500).send({
+    res.status(StatusCodes.BAD_REQUEST).send({
       message: 'You cannot leave a queue you\'re not in.',
     });
     return;
