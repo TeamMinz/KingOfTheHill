@@ -1,14 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import QueueContext from '@util/QueueContext';
 import {
   StyledQueue,
   StyledQueueComponent,
-  StyledJoin,
   StyledUserEntry,
   StyledUserIndex,
-  StyledSoftEdges,
+  StyledSoftEdge,
   HighlightedUserEntry,
-  StyledQueueButton,
   KickButton,
   StyledList,
   StyledListContainer,
@@ -52,50 +50,6 @@ const QueueComponent = () => {
   };
 
   /**
-   * Adds the User to the Queue
-   */
-  const joinQueue = () => {
-    ctx.auth.makeCall('/queue/join', 'POST').then((resp) => {
-      if (resp.ok) {
-        // eslint-disable-next-line no-use-before-define
-        setButtonAction(() => leaveQueue);
-        setButtonText('Leave the Queue');
-      }
-    });
-  };
-
-  /**
-   * Removes the User from the Queue
-   */
-  const leaveQueue = () => {
-    ctx.auth.makeCall('/queue/leave', 'POST').then((resp) => {
-      if (resp.ok) {
-        setButtonAction(() => joinQueue);
-        setButtonText('Join the Queue');
-      }
-    });
-  };
-
-  // called when the component mounts.
-
-  // Controls the join / leave button
-  useEffect(() => {
-    if (ctx.finishedLoading && ctx.queue) {
-      if (
-        ctx.queue.queue.findIndex(
-          (challenger) => challenger.opaqueUserId === ctx.auth.getOpaqueId(),
-        ) === -1
-      ) {
-        setButtonAction(() => joinQueue);
-        setButtonText('Join the Queue');
-      } else {
-        setButtonAction(() => leaveQueue);
-        setButtonText('Leave the Queue');
-      }
-    }
-  }, [ctx.queue]);
-
-  /**
    * Creates the li element for each queue member
    *
    * @param {any} challenger challenger to render.
@@ -113,8 +67,6 @@ const QueueComponent = () => {
     const kickButton = ctx.auth.isModerator() && (
       <KickButton
         type="button"
-        className="KickButton"
-        style={{ float: 'right' }}
         onClick={() => {
           kickPlayer(challenger.opaqueUserId);
         }}
@@ -128,7 +80,6 @@ const QueueComponent = () => {
         <HighlightedUserEntry key={index}>
           {indexComp}
           {challenger.displayName}
-          {kickButton}
         </HighlightedUserEntry>
       );
     }
@@ -157,21 +108,12 @@ const QueueComponent = () => {
       <StyledQueue>
         {queueEntries && queueEntries.length > 0 && (
           <StyledListContainer>
-            <StyledSoftEdges />
+            <StyledSoftEdge />
             <StyledList>{queueEntries}</StyledList>
+            <StyledSoftEdge />
           </StyledListContainer>
         )}
       </StyledQueue>
-      <StyledJoin>
-        <StyledQueueButton
-          type="button"
-          className="QueueButton"
-          onClick={ButtonAction}
-          disabled={!ctx.auth.getUserId() || !(ctx.queue && ctx.queue.isOpen)}
-        >
-          {ButtonText}
-        </StyledQueueButton>
-      </StyledJoin>
     </StyledQueueComponent>
   );
 };

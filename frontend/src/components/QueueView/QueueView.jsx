@@ -3,6 +3,7 @@ import Authentication from '@util/Authentication/Authentication';
 import QueueContext from '@util/QueueContext';
 import MatchupView from './components/MatchupView/MatchupView';
 import QueueComponent from './components/QueueComponent/QueueComponent';
+import QueueController from './components/QueueController/QueueController';
 import { StyledQueueView } from './QueueView.style';
 
 /**
@@ -128,6 +129,7 @@ const QueueView = () => {
       >
         <MatchupView />
         <QueueComponent />
+        <QueueController />
       </QueueContext.Provider>
     </StyledQueueView>
   );

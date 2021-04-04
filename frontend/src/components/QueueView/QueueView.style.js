@@ -5,4 +5,5 @@ export const StyledQueueView = styled.div`
   display: flex;
   flex-direction: column;
   flex-flow: column;
+  height: 100%;
 `;
