@@ -1,4 +1,5 @@
 import React from 'react';
 import App from '../src/components/App/App';
 
-export default () => <App format="component" />;
+const Component = () => <App format="component" />;
+export default Component;

@@ -3329,7 +3329,6 @@ fsevents@~2.3.1:
     react-dom: ^17.0.2
     react-is: ^17.0.2
     react-modal: ^3.14.2
-    react-notification-system: ^0.4.0
     react-rnd: ^10.3.3
     react-tabs: ^3.2.2
     sass: ^1.34.1
@@ -3965,7 +3964,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"object-assign@npm:^4.0.1, object-assign@npm:^4.1.0, object-assign@npm:^4.1.1":
+"object-assign@npm:^4.1.0, object-assign@npm:^4.1.1":
   version: 4.1.1
   resolution: "object-assign@npm:4.1.1"
   checksum: 66cf021898fc1b13ea573ea8635fbd5a76533f50cecbc2fcd5eee1e8029af41bcebe7023788b6d0e06cbe4401ecea075d972f78ec74467cdc571a0f1a4d1a081
@@ -4446,7 +4445,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"prop-types@npm:15.7.2, prop-types@npm:^15.5.0, prop-types@npm:^15.5.6, prop-types@npm:^15.6.0, prop-types@npm:^15.7.2":
+"prop-types@npm:15.7.2, prop-types@npm:^15.5.0, prop-types@npm:^15.6.0, prop-types@npm:^15.7.2":
   version: 15.7.2
   resolution: "prop-types@npm:15.7.2"
   dependencies:
@@ -4662,19 +4661,6 @@ fsevents@~2.3.1:
     react: ^0.14.0 || ^15.0.0 || ^16 || ^17
     react-dom: ^0.14.0 || ^15.0.0 || ^16 || ^17
   checksum: 280bbb6099be93ad381fff35e7ffca1815df312eb2185cd4665f00d80b89ab7b1237d339a2af7b35ccf3073cbe2d7698b10d9ec00634540767431f46b3dc1b84
-  languageName: node
-  linkType: hard
-
-"react-notification-system@npm:^0.4.0":
-  version: 0.4.0
-  resolution: "react-notification-system@npm:0.4.0"
-  dependencies:
-    object-assign: ^4.0.1
-    prop-types: ^15.5.6
-  peerDependencies:
-    react: 0.14.x || ^15.0.0 || ^16.0.0
-    react-dom: 0.14.x || ^15.0.0 || ^16.0.0
-  checksum: f7c452e1716d591f7f4b05afff9c854f949dccb7c05b2d7b7de7d6689b2fd4a08fd1d79488bcbdc8afcb28605246e25f3b557a5b39f2d4dda57e384894b894d9
   languageName: node
   linkType: hard
 

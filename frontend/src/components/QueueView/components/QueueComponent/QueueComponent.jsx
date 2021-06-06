@@ -134,7 +134,6 @@ const QueueComponent = () => {
   ) {
     queueEntries.shift();
   }
-
   return (
     <StyledQueueComponent>
       <StyledQueue>
