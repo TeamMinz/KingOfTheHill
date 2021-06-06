@@ -23,7 +23,7 @@ const MatchupView = () => {
       return (
         <StyledMatchup>
           <div>No Champion</div>
-          <MatchupCTA>Come claim your throne</MatchupCTA>
+          <MatchupCTA>Come claim your crown</MatchupCTA>
         </StyledMatchup>
       );
     }
