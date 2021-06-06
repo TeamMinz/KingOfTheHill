@@ -103,7 +103,7 @@ matchup.get('/message/get', canGetMessage, async (req, res) => {
 matchup.post('/message/set', isBroadcaster, async (req, res) => {
   const {channel_id: channelId} = req.twitch;
   const {message} = req.body;
-  await setSelectionMessage(channelId);
+  await setSelectionMessage(channelId, message);
   res.json({message});
 });
 
