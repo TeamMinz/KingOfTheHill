@@ -1,6 +1,6 @@
 {
   "allowHttpBackend": false,
-  "backendCommand": "node backend.js",
+  "backendCommand": "yarn dev",
   "backendFolderName": "services",
   "certificateExceptions": [
     {
@@ -102,28 +102,6 @@
       "viewerType": "Logged-In Viewer"
     },
     {
-      "channelId": "26898606",
-      "configurationAnchor": "panel",
-      "displayChannelName": "tminz",
-      "features": {
-        "isBitsEnabled": true,
-        "isChatEnabled": false,
-        "isSubscriptionStatusAvailable": false
-      },
-      "frameSize": {
-        "width": 1280,
-        "height": 720
-      },
-      "id": "4",
-      "isPopout": false,
-      "label": "",
-      "linked": false,
-      "linkedUserId": "",
-      "orientation": "Portrait",
-      "type": "video_overlay",
-      "viewerType": "Broadcaster"
-    },
-    {
       "channelId": "135887033",
       "configurationAnchor": "panel",
       "displayChannelName": "bassjio",
@@ -143,6 +121,28 @@
       "linkedUserId": "",
       "orientation": "Portrait",
       "type": "mobile",
+      "viewerType": "Broadcaster"
+    },
+    {
+      "channelId": "135887033",
+      "configurationAnchor": "panel",
+      "displayChannelName": "bassjio",
+      "features": {
+        "isBitsEnabled": true,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "frameSize": {
+        "width": 1280,
+        "height": 720
+      },
+      "id": "6",
+      "isPopout": false,
+      "label": "",
+      "linked": false,
+      "linkedUserId": "",
+      "orientation": "Portrait",
+      "type": "video_overlay",
       "viewerType": "Broadcaster"
     }
   ],
@@ -176,7 +176,7 @@
     ],
     "sku": "",
     "state": "Testing",
-    "subscriptionsSupportLevel": "none",
+    "subscriptionsSupportLevel": "optional",
     "summary": "A queue extension that specializes in a King of the Hill style queue.",
     "supportEmail": "support@teamminz.com",
     "vendorCode": "",
@@ -208,7 +208,7 @@
         "aspectHeight": 0,
         "aspectRatioX": 300,
         "aspectRatioY": 400,
-        "scalePixels": 1024,
+        "scalePixels": 0,
         "targetHeight": 6500,
         "size": 0,
         "zoom": false,

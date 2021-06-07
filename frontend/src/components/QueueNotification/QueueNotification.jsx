@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import NotificationSystem from 'react-notification-system';
+import Modal from 'react-modal';
 import Authentication from '../../util/Authentication/Authentication';
+
+Modal.setAppElement('#root');
+
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
 
 /**
  * Handles all notifications
@@ -11,27 +24,19 @@ import Authentication from '../../util/Authentication/Authentication';
  */
 const QueueNotification = () => {
   const authentication = new Authentication();
-  const notificationSystem = React.useRef();
 
   // state stuff.
   const [FinishedLoading, setFinishedLoading] = useState(false);
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const [message, setMessage] = useState('');
 
-  /**
-   * Adds a new notification
-   *
-   * @param {string} message - message for user on notification
-   */
-  const addNotification = (message) => {
-    const notification = notificationSystem.current;
-    notification.clearNotifications();
-    notification.addNotification({
-      position: 'tc',
-      message,
-      level: 'success',
-      autoDismiss: 0,
-      dismissable: 'click',
-    });
-  };
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
 
   /**
    * Gets Notification message from server
@@ -47,7 +52,8 @@ const QueueNotification = () => {
       authentication.makeCall('/matchup/message/get').then((resp) => {
         if (resp.ok) {
           resp.json().then((jsonResp) => {
-            addNotification(jsonResp.message);
+            setMessage(jsonResp.message);
+            openModal();
           });
         }
       });
@@ -96,12 +102,11 @@ const QueueNotification = () => {
      * @param {object} body message body passed by twitch api.
      */
     const handleMessage = (_target, _contentType, body) => {
-      const message = JSON.parse(body);
-      if (message.type === 'updateMatchup') {
-        const matchup = message.message;
+      const pubsub = JSON.parse(body);
+      if (pubsub.type === 'updateMatchup') {
+        const matchup = pubsub.message;
         if (matchup == null) {
-          const notification = notificationSystem.current;
-          notification.clearNotifications();
+          closeModal();
           return;
         }
 
@@ -146,35 +151,19 @@ const QueueNotification = () => {
   // called when the component mounts.
   useEffect(NotificationEffect, [FinishedLoading]);
 
-  const style = {
-    DefaultWidth: '75%',
-    Containers: {
-      tc: {
-        top: '50%',
-        left: '50%',
-        msTransform: 'translate(-50%, -50%)',
-        transform: 'translate(-50%, -50%)',
-        textAlign: 'center',
-        width: '75%',
-        padding: '0px',
-        margin: '0px',
-        marginLeft: '0px',
-      },
-    },
-    NotificationItem: {
-      // Override the notification item
-      DefaultStyle: {
-        // Applied to every notification, regardless of the notification level
-        fontSize: '1em',
-        color: 'var(--text-color)',
-        borderTop: '10px solid var(--border-color)',
-        boxShadow: 'var(--border-color) 0px 0px 5px',
-        background: 'var(--not-selected-color)',
-      },
-    },
-  };
-
-  return <NotificationSystem ref={notificationSystem} style={style} />;
+  return (
+    <Modal
+      isOpen={modalIsOpen}
+      onRequestClose={closeModal}
+      style={customStyles}
+      contentLabel="Example Modal"
+    >
+      <h2>{message}</h2>
+      <button onClick={closeModal} type="button">
+        close
+      </button>
+    </Modal>
+  );
 };
 
 export default QueueNotification;

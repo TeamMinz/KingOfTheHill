@@ -8,7 +8,6 @@ const {getMatchup, setMatchup, setSelectionMessage, getSelectionMessage} = requi
 const {isBroadcaster, isQueueOpen} = require('../util/middleware');
 const twitch = require('../util/twitch');
 
-
 /**
  * Reports the winner of a matchup.
  *
@@ -76,17 +75,14 @@ async function canGetMessage(req, res, next) {
   if (req.twitch.role == 'broadcaster') {
     next();
   } else {
-    if (!await getMatchup(channelId)) {
+    if (!(await getMatchup(channelId))) {
       res.sendStatus(401);
       return;
     }
 
     const {challenger, champion} = await getMatchup(channelId);
 
-    if (
-      challenger.opaqueUserId == opaqueUserId ||
-      champion.opaqueUserId == opaqueUserId
-    ) {
+    if (challenger.opaqueUserId == opaqueUserId || champion.opaqueUserId == opaqueUserId) {
       next();
     } else {
       res.sendStatus(401);
@@ -115,79 +111,62 @@ matchup.get('/current/get', async (req, res) => {
 });
 
 // Route for reporting the winner of the current mathcup
-matchup.post('/current/report',
-    isBroadcaster,
-    isQueueOpen,
-    async (req, res) => {
-      const {channel_id: channelId, opaque_user_id: opaqueUserId} = req.twitch;
+matchup.post('/current/report', isBroadcaster, isQueueOpen, async (req, res) => {
+  const {channel_id: channelId, opaque_user_id: opaqueUserId} = req.twitch;
 
-      // Error out if we don't have the required parameters.
-      if (!req.body.winner) {
-        res.sendStatus(400);
-        return;
-      }
+  // Error out if we don't have the required parameters.
+  if (!req.body.winner) {
+    res.sendStatus(400);
+    return;
+  }
 
-      const previousMatchup = await getMatchup(channelId);
+  const previousMatchup = await getMatchup(channelId);
 
-      if (previousMatchup) {
-        // Set the winner of the matchup as the new champion.
-        if (req.body.winner == 'challenger') {
-          const broadcasterLost =
-        opaqueUserId === previousMatchup.champion.opaqueUserId;
-          await reportWinner(
-              channelId,
-              previousMatchup.challenger,
-              previousMatchup.champion,
-              broadcasterLost,
-          );
-        } else if (req.body.winner == 'champion') {
-          const broadcasterLost =
-        opaqueUserId === previousMatchup.challenger.opaqueUserId;
-          await reportWinner(
-              channelId,
-              previousMatchup.champion,
-              previousMatchup.challenger,
-              broadcasterLost,
-          );
-        }
-        // reset the matchup.
-        await setMatchup(channelId, null);
-        res.sendStatus(200);
-      } else {
-        res.sendStatus(500);
-      }
-    });
+  if (previousMatchup) {
+    // Set the winner of the matchup as the new champion.
+    if (req.body.winner == 'challenger') {
+      const broadcasterLost = opaqueUserId === previousMatchup.champion.opaqueUserId;
+      await reportWinner(channelId, previousMatchup.challenger, previousMatchup.champion, broadcasterLost);
+    } else if (req.body.winner == 'champion') {
+      const broadcasterLost = opaqueUserId === previousMatchup.challenger.opaqueUserId;
+      await reportWinner(channelId, previousMatchup.champion, previousMatchup.challenger, broadcasterLost);
+    }
+    // reset the matchup.
+    await setMatchup(channelId, null);
+    res.sendStatus(200);
+  } else {
+    res.sendStatus(500);
+  }
+});
 
 // Route for reporting a forfeit
-matchup.post('/current/forfeit',
-    isBroadcaster,
-    isQueueOpen,
-    async (req, res) => {
-      const {channel_id: channelId} = req.twitch;
-      const matchup = await getMatchup(channelId);
+matchup.post('/current/forfeit', isBroadcaster, isQueueOpen, async (req, res) => {
+  const {channel_id: channelId} = req.twitch;
+  const matchup = await getMatchup(channelId);
 
-      // Error out if we don't have the required parameters.
-      if (!req.body.player) {
-        res.sendStatus(400);
-        return;
-      }
+  // Error out if we don't have the required parameters.
+  if (!req.body.player) {
+    res.sendStatus(400);
+    return;
+  }
 
-      if (matchup) {
-        const queue = getQueue(channelId);
+  if (matchup) {
+    const queue = getQueue(channelId);
 
-        if (req.body.player == 'challenger') { // Forfeit the challenger.
-          await queue.insert(0, matchup.champion);
-        } else {
-          await queue.insert(0, matchup.challenger);
-          await setChampion(channelId, null);
-        }
-        // reset the matchup
-        await setMatchup(channelId, null);
-        res.sendStatus(200);
-      } else {
-        res.sendStatus(500);
-      }
-    });
+    if (req.body.player == 'challenger') {
+      // Forfeit the challenger.
+      await queue.insert(0, matchup.champion);
+    } else {
+      await queue.insert(0, matchup.challenger);
+      await setChampion(channelId, null);
+    }
+    // reset the matchup
+    await setMatchup(channelId, null);
+    res.sendStatus(200);
+  } else {
+    res.sendStatus(500);
+  }
+});
 
 // Route for starting a new matchup.
 matchup.post('/start', isBroadcaster, isQueueOpen, async (req, res) => {
@@ -196,9 +175,7 @@ matchup.post('/start', isBroadcaster, isQueueOpen, async (req, res) => {
 
   // Lets do some checks to make sure we're not doing anything bad.
   if (currentMatchup) {
-    res
-        .status(500)
-        .send({error: true, message: 'There is already a match in progress'});
+    res.status(500).send({error: true, message: 'There is already a match in progress'});
     return;
   }
 
