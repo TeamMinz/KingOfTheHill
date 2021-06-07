@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "The Extension Backend Service (EBS) for the King of the Hill app.",
-  "main": "index.js",
+  "main": "backend.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/TeamMinz/QueueExtension",
@@ -31,6 +31,7 @@
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "http-status-codes": "^2.1.4",
     "ioredis": "^4.27.3",
     "jsonwebtoken": "^8.5.1",
     "pino-pretty": "^5.0.2",

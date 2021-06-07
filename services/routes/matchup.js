@@ -1,7 +1,6 @@
-// eslint-disable-next-line new-cap
 const express = require('express');
-// eslint-disable-next-line new-cap
 const matchup = express.Router();
+const {StatusCodes} = require('http-status-codes');
 const {getQueue} = require('../controller/queue');
 const {getChampion, setChampion} = require('../controller/champion');
 const {getMatchup, setMatchup, setSelectionMessage, getSelectionMessage} = require('../controller/matchup');
@@ -76,7 +75,7 @@ async function canGetMessage(req, res, next) {
     next();
   } else {
     if (!(await getMatchup(channelId))) {
-      res.sendStatus(401);
+      res.sendStatus(StatusCodes.UNAUTHORIZED);
       return;
     }
 
@@ -85,7 +84,7 @@ async function canGetMessage(req, res, next) {
     if (challenger.opaqueUserId == opaqueUserId || champion.opaqueUserId == opaqueUserId) {
       next();
     } else {
-      res.sendStatus(401);
+      res.sendStatus(StatusCodes.UNAUTHORIZED);
     }
   }
 }
@@ -99,7 +98,7 @@ matchup.get('/message/get', canGetMessage, async (req, res) => {
 matchup.post('/message/set', isBroadcaster, async (req, res) => {
   const {channel_id: channelId} = req.twitch;
   const {message} = req.body;
-  await setSelectionMessage(channelId);
+  await setSelectionMessage(channelId, message);
   res.json({message});
 });
 
@@ -116,7 +115,7 @@ matchup.post('/current/report', isBroadcaster, isQueueOpen, async (req, res) => 
 
   // Error out if we don't have the required parameters.
   if (!req.body.winner) {
-    res.sendStatus(400);
+    res.sendStatus(StatusCodes.BAD_REQUEST);
     return;
   }
 
@@ -133,9 +132,9 @@ matchup.post('/current/report', isBroadcaster, isQueueOpen, async (req, res) => 
     }
     // reset the matchup.
     await setMatchup(channelId, null);
-    res.sendStatus(200);
+    res.sendStatus(StatusCodes.OK);
   } else {
-    res.sendStatus(500);
+    res.sendStatus(StatusCodes.BAD_REQUEST);
   }
 });
 
@@ -146,7 +145,7 @@ matchup.post('/current/forfeit', isBroadcaster, isQueueOpen, async (req, res) =>
 
   // Error out if we don't have the required parameters.
   if (!req.body.player) {
-    res.sendStatus(400);
+    res.sendStatus(StatusCodes.BAD_REQUEST);
     return;
   }
 
@@ -162,9 +161,9 @@ matchup.post('/current/forfeit', isBroadcaster, isQueueOpen, async (req, res) =>
     }
     // reset the matchup
     await setMatchup(channelId, null);
-    res.sendStatus(200);
+    res.sendStatus(StatusCodes.OK);
   } else {
-    res.sendStatus(500);
+    res.sendStatus(StatusCodes.BAD_REQUEST);
   }
 });
 
@@ -175,14 +174,16 @@ matchup.post('/start', isBroadcaster, isQueueOpen, async (req, res) => {
 
   // Lets do some checks to make sure we're not doing anything bad.
   if (currentMatchup) {
-    res.status(500).send({error: true, message: 'There is already a match in progress'});
+    res
+        .status(StatusCodes.BAD_REQUEST)
+        .send({error: true, message: 'There is already a match in progress'});
     return;
   }
 
   const queue = getQueue(channelId);
 
   if ((await queue.getSize()) < 2) {
-    res.status(500).send({
+    res.status(StatusCodes.BAD_REQUEST).send({
       error: true,
       message: 'There are not enough people in the queue',
     });
