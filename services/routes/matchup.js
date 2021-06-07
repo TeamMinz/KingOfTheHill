@@ -1,7 +1,6 @@
-// eslint-disable-next-line new-cap
 const express = require('express');
-// eslint-disable-next-line new-cap
 const matchup = express.Router();
+const {StatusCodes} = require('http-status-codes');
 const {getQueue} = require('../controller/queue');
 const {getChampion, setChampion} = require('../controller/champion');
 const {getMatchup, setMatchup, setSelectionMessage, getSelectionMessage} = require('../controller/matchup');
@@ -77,7 +76,7 @@ async function canGetMessage(req, res, next) {
     next();
   } else {
     if (!await getMatchup(channelId)) {
-      res.sendStatus(401);
+      res.sendStatus(StatusCodes.OK);
       return;
     }
 
@@ -89,7 +88,7 @@ async function canGetMessage(req, res, next) {
     ) {
       next();
     } else {
-      res.sendStatus(401);
+      res.sendStatus(StatusCodes.UNAUTHORIZED);
     }
   }
 }
@@ -123,7 +122,7 @@ matchup.post('/current/report',
 
       // Error out if we don't have the required parameters.
       if (!req.body.winner) {
-        res.sendStatus(400);
+        res.sendStatus(StatusCodes.BAD_REQUEST);
         return;
       }
 
@@ -152,9 +151,9 @@ matchup.post('/current/report',
         }
         // reset the matchup.
         await setMatchup(channelId, null);
-        res.sendStatus(200);
+        res.sendStatus(StatusCodes.OK);
       } else {
-        res.sendStatus(500);
+        res.sendStatus(StatusCodes.BAD_REQUEST);
       }
     });
 
@@ -168,7 +167,7 @@ matchup.post('/current/forfeit',
 
       // Error out if we don't have the required parameters.
       if (!req.body.player) {
-        res.sendStatus(400);
+        res.sendStatus(StatusCodes.BAD_REQUEST);
         return;
       }
 
@@ -183,9 +182,9 @@ matchup.post('/current/forfeit',
         }
         // reset the matchup
         await setMatchup(channelId, null);
-        res.sendStatus(200);
+        res.sendStatus(StatusCodes.OK);
       } else {
-        res.sendStatus(500);
+        res.sendStatus(StatusCodes.BAD_REQUEST);
       }
     });
 
@@ -197,7 +196,7 @@ matchup.post('/start', isBroadcaster, isQueueOpen, async (req, res) => {
   // Lets do some checks to make sure we're not doing anything bad.
   if (currentMatchup) {
     res
-        .status(500)
+        .status(StatusCodes.BAD_REQUEST)
         .send({error: true, message: 'There is already a match in progress'});
     return;
   }
@@ -205,7 +204,7 @@ matchup.post('/start', isBroadcaster, isQueueOpen, async (req, res) => {
   const queue = getQueue(channelId);
 
   if ((await queue.getSize()) < 2) {
-    res.status(500).send({
+    res.status(StatusCodes.BAD_REQUEST).send({
       error: true,
       message: 'There are not enough people in the queue',
     });
