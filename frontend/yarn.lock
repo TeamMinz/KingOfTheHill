@@ -233,20 +233,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/eslintrc@npm:^0.4.1":
-  version: 0.4.1
-  resolution: "@eslint/eslintrc@npm:0.4.1"
+"@eslint/eslintrc@npm:^0.4.2":
+  version: 0.4.2
+  resolution: "@eslint/eslintrc@npm:0.4.2"
   dependencies:
     ajv: ^6.12.4
     debug: ^4.1.1
     espree: ^7.3.0
-    globals: ^12.1.0
+    globals: ^13.9.0
     ignore: ^4.0.6
     import-fresh: ^3.2.1
     js-yaml: ^3.13.1
     minimatch: ^3.0.4
     strip-json-comments: ^3.1.1
-  checksum: 418f5810c8dd9897d2457ceef098197d0e5f1ad345fbe4cd9256fd4223d7ea83d5e350f9091b3ab3483b6b1c367fa560df3ba1fccc7eb8ca6e1aae5a5b126d60
+  checksum: 60b66ce4257bf5c36a920dea83a056102fef746e7afd7100a6fe245a126ff455f67f4948e75d28ed73090bff8f8556b6a996e74a124911ca703440bc245dbc23
   languageName: node
   linkType: hard
 
@@ -2037,12 +2037,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^7.27.0":
-  version: 7.27.0
-  resolution: "eslint@npm:7.27.0"
+"eslint@npm:^7.28.0":
+  version: 7.28.0
+  resolution: "eslint@npm:7.28.0"
   dependencies:
     "@babel/code-frame": 7.12.11
-    "@eslint/eslintrc": ^0.4.1
+    "@eslint/eslintrc": ^0.4.2
     ajv: ^6.10.0
     chalk: ^4.0.0
     cross-spawn: ^7.0.2
@@ -2059,7 +2059,7 @@ __metadata:
     fast-deep-equal: ^3.1.3
     file-entry-cache: ^6.0.1
     functional-red-black-tree: ^1.0.1
-    glob-parent: ^5.0.0
+    glob-parent: ^5.1.2
     globals: ^13.6.0
     ignore: ^4.0.6
     import-fresh: ^3.0.0
@@ -2082,7 +2082,7 @@ __metadata:
     v8-compile-cache: ^2.0.3
   bin:
     eslint: bin/eslint.js
-  checksum: c91a9a88091fb2654ec599b452f6d8aff22daa4a21761e762536877ec8b65cd6386c29ea2e0fec2668125a07c62973bc23922f924c999e140c1042b8cffca030
+  checksum: 9d49d53ed56a1f1ccba9c71482722a91f2423432df70a3694d36ea478f0e3bb058034f170219f34f3d6b5cd5d47510b269b75e2b4117f88a3241b1db9cb95828
   languageName: node
   linkType: hard
 
@@ -2226,6 +2226,13 @@ __metadata:
     node-gyp: latest
     safe-buffer: ^5.1.1
   checksum: 529ceee780657a04e2b19ecbb685473f12aae05d5f9f794e36044f5ea602e1a0ba42bff4e1b7544a8a4164fbd9c585e69398b114f9925448d02c31c52c95cf26
+  languageName: node
+  linkType: hard
+
+"exenv@npm:^1.2.0":
+  version: 1.2.2
+  resolution: "exenv@npm:1.2.2"
+  checksum: 09fd080c0478739f0154916b73dea07f30f97972e1b3be3368d2b96d282d889b509f05e163d830e323c9ab1e94b0a293a9947b410651325df467c404f37f32f1
   languageName: node
   linkType: hard
 
@@ -2501,6 +2508,15 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
+"glob-parent@npm:^5.1.2":
+  version: 5.1.2
+  resolution: "glob-parent@npm:5.1.2"
+  dependencies:
+    is-glob: ^4.0.1
+  checksum: 82fcaa4ce102a0ae01370ed8fd5299ca32184af0418e1c1b613ed851240160558c0cc9712868eb9ca1924f687b07cd9c70c25f303f39f9f376d9a32f94f28e76
+  languageName: node
+  linkType: hard
+
 "glob-to-regexp@npm:^0.4.1":
   version: 0.4.1
   resolution: "glob-to-regexp@npm:0.4.1"
@@ -2544,6 +2560,15 @@ fsevents@~2.3.1:
   dependencies:
     type-fest: ^0.20.2
   checksum: 98e36151746f1457c28553db5d2ceb0fc11838f81bf4868d43df30fb1f03d0abf11b0fe16eeb8d390def5c91142a3e1a42a0f505ca67ec659aa1a30a82302268
+  languageName: node
+  linkType: hard
+
+"globals@npm:^13.9.0":
+  version: 13.9.0
+  resolution: "globals@npm:13.9.0"
+  dependencies:
+    type-fest: ^0.20.2
+  checksum: 26d71f2c286c80d806faad49c801bfb2ac5144497b5c844c5a718b2c3fad51e0d507d9069474e89f110f16a38bf212ec56e6e40936a4f24b1a645e7f21001d1d
   languageName: node
   linkType: hard
 
@@ -3285,7 +3310,7 @@ fsevents@~2.3.1:
   dependencies:
     babel-plugin-styled-components: ^1.12.0
     enzyme: ^3.11.0
-    eslint: ^7.27.0
+    eslint: ^7.28.0
     eslint-config-airbnb: ^18.2.1
     eslint-import-resolver-node: ^0.3.4
     eslint-plugin-import: ^2.23.4
@@ -3296,15 +3321,15 @@ fsevents@~2.3.1:
     jsonwebtoken: ^8.5.1
     next: ^10.2.3
     next-images: ^1.7.0
-    prettier: ^2.3.0
+    prettier: ^2.3.1
     prettier-eslint: ^12.0.0
     prop-types: ^15.7.2
     react: ^17.0.2
     react-collapsible: ^2.8.3
     react-dom: ^17.0.2
     react-is: ^17.0.2
-    react-notification-system: ^0.4.0
-    react-rnd: ^10.3.2
+    react-modal: ^3.14.2
+    react-rnd: ^10.3.3
     react-tabs: ^3.2.2
     sass: ^1.34.1
     styled-components: ^5.3.0
@@ -3512,7 +3537,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"loose-envify@npm:^1.1.0, loose-envify@npm:^1.4.0":
+"loose-envify@npm:^1.0.0, loose-envify@npm:^1.1.0, loose-envify@npm:^1.4.0":
   version: 1.4.0
   resolution: "loose-envify@npm:1.4.0"
   dependencies:
@@ -3939,7 +3964,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"object-assign@npm:^4.0.1, object-assign@npm:^4.1.0, object-assign@npm:^4.1.1":
+"object-assign@npm:^4.1.0, object-assign@npm:^4.1.1":
   version: 4.1.1
   resolution: "object-assign@npm:4.1.1"
   checksum: 66cf021898fc1b13ea573ea8635fbd5a76533f50cecbc2fcd5eee1e8029af41bcebe7023788b6d0e06cbe4401ecea075d972f78ec74467cdc571a0f1a4d1a081
@@ -4380,12 +4405,12 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"prettier@npm:^2.3.0":
-  version: 2.3.0
-  resolution: "prettier@npm:2.3.0"
+"prettier@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "prettier@npm:2.3.1"
   bin:
     prettier: bin-prettier.js
-  checksum: 652640cc8b71bc5277cfb8bf6f161783ca588efcf683c3d630837b39da8d57fef35c9e00ae5855a8e3c75136c42274046c913cc2b2d2968558315f31c6a26981
+  checksum: 9b4a695b87ce5f510fc20feec01cce7371f0fa0b92ffe79d543f6be52e2004c532861629de4d7ab1c577e1f649dce3cfccd62cb2ca6526b1da8d9c63eb84bf36
   languageName: node
   linkType: hard
 
@@ -4420,7 +4445,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"prop-types@npm:15.7.2, prop-types@npm:^15.5.0, prop-types@npm:^15.5.6, prop-types@npm:^15.6.0, prop-types@npm:^15.7.2":
+"prop-types@npm:15.7.2, prop-types@npm:^15.5.0, prop-types@npm:^15.6.0, prop-types@npm:^15.7.2":
   version: 15.7.2
   resolution: "prop-types@npm:15.7.2"
   dependencies:
@@ -4617,16 +4642,25 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-notification-system@npm:^0.4.0":
-  version: 0.4.0
-  resolution: "react-notification-system@npm:0.4.0"
+"react-lifecycles-compat@npm:^3.0.0":
+  version: 3.0.4
+  resolution: "react-lifecycles-compat@npm:3.0.4"
+  checksum: 82176a55ef7526414d770d5e07dc1d28b4c7f20281f22c6f53f3a98df9dbbb5d70c94bebee57b4ea8ccc2eee430b907ca7b564a42fbdd0ed21e7c43bfee35404
+  languageName: node
+  linkType: hard
+
+"react-modal@npm:^3.14.2":
+  version: 3.14.2
+  resolution: "react-modal@npm:3.14.2"
   dependencies:
-    object-assign: ^4.0.1
-    prop-types: ^15.5.6
+    exenv: ^1.2.0
+    prop-types: ^15.7.2
+    react-lifecycles-compat: ^3.0.0
+    warning: ^4.0.3
   peerDependencies:
-    react: 0.14.x || ^15.0.0 || ^16.0.0
-    react-dom: 0.14.x || ^15.0.0 || ^16.0.0
-  checksum: f7c452e1716d591f7f4b05afff9c854f949dccb7c05b2d7b7de7d6689b2fd4a08fd1d79488bcbdc8afcb28605246e25f3b557a5b39f2d4dda57e384894b894d9
+    react: ^0.14.0 || ^15.0.0 || ^16 || ^17
+    react-dom: ^0.14.0 || ^15.0.0 || ^16 || ^17
+  checksum: 280bbb6099be93ad381fff35e7ffca1815df312eb2185cd4665f00d80b89ab7b1237d339a2af7b35ccf3073cbe2d7698b10d9ec00634540767431f46b3dc1b84
   languageName: node
   linkType: hard
 
@@ -4637,14 +4671,14 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"react-rnd@npm:^10.3.2":
-  version: 10.3.2
-  resolution: "react-rnd@npm:10.3.2"
+"react-rnd@npm:^10.3.3":
+  version: 10.3.3
+  resolution: "react-rnd@npm:10.3.3"
   dependencies:
     re-resizable: 6.9.0
     react-draggable: 4.4.3
     tslib: 2.2.0
-  checksum: ec8483658d982f6f8e3f99df325d07485b4c5cecaaa711056446b5242c93e5f56943a10404fdb76276d87825fe99a20345f4542352836655d757c570a62754de
+  checksum: 76476671300d090afed8edf51c0bccbcbe523e978c9d8ad40bb45b36e8b1d4a104eaf937c741922c6fa7a8984d3eae3099fcc7b41e61bb48a3785994be9c9dcc
   languageName: node
   linkType: hard
 
@@ -5876,6 +5910,15 @@ typescript@^3.9.3:
   peerDependencies:
     eslint: ">=5.0.0"
   checksum: 3f28f30e1aaf264409023ed19a7203b2eeadf3ec0c78783849d9ad826d0c21c67b186588e16169bfd7043d3cd19cfec82b806469f51a3b2b4da77c43621f21ec
+  languageName: node
+  linkType: hard
+
+"warning@npm:^4.0.3":
+  version: 4.0.3
+  resolution: "warning@npm:4.0.3"
+  dependencies:
+    loose-envify: ^1.0.0
+  checksum: 20ef5d29ff9c20af3060e504914a00d5a90ce346e75e6691efbedb540481cdc82070c966d75195f812de64bb0bd7f1b02315fcb52469db151c0f15e29002781c
   languageName: node
   linkType: hard
 

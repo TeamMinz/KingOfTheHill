@@ -25,7 +25,7 @@ const App = ({ format }) => {
         console.log('Error', err);
       });
 
-      twitch.onVisibilityChanged((isVisible, _) => {
+      twitch.onVisibilityChanged((isVisible) => {
         setVisible(isVisible);
       });
 
