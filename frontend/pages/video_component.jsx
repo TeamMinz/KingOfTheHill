@@ -1,6 +1,5 @@
 import React from 'react';
 import App from '../src/components/App/App';
 
-const VideoComponent = () => <App format="component" />;
-
-export default VideoComponent;
+const Component = () => <App format="component" />;
+export default Component;

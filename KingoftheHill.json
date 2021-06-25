@@ -111,8 +111,8 @@
         "isSubscriptionStatusAvailable": false
       },
       "frameSize": {
-        "width": 1280,
-        "height": 720
+        "width": 375,
+        "height": 822
       },
       "id": "5",
       "isPopout": false,
@@ -220,7 +220,7 @@
     ],
     "sku": "",
     "state": "Testing",
-    "subscriptionsSupportLevel": "none",
+    "subscriptionsSupportLevel": "optional",
     "summary": "A queue extension that specializes in a King of the Hill style queue.",
     "supportEmail": "support@teamminz.com",
     "vendorCode": "",
@@ -252,7 +252,7 @@
         "aspectHeight": 0,
         "aspectRatioX": 300,
         "aspectRatioY": 400,
-        "scalePixels": 1024,
+        "scalePixels": 0,
         "targetHeight": 6500,
         "size": 0,
         "zoom": false,

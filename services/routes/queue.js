@@ -41,7 +41,7 @@ queue.post('/kick', isQueueOpen, async (req, res) => {
 
   const kickTarget = req.body.kickTarget;
 
-  if (await currentQueue.getPosition(kickTarget) == -1) {
+  if ((await currentQueue.getPosition(kickTarget)) == -1) {
     res.status(StatusCodes.BAD_REQUEST).send('Cannot kick someone not in the queue.');
     return;
   }
@@ -49,9 +49,7 @@ queue.post('/kick', isQueueOpen, async (req, res) => {
   const champ = await getChampion(channelId);
 
   // Remove this person as champion if they're champ.
-  if (champ &&
-    (champ.user.opaqueUserId == kickTarget ||
-      champ.user.userId == kickTarget)) {
+  if (champ && (champ.user.opaqueUserId == kickTarget || champ.user.userId == kickTarget)) {
     await setChampion(channelId, null);
   }
 
@@ -61,11 +59,7 @@ queue.post('/kick', isQueueOpen, async (req, res) => {
 
 queue.post('/join', isQueueOpen, async (req, res) => {
   // Handles joining the queue.
-  const {
-    channel_id: channelId,
-    opaque_user_id: opaqueUserId,
-    user_id: userId,
-  } = req.twitch;
+  const {channel_id: channelId, opaque_user_id: opaqueUserId, user_id: userId} = req.twitch;
 
   if (!userId) {
     res.status(StatusCodes.UNAUTHORIZED).send({
@@ -86,10 +80,7 @@ queue.post('/join', isQueueOpen, async (req, res) => {
   const currentMatchup = await getMatchup(channelId);
 
   if (currentMatchup) {
-    if (
-      currentMatchup.champion.userId == userId ||
-      currentMatchup.challenger.userId == userId
-    ) {
+    if (currentMatchup.champion.userId == userId || currentMatchup.challenger.userId == userId) {
       res.status(StatusCodes.BAD_REQUEST).send({
         message: 'You may not join the queue if you are in a current match.',
       });
@@ -138,7 +129,7 @@ queue.post('/leave', isQueueOpen, async (req, res) => {
     return;
   }
   // Make sure this person is actually in this queue.
-  if (!await currentQueue.contains(userId)) {
+  if (!(await currentQueue.contains(userId))) {
     res.status(StatusCodes.BAD_REQUEST).send({
       message: 'You cannot leave a queue you\'re not in.',
     });
