@@ -4,6 +4,7 @@ import QueueContext from '@util/QueueContext';
 import MatchupView from './components/MatchupView/MatchupView';
 import QueueComponent from './components/QueueComponent/QueueComponent';
 import QueueController from './components/QueueController/QueueController';
+import ShopComponent from './components/ShopComponent/ShopComponent';
 import { StyledQueueView } from './QueueView.style';
 
 /**
@@ -20,7 +21,7 @@ const QueueView = () => {
   const [Queue, setQueue] = useState(null);
   const [CurrentMatchup, setCurrentMatchup] = useState(null);
   const [CurrentChampion, setCurrentChampion] = useState(null);
-
+  const [ShopState, setShopState] = useState({ open: false, buttonX: 0, buttonY: 0 });
   /**
    * Fetches a bunch of info from the backend,
    * and stores it for components to use.
@@ -124,9 +125,12 @@ const QueueView = () => {
           currentMatchup: CurrentMatchup,
           finishedLoading: FinishedLoading,
           currentChampion: CurrentChampion,
+          shopState: ShopState,
+          setShopState,
           auth: authentication,
         }}
       >
+        <ShopComponent />
         <MatchupView />
         <QueueComponent />
         <QueueController />

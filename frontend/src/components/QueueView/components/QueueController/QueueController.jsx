@@ -1,7 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, {
+  useState, useEffect, useContext, useRef,
+} from 'react';
 import QueueContext from '@util/QueueContext';
 import ShoppingCart from '@assets/shopping-cart-2-fill.svg';
 import Crown from '@assets/vip-crown-2-fill.svg';
+
 import {
   StyledQueueButton,
   StyledControllerContainer,
@@ -63,11 +66,41 @@ const QueueButton = () => {
   return <StyledQueueButton onClick={ButtonAction}>{ButtonText}</StyledQueueButton>;
 };
 
-const QueueController = () => (
-  <StyledControllerContainer>
-    <StyledShopButton>
+const ShopButton = () => {
+  const ctx = useContext(QueueContext);
+  const btnRef = useRef();
+
+  useEffect(() => {
+    const clientRect = btnRef.current.getBoundingClientRect();
+    const buttonX = (clientRect.left + clientRect.right) / 2;
+    const buttonY = (clientRect.top + clientRect.bottom) / 2;
+
+    ctx.setShopState({
+      open: ctx.shopState.open,
+      buttonX,
+      buttonY,
+    });
+  }, [ctx.finishedLoading]);
+
+  return (
+    <StyledShopButton
+      onClick={function (e) {
+        ctx.setShopState({
+          open: true,
+          buttonX: ctx.shopState.buttonX,
+          buttonY: ctx.shopState.buttonY,
+        });
+      }}
+      ref={btnRef}
+    >
       <ShoppingCart />
     </StyledShopButton>
+  );
+};
+
+const QueueController = () => (
+  <StyledControllerContainer>
+    <ShopButton />
     <QueueButton />
     <StyledLeaderboardButton>
       <Crown />
