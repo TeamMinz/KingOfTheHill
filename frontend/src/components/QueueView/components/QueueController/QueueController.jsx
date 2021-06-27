@@ -63,7 +63,11 @@ const QueueButton = () => {
     }
   }, [ctx.queue]);
 
-  return <StyledQueueButton onClick={ButtonAction}>{ButtonText}</StyledQueueButton>;
+  return (
+    <StyledQueueButton onClick={ButtonAction} disabled={!(ctx.queue && ctx.queue.isOpen)}>
+      {ButtonText}
+    </StyledQueueButton>
+  );
 };
 
 const ShopButton = () => {

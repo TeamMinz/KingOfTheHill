@@ -31,6 +31,11 @@ export const StyledQueueButton = styled.button`
     transform: translateY(0.1em) !important;
     box-shadow: 0px 0px 0px 0px !important;
   }
+
+  &:disabled {
+    pointer-events: none;
+    opacity: 0.8;
+  }
 `;
 
 export const StyledShopButton = styled.button`

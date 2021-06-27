@@ -11,6 +11,7 @@ export const StyledOverlayContainer = styled.div(
 
   overflow: hidden;
 
+
   background-color: var(--secondary-background-color);
   
   ${
@@ -18,7 +19,7 @@ export const StyledOverlayContainer = styled.div(
     ? `clip-path: circle(0% at ${props.buttonX}px ${props.buttonY}px);`
     : ''
 }
-  ${props.animState == 'open' || props.animState == 'opening' ? 'z-index: 999;' : 'z-index: 0;'}
+  ${props.animState == 'open' || props.animState == 'opening' ? 'z-index: 9999;' : 'z-index: 0;'}
   transition: clip-path 0.5s;
   ${props.animState == 'open' || props.animState == 'closing' ? 'transition-delay: 0.05s;' : ''}
   ${
