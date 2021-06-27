@@ -71,15 +71,16 @@ const ShopButton = () => {
   const btnRef = useRef();
 
   useEffect(() => {
-    const clientRect = btnRef.current.getBoundingClientRect();
-    const buttonX = (clientRect.left + clientRect.right) / 2;
-    const buttonY = (clientRect.top + clientRect.bottom) / 2;
+    if (btnRef && btnRef.current) {
+      const buttonX = btnRef.current.offsetLeft + btnRef.current.offsetWidth / 2;
+      const buttonY = btnRef.current.offsetTop + btnRef.current.offsetHeight / 2;
 
-    ctx.setShopState({
-      open: ctx.shopState.open,
-      buttonX,
-      buttonY,
-    });
+      ctx.setShopState({
+        open: ctx.shopState.open,
+        buttonX,
+        buttonY,
+      });
+    }
   }, [ctx.finishedLoading]);
 
   return (

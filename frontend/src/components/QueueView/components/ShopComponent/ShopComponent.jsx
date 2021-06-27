@@ -1,41 +1,85 @@
-import React, { useContext } from 'react';
+import React, {
+  useContext, useEffect, useRef, useState,
+} from 'react';
 import QueueContext from '@util/QueueContext';
-import styled from 'styled-components';
-
-const StyledOverlayContainer = styled.div(
-  (props) => `
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-
-  width: 100vw;
-  height: 100vh;
-
-  pointer-events: none;
-
-  display: ${props.shopOpen ? 'block' : 'block'};
-
-  background-color: var(--secondary-background-color);
-  z-index: 9999;
-
-  clip-path: circle(0% at ${props.buttonX}px ${props.buttonY}px);
-  transition: clip-path 1s;
-  ${props.shopOpen && `clip-path: circle(120vh at ${props.buttonX}px ${props.buttonY}px);`}
-`,
-);
+import ArrowLeft from '@assets/arrow-left-fill.svg';
+import {
+  StyledOverlayContainer,
+  StyledShopContainer,
+  StyledShopHeader,
+  StyledCloseButton,
+  StyledShopDivider,
+  StyledShopTitle,
+} from './ShopComponent.style';
 
 const ShopComponent = () => {
   const ctx = useContext(QueueContext);
+  const overlayRef = useRef();
+  const [ShopState, setShopState] = useState('closed');
+
+  useEffect(() => {
+    console.log(ShopState);
+  }, [ShopState]);
+
+  useEffect(() => {
+    if (ctx.shopState.open && ShopState == 'closed') {
+      setShopState('opening');
+    } else if (!ctx.shopState.open && ShopState == 'open') {
+      setShopState('closing');
+    }
+  });
+
+  useEffect(() => {
+    const updateShopState = (e) => {
+      if (!(e.srcElement == overlayRef.current && e.propertyName == 'clip-path')) return;
+
+      if (ShopState == 'opening') {
+        setShopState('open');
+      } else if (ShopState == 'closing') {
+        setShopState('closed');
+      }
+    };
+
+    if (overlayRef && overlayRef.current) {
+      overlayRef.current.addEventListener('transitionend', updateShopState);
+      return () => {
+        overlayRef.current.removeEventListener('transitionend', updateShopState);
+      };
+    }
+  }, [ctx.finishedLoading, ShopState]);
 
   return (
     <StyledOverlayContainer
+      ref={overlayRef}
       shopOpen={ctx.shopState.open}
+      shopState={ShopState}
       buttonX={ctx.shopState.buttonX}
       buttonY={ctx.shopState.buttonY}
-    />
+    >
+      <StyledShopContainer
+        shopOpen={ctx.shopState.open}
+        shopState={ShopState}
+        buttonX={ctx.shopState.buttonX}
+        buttonY={ctx.shopState.buttonY}
+      >
+        <StyledShopHeader>
+          <StyledCloseButton
+            onClick={() => {
+              ctx.setShopState({
+                open: false,
+                buttonX: ctx.shopState.buttonX,
+                buttonY: ctx.shopState.buttonY,
+              });
+            }}
+          >
+            <ArrowLeft />
+          </StyledCloseButton>
+          <StyledShopTitle>Shop</StyledShopTitle>
+        </StyledShopHeader>
+        <StyledShopDivider />
+      </StyledShopContainer>
+    </StyledOverlayContainer>
   );
 };
-
+/*  */
 export default ShopComponent;

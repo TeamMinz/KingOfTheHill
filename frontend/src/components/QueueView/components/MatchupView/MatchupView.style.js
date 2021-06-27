@@ -11,7 +11,7 @@ export const StyledMatchup = styled.div`
 
   background-color: var(--secondary-background-color);
   color: var(--secondary-text-color);
-  
+
   user-select: none;
 
   text-align: center;
@@ -33,8 +33,8 @@ export const StyledHeader = styled.div`
   text-align: center;
 
   padding: 0.3em;
-  
-  text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.5);
+
+  text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.4);
 `;
 
 export const MatchupCTA = styled.div`
@@ -43,7 +43,6 @@ export const MatchupCTA = styled.div`
 
 export const MatchupChampion = styled.div`
   font-weight: bold;
-  
 `;
 
 export const MatchupChallenger = styled.div``;
