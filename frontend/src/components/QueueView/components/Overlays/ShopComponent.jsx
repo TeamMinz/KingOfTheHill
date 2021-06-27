@@ -5,12 +5,12 @@ import QueueContext from '@util/QueueContext';
 import ArrowLeft from '@assets/arrow-left-fill.svg';
 import {
   StyledOverlayContainer,
-  StyledShopContainer,
-  StyledShopHeader,
+  StyledOverlayInner,
+  StyledOverlayHeader,
   StyledCloseButton,
-  StyledShopDivider,
-  StyledShopTitle,
-} from './ShopComponent.style';
+  StyledOverlayDivider,
+  StyledOverlayTitle,
+} from './OverlayComponent.style';
 
 const ShopComponent = () => {
   const ctx = useContext(QueueContext);
@@ -18,13 +18,9 @@ const ShopComponent = () => {
   const [ShopState, setShopState] = useState('closed');
 
   useEffect(() => {
-    console.log(ShopState);
-  }, [ShopState]);
-
-  useEffect(() => {
-    if (ctx.shopState.open && ShopState == 'closed') {
+    if (ctx.shopState.shopOpen && ShopState == 'closed') {
       setShopState('opening');
-    } else if (!ctx.shopState.open && ShopState == 'open') {
+    } else if (!ctx.shopState.shopOpen && ShopState == 'open') {
       setShopState('closing');
     }
   });
@@ -51,22 +47,20 @@ const ShopComponent = () => {
   return (
     <StyledOverlayContainer
       ref={overlayRef}
-      shopOpen={ctx.shopState.open}
-      shopState={ShopState}
+      animState={ShopState}
       buttonX={ctx.shopState.buttonX}
       buttonY={ctx.shopState.buttonY}
     >
-      <StyledShopContainer
-        shopOpen={ctx.shopState.open}
-        shopState={ShopState}
+      <StyledOverlayInner
+        animState={ShopState}
         buttonX={ctx.shopState.buttonX}
         buttonY={ctx.shopState.buttonY}
       >
-        <StyledShopHeader>
+        <StyledOverlayHeader>
           <StyledCloseButton
             onClick={() => {
               ctx.setShopState({
-                open: false,
+                shopOpen: false,
                 buttonX: ctx.shopState.buttonX,
                 buttonY: ctx.shopState.buttonY,
               });
@@ -74,12 +68,12 @@ const ShopComponent = () => {
           >
             <ArrowLeft />
           </StyledCloseButton>
-          <StyledShopTitle>Shop</StyledShopTitle>
-        </StyledShopHeader>
-        <StyledShopDivider />
-      </StyledShopContainer>
+          <StyledOverlayTitle>Shop</StyledOverlayTitle>
+        </StyledOverlayHeader>
+        <StyledOverlayDivider />
+      </StyledOverlayInner>
     </StyledOverlayContainer>
   );
 };
-/*  */
+
 export default ShopComponent;

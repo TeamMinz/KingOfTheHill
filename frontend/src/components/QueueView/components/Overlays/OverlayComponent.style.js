@@ -14,15 +14,15 @@ export const StyledOverlayContainer = styled.div(
   background-color: var(--secondary-background-color);
   
   ${
-  props.shopState == 'closed' || props.shopState == 'closing'
+  props.animState == 'closed' || props.animState == 'closing'
     ? `clip-path: circle(0% at ${props.buttonX}px ${props.buttonY}px);`
     : ''
 }
-  ${props.shopState == 'open' || props.shopState == 'opening' ? 'z-index: 999;' : 'z-index: 0;'}
+  ${props.animState == 'open' || props.animState == 'opening' ? 'z-index: 999;' : 'z-index: 0;'}
   transition: clip-path 0.5s;
-  ${props.shopState == 'open' || props.shopState == 'closing' ? 'transition-delay: 0.05s;' : ''}
+  ${props.animState == 'open' || props.animState == 'closing' ? 'transition-delay: 0.05s;' : ''}
   ${
-  props.shopState == 'open' || props.shopState == 'opening'
+  props.animState == 'open' || props.animState == 'opening'
     ? `clip-path: circle(120vh at ${props.buttonX}px ${props.buttonY}px);`
     : ''
 }
@@ -31,7 +31,7 @@ export const StyledOverlayContainer = styled.div(
 `,
 );
 
-export const StyledShopContainer = styled.div(
+export const StyledOverlayInner = styled.div(
   (props) => `
   display: flex;
   flex-direction: column;
@@ -49,14 +49,14 @@ export const StyledShopContainer = styled.div(
   height: 100%;
 
   ${
-  props.shopState == 'closed' || props.shopState == 'closing'
+  props.animState == 'closed' || props.animState == 'closing'
     ? `clip-path: circle(0% at ${props.buttonX}px ${props.buttonY}px);`
     : ''
 }
   transition: clip-path 0.5s;
-  ${props.shopState == 'closed' || props.shopState == 'opening' ? 'transition-delay: 0.05s;' : ''}
+  ${props.animState == 'closed' || props.animState == 'opening' ? 'transition-delay: 0.05s;' : ''}
   ${
-  props.shopState == 'open' || props.shopState == 'opening'
+  props.animState == 'open' || props.animState == 'opening'
     ? `clip-path: circle(120vh at ${props.buttonX}px ${props.buttonY}px);`
     : ''
 }
@@ -64,13 +64,13 @@ export const StyledShopContainer = styled.div(
 `,
 );
 
-export const StyledShopHeader = styled.div`
+export const StyledOverlayHeader = styled.div`
   display: block;
   text-align: center;
   position: relative;
 `;
 
-export const StyledShopTitle = styled.span`
+export const StyledOverlayTitle = styled.span`
   font-family: 'Nunito Sans';
   font-size: 1.2em;
   font-weight: 900;
@@ -135,7 +135,7 @@ export const StyledCloseButton = styled.button`
   }
 `;
 
-export const StyledShopDivider = styled.div`
+export const StyledOverlayDivider = styled.div`
   background-color: var(--secondary-background-color);
 
   height: 1.5em;

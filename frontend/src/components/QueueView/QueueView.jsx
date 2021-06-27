@@ -4,7 +4,8 @@ import QueueContext from '@util/QueueContext';
 import MatchupView from './components/MatchupView/MatchupView';
 import QueueComponent from './components/QueueComponent/QueueComponent';
 import QueueController from './components/QueueController/QueueController';
-import ShopComponent from './components/ShopComponent/ShopComponent';
+import ShopComponent from './components/Overlays/ShopComponent';
+import LeaderboardComponent from './components/Overlays/LeaderboardComponent';
 import { StyledQueueView } from './QueueView.style';
 
 /**
@@ -21,7 +22,13 @@ const QueueView = () => {
   const [Queue, setQueue] = useState(null);
   const [CurrentMatchup, setCurrentMatchup] = useState(null);
   const [CurrentChampion, setCurrentChampion] = useState(null);
-  const [ShopState, setShopState] = useState({ open: false, buttonX: 0, buttonY: 0 });
+  const [ShopState, setShopState] = useState({ shopOpen: false, buttonX: 0, buttonY: 0 });
+  const [LeaderboardState, setLeaderboardState] = useState({
+    leaderboardOpen: false,
+    buttonX: 0,
+    buttonY: 0,
+  });
+
   /**
    * Fetches a bunch of info from the backend,
    * and stores it for components to use.
@@ -43,7 +50,7 @@ const QueueView = () => {
           setCurrentMatchup(jsonResp.matchup);
         });
       } else {
-        // TODO: add logging.
+        console.warn('Failed to fetch current matchup');
       }
     });
 
@@ -57,7 +64,7 @@ const QueueView = () => {
           }
         });
       } else {
-        // TODO: add logging.
+        console.warn('Failed to fetch current champion');
       }
     });
   };
@@ -67,7 +74,7 @@ const QueueView = () => {
     const twitch = window.Twitch ? window.Twitch.ext : null;
     if (twitch) {
       twitch.onError((err) => {
-        console.log('Error', err);
+        console.error('Error', err);
       });
 
       // Authentication setup
@@ -126,11 +133,14 @@ const QueueView = () => {
           finishedLoading: FinishedLoading,
           currentChampion: CurrentChampion,
           shopState: ShopState,
+          leaderboardState: LeaderboardState,
           setShopState,
+          setLeaderboardState,
           auth: authentication,
         }}
       >
         <ShopComponent />
+        <LeaderboardComponent />
         <MatchupView />
         <QueueComponent />
         <QueueController />

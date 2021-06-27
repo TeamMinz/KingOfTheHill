@@ -76,7 +76,7 @@ const ShopButton = () => {
       const buttonY = btnRef.current.offsetTop + btnRef.current.offsetHeight / 2;
 
       ctx.setShopState({
-        open: ctx.shopState.open,
+        open: ctx.shopState.shopOpen,
         buttonX,
         buttonY,
       });
@@ -85,9 +85,9 @@ const ShopButton = () => {
 
   return (
     <StyledShopButton
-      onClick={function (e) {
+      onClick={() => {
         ctx.setShopState({
-          open: true,
+          shopOpen: true,
           buttonX: ctx.shopState.buttonX,
           buttonY: ctx.shopState.buttonY,
         });
@@ -99,13 +99,44 @@ const ShopButton = () => {
   );
 };
 
+const LeaderboardButton = () => {
+  const ctx = useContext(QueueContext);
+  const btnRef = useRef();
+
+  useEffect(() => {
+    if (btnRef && btnRef.current) {
+      const buttonX = btnRef.current.offsetLeft + btnRef.current.offsetWidth / 2;
+      const buttonY = btnRef.current.offsetTop + btnRef.current.offsetHeight / 2;
+
+      ctx.setLeaderboardState({
+        open: ctx.leaderboardState.leaderboardOpen,
+        buttonX,
+        buttonY,
+      });
+    }
+  }, [ctx.finishedLoading]);
+
+  return (
+    <StyledLeaderboardButton
+      onClick={() => {
+        ctx.setLeaderboardState({
+          leaderboardOpen: true,
+          buttonX: ctx.leaderboardState.buttonX,
+          buttonY: ctx.leaderboardState.buttonY,
+        });
+      }}
+      ref={btnRef}
+    >
+      <Crown />
+    </StyledLeaderboardButton>
+  );
+};
+
 const QueueController = () => (
   <StyledControllerContainer>
     <ShopButton />
     <QueueButton />
-    <StyledLeaderboardButton>
-      <Crown />
-    </StyledLeaderboardButton>
+    <LeaderboardButton />
   </StyledControllerContainer>
 );
 
