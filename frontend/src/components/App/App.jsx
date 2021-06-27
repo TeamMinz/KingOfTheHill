@@ -3,9 +3,9 @@ import {
   Tab, Tabs, TabList, TabPanel,
 } from 'react-tabs';
 import PropTypes from 'prop-types';
-import Authentication from '../../util/Authentication/Authentication';
-import QueueView from '../QueueView/QueueView';
-import QueueNotification from '../QueueNotification/QueueNotification';
+import QueueNotification from '@components/QueueNotification/QueueNotification';
+import QueueView from '@components/QueueView/QueueView';
+import Authentication from '@util/Authentication/Authentication';
 import { StyledQueuePanel, StyledApp } from './App.style';
 
 /**
@@ -48,16 +48,7 @@ const App = ({ format }) => {
     return (
       <StyledApp format={format} theme={Theme}>
         <QueueNotification />
-        <Tabs>
-          <TabList>
-            <Tab>Queue</Tab>
-            <Tab>Leaderboard</Tab>
-          </TabList>
-          <StyledQueuePanel>
-            <QueueView />
-          </StyledQueuePanel>
-          <TabPanel />
-        </Tabs>
+        <QueueView />
       </StyledApp>
     );
   }

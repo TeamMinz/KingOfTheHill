@@ -1,6 +1,14 @@
 import React, { useContext } from 'react';
-import QueueContext from '../../../../util/QueueContext';
-import { StyledMatchup, StyledChampion, StyledChallenger } from './MatchupView.style';
+import QueueContext from '@util/QueueContext';
+import {
+  StyledMatchup,
+  StyledHeader,
+  StyledMatchupContainer,
+  MatchupCTA,
+  MatchupChampion,
+  MatchupChallenger,
+  MatchupVersus,
+} from './MatchupView.style';
 
 /**
  * Component to display current matchup/champion
@@ -10,19 +18,51 @@ import { StyledMatchup, StyledChampion, StyledChallenger } from './MatchupView.s
 const MatchupView = () => {
   const ctx = useContext(QueueContext);
 
+  const matchupContent = (() => {
+    if (!ctx.currentChampion) {
+      return (
+        <StyledMatchup>
+          <div>No Champion</div>
+          <MatchupCTA>Come claim your crown</MatchupCTA>
+        </StyledMatchup>
+      );
+    }
+    if (ctx.currentMatchup) {
+      return (
+        <StyledMatchup>
+          <MatchupChampion>
+            👑
+            {' '}
+            {ctx.currentChampion.user.displayName}
+            {' | '}
+            {ctx.currentChampion.winStreak && `${ctx.currentChampion.winStreak} Wins`}
+            {' '}
+          </MatchupChampion>
+          <MatchupVersus>vs</MatchupVersus>
+          <MatchupChallenger>{ctx.currentMatchup.challenger.user.displayName}</MatchupChallenger>
+        </StyledMatchup>
+      );
+    }
+    return (
+      <StyledMatchup>
+        <MatchupChampion>
+          👑
+          {' '}
+          {ctx.currentChampion.user.displayName}
+          {' | '}
+          {ctx.currentChampion.winStreak && `${ctx.currentChampion.winStreak} Wins`}
+          {' '}
+        </MatchupChampion>
+        <MatchupCTA>Stands alone undefeated.</MatchupCTA>
+      </StyledMatchup>
+    );
+  })();
+
   return (
-    <StyledMatchup>
-      <StyledChampion>
-        {(!ctx.currentChampion || ctx.currentChampion.winStreak == 0) && '👑 No Champion Yet!'}
-        {ctx.currentChampion
-          && ctx.currentChampion.winStreak != 0
-          && `👑: (${ctx.currentChampion.winStreak})
-          ${ctx.currentChampion.user.displayName}`}
-      </StyledChampion>
-      <StyledChallenger>
-        {ctx.currentMatchup && `⚔️: ${ctx.currentMatchup.challenger.displayName}`}
-      </StyledChallenger>
-    </StyledMatchup>
+    <StyledMatchupContainer>
+      <StyledHeader>Current Matchup</StyledHeader>
+      {matchupContent}
+    </StyledMatchupContainer>
   );
 };
 

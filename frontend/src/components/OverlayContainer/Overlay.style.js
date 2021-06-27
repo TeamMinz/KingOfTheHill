@@ -5,6 +5,8 @@ export const StyledOverlayContainer = styled.div`
   height: 100%;
   width: 100%;
   outline: white solid 2px;
+  border: white solid 2px;
+  overflow: hidden;
 `;
 
 export const StyledButtonWrapper = styled.div`

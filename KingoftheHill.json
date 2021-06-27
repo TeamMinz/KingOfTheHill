@@ -117,11 +117,11 @@
       "id": "5",
       "isPopout": false,
       "label": "",
-      "linked": false,
-      "linkedUserId": "",
+      "linked": true,
+      "linkedUserId": "137137594",
       "orientation": "Portrait",
-      "type": "mobile",
-      "viewerType": "Broadcaster"
+      "type": "component",
+      "viewerType": "Logged-In Viewer"
     },
     {
       "channelId": "135887033",
@@ -137,6 +137,72 @@
         "height": 720
       },
       "id": "6",
+      "isPopout": false,
+      "label": "",
+      "linked": true,
+      "linkedUserId": "245579583",
+      "orientation": "Portrait",
+      "type": "component",
+      "viewerType": "Logged-In Viewer"
+    },
+    {
+      "channelId": "135887033",
+      "configurationAnchor": "panel",
+      "displayChannelName": "bassjio",
+      "features": {
+        "isBitsEnabled": true,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "frameSize": {
+        "width": 1280,
+        "height": 720
+      },
+      "id": "8",
+      "isPopout": false,
+      "label": "",
+      "linked": true,
+      "linkedUserId": "37402112",
+      "orientation": "Portrait",
+      "type": "component",
+      "viewerType": "Logged-In Viewer"
+    },
+    {
+      "channelId": "135887033",
+      "configurationAnchor": "panel",
+      "displayChannelName": "bassjio",
+      "features": {
+        "isBitsEnabled": true,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "frameSize": {
+        "width": 1280,
+        "height": 720
+      },
+      "id": "9",
+      "isPopout": false,
+      "label": "",
+      "linked": true,
+      "linkedUserId": "93536131",
+      "orientation": "Portrait",
+      "type": "component",
+      "viewerType": "Logged-In Viewer"
+    },
+    {
+      "channelId": "135887033",
+      "configurationAnchor": "panel",
+      "displayChannelName": "bassjio",
+      "features": {
+        "isBitsEnabled": true,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
+      },
+      "frameSize": {
+        "width": 1280,
+        "height": 720
+      },
+      "id": "10",
       "isPopout": false,
       "label": "",
       "linked": false,

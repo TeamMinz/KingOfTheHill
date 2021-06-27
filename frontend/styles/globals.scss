@@ -1,11 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700;900&family=Roboto:wght@400;700;900&display=swap');
 
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
-    Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   width: 100%;
   height: 100%;
 }
@@ -22,73 +20,4 @@ a {
 div#__next {
   width: 100%;
   height: 100%;
-}
-
-.react-tabs {
-  -webkit-tap-highlight-color: transparent;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.react-tabs__tab-list {
-  border-bottom: 1px solid #aaa;
-  margin: 0 0 2px;
-  padding: 0;
-  display: flex;
-  flex-direction: row;
-}
-
-.react-tabs__tab {
-  display: block;
-  border: 1px solid transparent;
-  border-bottom: 2px solid  var(--border-color);
-  bottom: -1px;
-  position: relative;
-  list-style: none;
-  padding: 6px 12px;
-  cursor: pointer;
-  flex-grow: 1;
-  background: var(--disabled-background);
-  color: var(--disabled-foreground);
-  text-align: center;
-}
-
-.react-tabs__tab--selected {
-  background: var(--background-color);
-  // border-color: var(--border-color);
-  color: var(--text-color);
-  border-radius: 5px 5px 0 0;
-  border-bottom: 2px solid var(--text-color);
-  cursor: default;
-}
-
-.react-tabs__tab--disabled {
-  color: #5a5a5a;
-  cursor: default;
-}
-
-.react-tabs__tab:focus {
-  //box-shadow: 0 0 5px hsl(208, 99%, 50%);
-  //border-color: hsl(208, 99%, 50%);
-  outline: none;
-}
-
-.react-tabs__tab:focus:after {
-  content: '';
-  position: absolute;
-  height: 5px;
-  left: -4px;
-  right: -4px;
-  bottom: -5px;
-  background: var(--background-color);
-}
-
-.react-tabs__tab-panel {
-  display: none;
-  background: black;
-}
-
-.react-tabs__tab-panel--selected {
-  display: block;
 }
