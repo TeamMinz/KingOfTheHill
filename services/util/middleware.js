@@ -1,3 +1,4 @@
+const {StatusCodes} = require('http-status-codes');
 const {SECRET} = require('./options');
 const jwt = require('jsonwebtoken');
 const express = require('express');
@@ -11,7 +12,7 @@ const {getQueue} = require('../controller/queue');
  */
 function authorizeHeader(req, res, next) {
   if (!req.headers.authorization) {
-    // TODO sent appropriate response code.
+    res.status(StatusCodes.UNAUTHORIZED).send('No JWT sent with request.');
     return;
   }
 
@@ -24,7 +25,7 @@ function authorizeHeader(req, res, next) {
     jwt.verify(token, SECRET, function(err, payload) {
       if (err) {
         console.log(err);
-        res.status(401).send('Failed to authorize JWT token.');
+        res.status(StatusCodes.UNAUTHORIZED).send('Failed to authorize JWT token.');
         return;
       }
 
@@ -33,7 +34,7 @@ function authorizeHeader(req, res, next) {
       next();
     });
   } else {
-    res.status(401).send('Failed to authorize JWT token.');
+    res.status(StatusCodes.UNAUTHORIZED).send('Failed to authorize JWT token.');
     return;
   }
 }
@@ -49,7 +50,7 @@ function isBroadcaster(req, res, next) {
   if (req.twitch.role == 'broadcaster') {
     next();
   } else {
-    res.sendStatus(401);
+    res.sendStatus(StatusCodes.FORBIDDEN);
   }
 }
 /**
@@ -64,7 +65,7 @@ async function isQueueOpen(req, res, next) {
   const currentQueue = getQueue(channelId);
 
   if (!(await currentQueue.isOpen())) {
-    res.sendStatus(500);
+    res.sendStatus(StatusCodes.NOT_ALLOWED);
     return;
   }
 
