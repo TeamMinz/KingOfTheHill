@@ -2146,6 +2146,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-import-resolver-alias@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "eslint-import-resolver-alias@npm:1.1.2"
+  peerDependencies:
+    eslint-plugin-import: ">=1.4.0"
+  checksum: 115d2b221e000a3be81bc1cf716714f2fce8f87679984a4f993735c955de4001356e6ca426f1edbb3013a8bc7ea5da590dfe53b0700700b3a3e6a20be30a2482
+  languageName: node
+  linkType: hard
+
 "eslint-import-resolver-node@npm:*, eslint-import-resolver-node@npm:^0.3.4":
   version: 0.3.4
   resolution: "eslint-import-resolver-node@npm:0.3.4"
@@ -3569,6 +3578,7 @@ fsevents@~2.3.1:
     enzyme: ^3.11.0
     eslint: ^7.28.0
     eslint-config-airbnb: ^18.2.1
+    eslint-import-resolver-alias: ^1.1.2
     eslint-import-resolver-node: ^0.3.4
     eslint-plugin-import: ^2.23.4
     eslint-plugin-jsx-a11y: ^6.4.1
