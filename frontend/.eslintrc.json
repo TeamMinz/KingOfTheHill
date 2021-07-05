@@ -11,19 +11,14 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["react", "eslint-import-resolver-alias"],
+  "plugins": ["react"],
   "rules": {
-    "react/jsx-props-no-spreading": 0
-  },
-  "settings": { 
-    "import/resolver": {
-      "alias": {
-        "map": [
-          ["components", "src/components/*"],
-          ["util", "src/util/*"],
-          ["assets", "assets/*"]
-        ]
+    "react/jsx-props-no-spreading": 0,
+    "import/no-unresolved": [
+      2,
+      {
+        "ignore": ["@util/*", "@components/*", "@assets/"]
       }
-    }
+    ]
   }
 }
