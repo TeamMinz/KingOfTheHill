@@ -1,8 +1,0 @@
-{
-  "devDependencies": {
-    "babel-plugin-inline-react-svg": "^2.0.1"
-  },
-  "dependencies": {
-    "@svgr/webpack": "^5.5.0"
-  }
-}
