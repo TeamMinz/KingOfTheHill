@@ -11,6 +11,7 @@ import {
   StyledOverlayDivider,
   StyledOverlayTitle,
 } from './OverlayComponent.style';
+import LeaderboardView from './Leaderboard/LeaderboardView';
 
 const LeaderboardComponent = () => {
   const ctx = useContext(QueueContext);
@@ -39,7 +40,9 @@ const LeaderboardComponent = () => {
     if (overlayRef && overlayRef.current) {
       overlayRef.current.addEventListener('transitionend', updateLeaderboardState);
       return () => {
-        overlayRef.current.removeEventListener('transitionend', updateLeaderboardState);
+        if (overlayRef && overlayRef.current) {
+          overlayRef.current.removeEventListener('transitionend', updateLeaderboardState);
+        }
       };
     }
   }, [ctx.finishedLoading, LeaderboardState]);
@@ -71,6 +74,7 @@ const LeaderboardComponent = () => {
           <StyledOverlayTitle>Leaderboard</StyledOverlayTitle>
         </StyledOverlayHeader>
         <StyledOverlayDivider />
+        <LeaderboardView />
       </StyledOverlayInner>
     </StyledOverlayContainer>
   );

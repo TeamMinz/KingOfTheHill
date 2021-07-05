@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
   BASE_URL = 'http://localhost:8000';
 }
 
-console.log(`Using backend: ${BASE_URL}`);
+console.info(`Using backend: ${BASE_URL}`);
 
 /**
  * Helper class for authentication against an EBS service.

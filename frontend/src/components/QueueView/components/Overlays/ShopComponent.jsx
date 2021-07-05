@@ -39,7 +39,9 @@ const ShopComponent = () => {
     if (overlayRef && overlayRef.current) {
       overlayRef.current.addEventListener('transitionend', updateShopState);
       return () => {
-        overlayRef.current.removeEventListener('transitionend', updateShopState);
+        if (overlayRef && overlayRef.current) {
+          overlayRef.current.removeEventListener('transitionend', updateShopState);
+        }
       };
     }
   }, [ctx.finishedLoading, ShopState]);

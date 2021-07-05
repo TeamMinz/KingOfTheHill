@@ -37,15 +37,13 @@ const QueueComponent = () => {
       })
       .then((resp) => {
         if (!resp.ok) {
-          // TODO: log error.
-          console.log('Kick failed');
+          console.info('Kick failed'); // TODO: Add some better logging maybe? Show a message or something? Idk.
         } else {
-          console.log('kick successful');
+          console.info('kick successful');
         }
       })
       .catch((err) => {
-        // TODO: log error.
-        console.log(err);
+        console.error(err);
       });
   };
 

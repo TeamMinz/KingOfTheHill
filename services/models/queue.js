@@ -32,12 +32,7 @@ class QueueModel {
    */
   async push(challenger) {
     if (production) {
-      const resp =
-        await redis
-            .rpush(
-                this._key,
-                JSON.stringify(challenger),
-            );
+      const resp = await redis.rpush(this._key, JSON.stringify(challenger));
       return resp;
     } else {
       return this._debugValue[this._key].push(JSON.stringify(challenger));
@@ -51,11 +46,10 @@ class QueueModel {
    */
   async shift() {
     if (production) {
-      const resp =
-        await redis.lpop(this._key);
+      const resp = await redis.lpop(this._key);
       return JSON.parse(resp);
     } else {
-      const resp = this._debugValue[this._key].pop();
+      const resp = this._debugValue[this._key].shift();
       return JSON.parse(resp);
     }
   }
@@ -68,8 +62,7 @@ class QueueModel {
    */
   async remove(userId) {
     if (production) {
-      const resp =
-        await redis.removeUser(this._key, userId);
+      const resp = await redis.removeUser(this._key, userId);
 
       return JSON.parse(resp);
     } else {
@@ -122,10 +115,7 @@ class QueueModel {
     }
 
     if (production) {
-      await redis
-          .insertAt(this._key,
-              index,
-              JSON.stringify(challenger));
+      await redis.insertAt(this._key, index, JSON.stringify(challenger));
     } else {
       this._debugValue[this._key].splice(index, 0, JSON.stringify(challenger));
     }
