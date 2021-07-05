@@ -65,7 +65,7 @@ async function isQueueOpen(req, res, next) {
   const currentQueue = getQueue(channelId);
 
   if (!(await currentQueue.isOpen())) {
-    res.sendStatus(StatusCodes.NOT_ALLOWED);
+    res.sendStatus(StatusCodes.FORBIDDEN);
     return;
   }
 

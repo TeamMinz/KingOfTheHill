@@ -8,13 +8,14 @@ const LeaderboardView = () => {
     if (!ctx.finishedLoading) return;
 
     ctx.auth
-      .makeCall('/leaderboard')
-      .then((resp) => {
-        console.log(resp);
+      .makeCall('/leaderboard/')
+      .then((resp) => resp.json())
+      .then((json) => {
+        console.log(json);
       })
       .catch((err) => {
         console.error('Error fetching leaderboard state.');
-        console.debug(err);
+        console.log(err);
       });
   }, [ctx.finishedLoading]);
 
