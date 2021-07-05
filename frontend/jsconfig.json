@@ -6,5 +6,6 @@
       "@util/*": ["src/util/*"],
       "@assets/*": ["assets/*"]
     }
-  }
+  },
+  "exclude": ["node_modules", "dist"]
 }
