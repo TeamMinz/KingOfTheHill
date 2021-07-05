@@ -22,7 +22,11 @@ const QueueView = () => {
   const [Queue, setQueue] = useState(null);
   const [CurrentMatchup, setCurrentMatchup] = useState(null);
   const [CurrentChampion, setCurrentChampion] = useState(null);
-  const [ShopState, setShopState] = useState({ shopOpen: false, buttonX: 0, buttonY: 0 });
+  const [ShopState, setShopState] = useState({
+    shopOpen: false,
+    buttonX: 0,
+    buttonY: 0,
+  });
   const [LeaderboardState, setLeaderboardState] = useState({
     leaderboardOpen: false,
     buttonX: 0,
