@@ -17,7 +17,7 @@ const production = process.env.NODE_ENV == 'production';
  */
 class LeaderboardModel {
   /**
-   * @param channelId The id of the channel who's leaderboard this model represents.
+   * @param {string | number} channelId The id of the channel who's leaderboard this model represents.
    */
   constructor(channelId) {
     this._channeldId = channelId;

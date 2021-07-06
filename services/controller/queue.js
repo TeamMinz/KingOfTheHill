@@ -6,11 +6,18 @@ const {QueueModel} = require('../models/queue');
  * @property {string} displayName The display name of the user.
  * @property {string | number} userId the id of the user.
  */
+
+/**
+ * Controller class for queues.
+ *
+ * @class
+ * @public
+ */
 class Queue {
   /**
-   * Constructor
+   * Create a Queue for the specified channel.
    *
-   * @param {string} channelId the channel that this queue belongs to.
+   * @param {string} channelId twitch channel id of the channel who's queue this represents.
    */
   constructor(channelId) {
     this._model = new QueueModel(channelId);
@@ -19,7 +26,7 @@ class Queue {
     this._isOpen = false;
   }
   /**
-   * Determines whether a queue contains a specified person.
+   * Determines whether this queue contains a specified person.
    *
    * @param {string | number} userId The person to search for.
    * @returns {boolean} true if person is in queue otherwise false.
@@ -28,14 +35,15 @@ class Queue {
     return (await this.getPosition(userId)) != -1;
   }
   /**
-   * Searches a queue for a person.
+   * Searches this queue for a person.
    *
    * @param {string} userId The user to search for.
    * @returns {number} The current position in the queue or -1 if not in queue.
    */
   async getPosition(userId) {
-    return (await this._model.getValue()).findIndex((challenger) =>
-      (challenger.userId == userId || challenger.opaqueUserId == userId));
+    return (await this._model.getValue()).findIndex(
+        (challenger) => challenger.userId == userId || challenger.opaqueUserId == userId,
+    );
   }
   /**
    * Adds a challenger to the back of the queue.

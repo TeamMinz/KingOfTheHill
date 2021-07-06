@@ -1,8 +1,10 @@
-import { useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import QueueContext from '@util/QueueContext';
 
 const LeaderboardView = () => {
   const ctx = useContext(QueueContext);
+
+  const [LeaderboardList, setLeaderboardList] = useState([]);
 
   useEffect(() => {
     if (!ctx.finishedLoading) return;
@@ -11,7 +13,7 @@ const LeaderboardView = () => {
       .makeCall('/leaderboard/')
       .then((resp) => resp.json())
       .then((json) => {
-        console.log(json);
+        setLeaderboardList(json);
       })
       .catch((err) => {
         console.error('Error fetching leaderboard state.');
