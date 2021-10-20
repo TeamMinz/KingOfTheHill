@@ -34,14 +34,18 @@ class Leaderboard {
    * @returns {number} number of wins to beat, in order to get on the leaderboard.
    */
   async getWinThreshold() {
-    return await this._model.getWinThreshold();
+    const maxSize = await this._model.getMaxSize();
+    const leaderboard = await this._model.getValue();
+
+    if (leaderboard.length < maxSize) return 0;
+    return leaderboard[maxSize - 1].score;
   }
 
   /**
    * Empties the leaderboard.
    */
   async clearLeaderboard() {
-    await this._model.clear();
+    await this._model.setValue([]);
   }
 
   /**
@@ -51,8 +55,14 @@ class Leaderboard {
    * @returns {boolean} whether the entry was added to the leaderboard or not.
    */
   async addEntry(entry) {
-    if (entry.score > await this._model.getWinThreshold()) {
-      await this._model.addLeaderboardEntry(entry);
+    const winThreshold = await this.getWinThreshold();
+    const maxSize = await this._model.getMaxSize();
+    if (entry.score > winThreshold) {
+      let leaderboard = await this._model.getValue();
+
+      leaderboard.push(entry);
+      leaderboard.sort((a, b) => b.score - a.score); // Sort descending by score
+      await this._model.setValue(leaderboard.slice(0, maxSize));
     }
   }
 }

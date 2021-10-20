@@ -31,10 +31,27 @@ class LeaderboardModel {
    */
   async getValue() {
     if (production) {
-      return;
+      const resp = await redis.get(this._key);
+      if (resp) {
+        return JSON.parse(resp);
+      }
+      return [];
     } else {
       if (!(this._key in this._debugValue)) return [];
       return this._debugValue[this._key];
+    }
+  }
+
+  /**
+   * Sets the value of the leaderboard in the database.
+   * @param {LeaderboardEntry[]} value The new state of the leaderboard. 
+   */
+  async setValue(value) {
+    if (production) {
+      const enc_arr = JSON.stringify(value);
+      await redis.set(this._key, enc_arr);
+    } else {
+      this._debugValue[this._key] = value;
     }
   }
 
@@ -43,7 +60,12 @@ class LeaderboardModel {
    */
   async getMaxSize() {
     if (production) {
-      return;
+      const resp = await redis.get(this._maxSizeKey);
+      
+      if (resp) {
+        return parseInt(resp);
+      } 
+      return 10;
     } else {
       if (!(this._maxSizeKey in this._debugValue)) return 10;
       return this._debugValue[this._maxSizeKey];
@@ -57,77 +79,11 @@ class LeaderboardModel {
    */
   async setMaxSize(maxSize) {
     if (production) {
-      return;
+      if (maxSize > 100) maxSize = 100;
+      await redis.set(this._maxSizeKey, maxSize);
     } else {
       if (maxSize > 100) maxSize = 100;
       this._debugValue[this._maxSizeKey] = maxSize;
-    }
-  }
-
-  /**
-   * The minimum number of wins required to be added to the leaderboard.
-   *
-   * @returns {number} Number of wins to exceed in order to be added to the leaderboard.
-   */
-  async getWinThreshold() {
-    if (production) {
-      return;
-    } else {
-      if (!(this._key in this._debugValue)) return 0;
-
-      const leaderboard = await this.getValue();
-      const maxSize = await this.getMaxSize();
-
-      if (leaderboard.length < maxSize) {
-        return 0;
-      }
-
-      return leaderboard[maxSize - 1].score;
-    }
-  }
-
-  /**
-   * Add an entry to the leaderboard.
-   * Fails if the entry doesn't meet the minimum leaderboard threshold.
-   *
-   * @param {LeaderboardEntry} entry The entry to add to the leaderboard.
-   */
-  async addLeaderboardEntry(entry) {
-    if (production) {
-      return;
-    } else {
-      // NOTE: The produciton & dev versions of this action are implemented completely differently.
-      // Do not look here for insight into how the production code works.
-      if (!(this._key in this._debugValue)) {
-        this._debugValue[this._key] = [];
-      }
-
-      let leaderboard = this._debugValue[this._key];
-      const maxSize = await this.getMaxSize();
-
-      if (leaderboard.length >= maxSize) {
-        if (entry.score <= leaderboard[maxSize - 1].score) return;
-      }
-
-      leaderboard.push(entry);
-      leaderboard.sort((a, b) => {
-        return b.score - a.score;
-      });
-
-      this._debugValue[this._key] = leaderboard;
-    }
-  }
-
-  /**
-   * Empties the leaderboard.
-   */
-  async clear() {
-    if (production) {
-      return;
-    } else {
-      if (!(this._key in this._debugValue)) return;
-
-      this._debugValue[this._key] = [];
     }
   }
 }

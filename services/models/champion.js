@@ -5,7 +5,7 @@ const production = process.env.NODE_ENV == 'production';
 const redis = getRedis();
 
 /**
- *
+ * Class for dealing with updating the champions in our redis db.
  */
 class ChampionModel {
   /**
