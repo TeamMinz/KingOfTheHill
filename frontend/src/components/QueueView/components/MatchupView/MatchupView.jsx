@@ -34,12 +34,12 @@ const MatchupView = () => {
             👑
             {' '}
             {ctx.currentChampion.user.displayName}
-            {' | '}
-            {ctx.currentChampion.winStreak && `${ctx.currentChampion.winStreak} Wins`}
+            {ctx.currentChampion.winStreak ? ' | ' : ''}
+            {ctx.currentChampion.winStreak ? `${ctx.currentChampion.winStreak} Wins` : ''}
             {' '}
           </MatchupChampion>
           <MatchupVersus>vs</MatchupVersus>
-          <MatchupChallenger>{ctx.currentMatchup.challenger.user.displayName}</MatchupChallenger>
+          <MatchupChallenger>{ctx.currentMatchup.challenger.displayName}</MatchupChallenger>
         </StyledMatchup>
       );
     }
@@ -49,8 +49,8 @@ const MatchupView = () => {
           👑
           {' '}
           {ctx.currentChampion.user.displayName}
-          {' | '}
-          {ctx.currentChampion.winStreak && `${ctx.currentChampion.winStreak} Wins`}
+          {ctx.currentChampion.winStreak ? ' | ' : ''}
+          {ctx.currentChampion.winStreak ? `${ctx.currentChampion.winStreak} Wins` : ''}
           {' '}
         </MatchupChampion>
         <MatchupCTA>Stands alone undefeated.</MatchupCTA>
