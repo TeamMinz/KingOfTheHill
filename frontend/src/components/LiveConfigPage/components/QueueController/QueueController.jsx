@@ -125,8 +125,8 @@ const QueueController = () => {
       : -1;
 
     const queueEntries = ctx.queue
-      ? ctx.queue.queue.map((challenger, index) => (
-        <li key={index}>
+      ? ctx.queue.queue.map((challenger) => (
+        <li key={challenger.userId}>
           {challenger.displayName}
           {ctx.auth.isModerator() && (
           <StyledKickButton

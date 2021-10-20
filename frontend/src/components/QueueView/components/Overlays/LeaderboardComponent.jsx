@@ -19,20 +19,20 @@ const LeaderboardComponent = () => {
   const [LeaderboardState, setLeaderboardState] = useState('closed');
 
   useEffect(() => {
-    if (ctx.leaderboardState.leaderboardOpen && LeaderboardState == 'closed') {
+    if (ctx.leaderboardState.leaderboardOpen && LeaderboardState === 'closed') {
       setLeaderboardState('opening');
-    } else if (!ctx.leaderboardState.leaderboardOpen && LeaderboardState == 'open') {
+    } else if (!ctx.leaderboardState.leaderboardOpen && LeaderboardState === 'open') {
       setLeaderboardState('closing');
     }
   });
 
   useEffect(() => {
     const updateLeaderboardState = (e) => {
-      if (!(e.srcElement == overlayRef.current && e.propertyName == 'clip-path')) return;
+      if (!(e.srcElement === overlayRef.current && e.propertyName === 'clip-path')) return;
 
-      if (LeaderboardState == 'opening') {
+      if (LeaderboardState === 'opening') {
         setLeaderboardState('open');
-      } else if (LeaderboardState == 'closing') {
+      } else if (LeaderboardState === 'closing') {
         setLeaderboardState('closed');
       }
     };
@@ -45,6 +45,7 @@ const LeaderboardComponent = () => {
         }
       };
     }
+    return () => {};
   }, [ctx.finishedLoading, LeaderboardState]);
 
   return (
@@ -63,7 +64,7 @@ const LeaderboardComponent = () => {
           <StyledCloseButton
             onClick={() => {
               ctx.setLeaderboardState({
-                shopOpen: false,
+                leaderboardOpen: false,
                 buttonX: ctx.leaderboardState.buttonX,
                 buttonY: ctx.leaderboardState.buttonY,
               });
@@ -74,7 +75,7 @@ const LeaderboardComponent = () => {
           <StyledOverlayTitle>Leaderboard</StyledOverlayTitle>
         </StyledOverlayHeader>
         <StyledOverlayDivider />
-        <LeaderboardView />
+        <LeaderboardView open={LeaderboardState === 'open'} />
       </StyledOverlayInner>
     </StyledOverlayContainer>
   );

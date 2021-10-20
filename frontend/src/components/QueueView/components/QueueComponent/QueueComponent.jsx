@@ -73,16 +73,16 @@ const QueueComponent = () => {
       </KickButton>
     );
 
-    if (challenger.opaqueUserId == ctx.auth.getOpaqueId()) {
+    if (challenger.opaqueUserId === ctx.auth.getOpaqueId()) {
       return (
-        <HighlightedUserEntry key={index}>
+        <HighlightedUserEntry key={challenger.userId}>
           {indexComp}
           {challenger.displayName}
         </HighlightedUserEntry>
       );
     }
     return (
-      <StyledUserEntry key={index}>
+      <StyledUserEntry key={challenger.userId}>
         {indexComp}
         {challenger.displayName}
         {kickButton}
