@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import {
   CollapsibleHeader,
   ToggleButton,
@@ -24,6 +25,16 @@ const Collapsible = ({ children, title, isOpen }) => {
       <CollapsibleBody open={IsOpen}>{children}</CollapsibleBody>
     </div>
   );
+};
+
+Collapsible.propTypes = {
+  children: PropTypes.oneOf(PropTypes.arrayOf(PropTypes.node), PropTypes.node).isRequired,
+  title: PropTypes.string.isRequired,
+  isOpen: PropTypes.bool,
+};
+
+Collapsible.defaultProps = {
+  isOpen: false,
 };
 
 export default Collapsible;

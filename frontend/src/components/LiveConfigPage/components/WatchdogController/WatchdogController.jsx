@@ -41,8 +41,10 @@ const WatchdogController = ({ settings = {}, onChange = () => {} }) => {
 };
 
 WatchdogController.propTypes = {
-  settings: PropTypes.object,
-  onChange: PropTypes.func,
+  settings: PropTypes.shape({
+    enableWatchdog: PropTypes.bool.isRequired,
+  }).isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
 export default WatchdogController;
