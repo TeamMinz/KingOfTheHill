@@ -86,6 +86,14 @@ class LeaderboardModel {
       this._debugValue[this._maxSizeKey] = maxSize;
     }
   }
+
+  /**
+   * Deletes any keys associated with this model.
+   */
+  async delete() {
+    await redis.del(this._key);
+    await redis.del(this._maxSizeKey);
+  }
 }
 
 module.exports = LeaderboardModel;

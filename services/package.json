@@ -9,8 +9,14 @@
     "url": "https://github.com/TeamMinz/QueueExtension",
     "directory": "services"
   },
+  "jest": {
+    "setupFiles": [
+      "dotenv/config"
+    ]
+  },
   "scripts": {
-    "test": "jest",
+    "test-no-redis": "jest",
+    "test": "NODE_ENV=production jest",
     "dev": "node backend.js",
     "prod": "NODE_ENV=production node backend.js"
   },
