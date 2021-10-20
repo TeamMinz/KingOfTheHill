@@ -9,7 +9,7 @@ const redis = getRedis();
  */
 class ChampionModel {
   /**
-   * @param channelId
+   * @param {string | number} channelId
    */
   constructor(channelId) {
     this._channelId = channelId;
@@ -20,7 +20,7 @@ class ChampionModel {
   /**
    * Sets the value of the champion.
    *
-   * @param value the value of the next champion.
+   * @param {import('../controller/champion').Champion} value the value of the next champion.
    */
   async setValue(value) {
     const strValue = JSON.stringify(value);
@@ -33,7 +33,7 @@ class ChampionModel {
   }
 
   /**
-   * @returns The current champion.
+   * @returns {import('../controller/champion').Champion} The current champion.
    */
   async getValue() {
     if (production) {

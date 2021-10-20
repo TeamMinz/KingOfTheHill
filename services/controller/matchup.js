@@ -7,6 +7,12 @@ const channelMessages = {};
 const DEFAULT_MESSAGE = 'You\'re up! Connect to the match now!';
 
 /**
+ * @typedef {object} Matchup
+ * @property {Challenger} champion champion in this matchup
+ * @property {Challenger} challenger challenger in this matchup.
+ */
+
+/**
  * @param {*} channelId the id of the channel who's matchup to broadcast.
  */
 async function broadcastMatchup(channelId) {
@@ -21,8 +27,8 @@ async function broadcastMatchup(channelId) {
 /**
  * Gets the current matchup for the specified chanel.
  *
- * @param {*} channelId the channel who's matchup to get
- * @returns {object} The current matchup, null if none.
+ * @param {string | number} channelId the channel who's matchup to get
+ * @returns {Matchup} The current matchup, null if none.
  */
 async function getMatchup(channelId) {
   if (!(channelId in channelMatchups)) {
@@ -35,8 +41,8 @@ async function getMatchup(channelId) {
 /**
  * Sets the current matchup then broadcasts the change.
  *
- * @param {*} channelId the channel who's matchup to set.
- * @param {*} matchup the matchup to set.
+ * @param {string | number} channelId the channel who's matchup to set.
+ * @param {Matchup} matchup the matchup to set.
  */
 async function setMatchup(channelId, matchup) {
   if (!(channelId in channelMatchups)) {
@@ -49,8 +55,8 @@ async function setMatchup(channelId, matchup) {
 }
 
 /**
- * @param channelId
- * @param message
+ * @param {string | number} channelId The channel whos selection message to set.
+ * @param {string} message The message to set.
  */
 async function setSelectionMessage(channelId, message) {
   if (!(channelId in channelMessages)) {
@@ -61,7 +67,7 @@ async function setSelectionMessage(channelId, message) {
 }
 
 /**
- * @param channelId The channel whos selection message to update.
+ * @param {string | number} channelId The channel whos selection message to update.
  */
 async function getSelectionMessage(channelId) {
   if (!(channelId in channelMessages)) {

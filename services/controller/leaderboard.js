@@ -51,7 +51,7 @@ class Leaderboard {
    * @returns {boolean} whether the entry was added to the leaderboard or not.
    */
   async addEntry(entry) {
-    if (entry.score > this._model.getWinThreshold()) {
+    if (entry.score > await this._model.getWinThreshold()) {
       await this._model.addLeaderboardEntry(entry);
     }
   }

@@ -20,7 +20,7 @@ class LeaderboardModel {
    * @param {string | number} channelId The id of the channel who's leaderboard this model represents.
    */
   constructor(channelId) {
-    this._channeldId = channelId;
+    this._channelId = channelId;
     this._debugValue = {};
     this._key = `${this.channelId}_leaderboard`;
     this._maxSizeKey = `${this.channelId}_leaderboard_max_size`;
@@ -69,7 +69,7 @@ class LeaderboardModel {
    *
    * @returns {number} Number of wins to exceed in order to be added to the leaderboard.
    */
-  async getLeaderboardThreshold() {
+  async getWinThreshold() {
     if (production) {
       return;
     } else {
@@ -98,12 +98,11 @@ class LeaderboardModel {
     } else {
       // NOTE: The produciton & dev versions of this action are implemented completely differently.
       // Do not look here for insight into how the production code works.
-      // These two methods of execution will have different time complexities as well.
       if (!(this._key in this._debugValue)) {
         this._debugValue[this._key] = [];
       }
 
-      const leaderboard = await this.getValue();
+      let leaderboard = this._debugValue[this._key];
       const maxSize = await this.getMaxSize();
 
       if (leaderboard.length >= maxSize) {

@@ -6,10 +6,8 @@ const {getLeaderboard} = require('../controller/leaderboard');
 
 leaderboard.get('/', async (req, res) => {
   const {channel_id: channelId} = req.twitch;
-
-  const board = getLeaderboard(channelId);
-
-  res.json(await board.getAsArray());
+  const leaderboard = await getLeaderboard(channelId);
+  res.json(await leaderboard.getAsArray());
 });
 
 leaderboard.delete('/', isBroadcaster, async (req, res) => {
