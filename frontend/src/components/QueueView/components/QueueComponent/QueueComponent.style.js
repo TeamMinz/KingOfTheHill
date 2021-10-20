@@ -88,7 +88,6 @@ export const HighlightedUserEntry = styled.div`
   font-weight: 400;
   background-color: var(--secondary-background-color);
   color: var(--secondary-text-color);
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.5);
   z-index: 2000;
 `;
 

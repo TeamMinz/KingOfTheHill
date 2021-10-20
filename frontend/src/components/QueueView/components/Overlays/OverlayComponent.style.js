@@ -85,8 +85,6 @@ export const StyledOverlayTitle = styled.span`
   text-align: center;
 
   padding: 0.3em;
-
-  text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.4);
 `;
 
 export const StyledCloseButton = styled.button`
@@ -116,7 +114,8 @@ export const StyledCloseButton = styled.button`
 
   cursor: pointer;
 
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.12),
+    0 4px 4px rgba(0, 0, 0, 0.12);
 
   > svg {
     width: 1em;
@@ -127,7 +126,8 @@ export const StyledCloseButton = styled.button`
 
   &:hover {
     transform: translateY(calc(-50% - 0.25em));
-    box-shadow: 0px calc(2px + 0.25em) 2px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.12),
+      0 4px 4px rgba(0, 0, 0, 0.12);
   }
 
   &:active {
@@ -142,5 +142,6 @@ export const StyledOverlayDivider = styled.div`
   height: 1.5em;
   width: 100%;
 
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 0.3px 0.3px rgba(0, 0, 0, 0.057), 0px 1.1px 0.9px rgba(0, 0, 0, 0.083),
+    0px 5px 4px rgba(0, 0, 0, 0.14);
 `;
