@@ -53,12 +53,7 @@ async function setChampion(channelId, champion) {
   if (currentChampion && (!champion || champion.user.userId != currentChampion.user.userId)) {
     const leaderboard = getLeaderboard(channelId);
 
-    console.log("Attempting leaderboard entry");
-    console.log(currentChampion);
-    console.log(await leaderboard.getWinThreshold());
-
     if (currentChampion.winStreak > await leaderboard.getWinThreshold()) {
-      console.log("ASDF");
       await leaderboard.addEntry({
         score: currentChampion.winStreak,
         userId: currentChampion.user.userId,
