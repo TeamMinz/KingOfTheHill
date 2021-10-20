@@ -39,7 +39,7 @@ export const KickButton = styled.button`
 
   &:hover {
     transform: translateY(-0.2rem);
-    box-shadow: black 0.0rem 0.2rem 0px;
+    box-shadow: black 0rem 0.2rem 0px;
     opacity: 1;
   }
 `;
@@ -53,7 +53,7 @@ export const StyledSoftEdge = styled.div`
 
 export const StyledListContainer = styled.div`
   position: relative;
-  
+
   margin-top: 1em;
   margin-left: 4px;
   margin-right: 4px;
@@ -69,7 +69,7 @@ export const StyledList = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
   color: var(--primary-text-color);
-  -ms-overflow-style: none;  
+  -ms-overflow-style: none;
   scrollbar-width: none;
   &::-webkit-scrollbar {
     display: none;
@@ -88,7 +88,6 @@ export const HighlightedUserEntry = styled.div`
   font-weight: 400;
   background-color: var(--secondary-background-color);
   color: var(--secondary-text-color);
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.5);
   z-index: 2000;
 `;
 
@@ -98,7 +97,6 @@ export const StyledUserEntry = styled.div`
   flex-direction: row;
   padding: 0.1em 1.5em;
   font-weight: 400;
-  text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.5);
 `;
 
 export const StyledUserIndex = styled.span`

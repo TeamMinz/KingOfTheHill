@@ -18,7 +18,8 @@ export const StyledMatchup = styled.div`
 
   padding: 0.3em;
 
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 0.3px 0.3px rgba(0, 0, 0, 0.057), 0px 1.1px 0.9px rgba(0, 0, 0, 0.083),
+    0px 5px 4px rgba(0, 0, 0, 0.14);
 `;
 
 export const StyledHeader = styled.div`
@@ -33,8 +34,6 @@ export const StyledHeader = styled.div`
   text-align: center;
 
   padding: 0.3em;
-
-  text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.4);
 `;
 
 export const MatchupCTA = styled.div`
