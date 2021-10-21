@@ -1,8 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Collapsible from '../Collapsible/Collapsible';
-import { StyledCheckbox, StyledFormRow, Well } from '../../LiveConfigPage.style';
-import { StyledWatchdogController, StyledWatchdogLabel } from './WatchdogController.style';
+import {
+  StyledCheckbox,
+  StyledFormRow,
+  StyledFormLabel,
+  StyledFormContainer,
+  Well,
+} from '../../LiveConfigPage.style';
 
 /**
  *  Watchdog controller component for the liveconfig.
@@ -20,11 +25,9 @@ const WatchdogController = ({ settings = {}, onChange = () => {} }) => {
   return (
     <Well>
       <Collapsible title="Chatbot Settings" isOpen>
-        <StyledWatchdogController>
+        <StyledFormContainer>
           <StyledFormRow>
-            <StyledWatchdogLabel htmlFor="ChatCommandsCheckBox">
-              Enable chat commands?
-            </StyledWatchdogLabel>
+            <StyledFormLabel htmlFor="ChatCommandsCheckBox">Enable chat commands?</StyledFormLabel>
             <StyledCheckbox
               id="ChatCommandsCheckBox"
               type="checkbox"
@@ -34,7 +37,7 @@ const WatchdogController = ({ settings = {}, onChange = () => {} }) => {
               }}
             />
           </StyledFormRow>
-        </StyledWatchdogController>
+        </StyledFormContainer>
       </Collapsible>
     </Well>
   );
@@ -42,9 +45,15 @@ const WatchdogController = ({ settings = {}, onChange = () => {} }) => {
 
 WatchdogController.propTypes = {
   settings: PropTypes.shape({
-    enableWatchdog: PropTypes.bool.isRequired,
-  }).isRequired,
+    enableWatchdog: PropTypes.bool,
+  }),
   onChange: PropTypes.func.isRequired,
+};
+
+WatchdogController.defaultProps = {
+  settings: {
+    enableWatchdog: false,
+  },
 };
 
 export default WatchdogController;

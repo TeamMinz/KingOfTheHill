@@ -9,7 +9,6 @@ import {
 
 const Collapsible = ({ children, title, isOpen }) => {
   const [IsOpen, setOpen] = useState(isOpen);
-
   return (
     <div>
       <CollapsibleHeader>
@@ -28,7 +27,8 @@ const Collapsible = ({ children, title, isOpen }) => {
 };
 
 Collapsible.propTypes = {
-  children: PropTypes.oneOf(PropTypes.arrayOf(PropTypes.node), PropTypes.node).isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  children: PropTypes.any.isRequired,
   title: PropTypes.string.isRequired,
   isOpen: PropTypes.bool,
 };

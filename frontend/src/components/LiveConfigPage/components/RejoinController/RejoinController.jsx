@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Collapsible from '../Collapsible/Collapsible';
-import { StyledRejoinController } from './RejoinController.style';
 import {
   Well,
   StyledCheckbox,
   StyledFormRow,
   StyledNumberSpinner,
+  StyledFormContainer,
 } from '../../LiveConfigPage.style';
 /**
  * Rejoin Component for LiveConfig
@@ -25,7 +25,7 @@ const RejoinController = ({ settings = {}, onChange = () => {} }) => {
   return (
     <Well>
       <Collapsible title="Rejoin Settings" isOpen>
-        <StyledRejoinController>
+        <StyledFormContainer>
           <StyledFormRow>
             Automatically rejoin the queue?
             <StyledCheckbox
@@ -52,7 +52,7 @@ const RejoinController = ({ settings = {}, onChange = () => {} }) => {
               />
             </StyledFormRow>
           )}
-        </StyledRejoinController>
+        </StyledFormContainer>
       </Collapsible>
     </Well>
   );

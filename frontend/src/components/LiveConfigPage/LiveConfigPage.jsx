@@ -5,7 +5,7 @@ import QueueController from './components/QueueController/QueueController';
 import RejoinController from './components/RejoinController/RejoinController';
 import QueueContext from '../../util/QueueContext';
 import Authentication from '../../util/Authentication/Authentication';
-
+import LeaderboardController from './components/LeaderboardController/LeaderboardController';
 import WatchdogController from './components/WatchdogController/WatchdogController';
 import { StyledLiveConfigPage } from './LiveConfigPage.style';
 
@@ -122,12 +122,7 @@ const LiveConfigPage = () => {
   useEffect(() => {
     const twitch = window.Twitch ? window.Twitch.ext : null;
     if (FinishedLoading) {
-      console.log('Pushing updates!');
-      twitch.configuration.set(
-          'broadcaster',
-          '1.0.0',
-          JSON.stringify(ConfigSettings),
-      );
+      twitch.configuration.set('broadcaster', '1.0.0', JSON.stringify(ConfigSettings));
     }
   }, [ConfigSettings]);
 
@@ -169,6 +164,7 @@ const LiveConfigPage = () => {
           <RejoinController settings={ConfigSettings} onChange={setRejoinSettings} />
           <WatchdogController settings={ConfigSettings} onChange={setWatchdogSettings} />
           <QueueController />
+          <LeaderboardController />
         </QueueContext.Provider>
       </StyledLiveConfigPage>
     );
