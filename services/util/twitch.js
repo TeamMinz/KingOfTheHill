@@ -92,11 +92,11 @@ const getBroadcasterConfig = async (channelId) => {
       const version = resp.body[`broadcaster:${channelId}`].record.verison;
       return {version, content};
     } else {
-      return {};
+      return {version: null, content: {}};
     }
   } catch (e) {
     console.error(e);
-    return {};
+    return {version: null, content: {}};
   }
 };
 
