@@ -3,7 +3,13 @@
     "browser": true,
     "es2021": true
   },
-  "extends": ["eslint:recommended", "plugin:react/recommended", "airbnb"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@next/next/recommended",
+    "airbnb",
+    "airbnb/hooks"
+  ],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -12,6 +18,14 @@
     "sourceType": "module"
   },
   "plugins": ["react"],
+  "settings": {
+    "next": {
+      "rootDir": "./frontend"
+    },
+    "react": {
+      "version": "detect"
+    }
+  },
   "rules": {
     "react/jsx-props-no-spreading": 0,
     "import/no-unresolved": [
@@ -19,6 +33,10 @@
       {
         "ignore": ["@util/*", "@components/*", "@assets/"]
       }
+    ],
+    "react/function-component-definition": [
+      2,
+      { "namedComponents": "arrow-function" }
     ]
   }
 }

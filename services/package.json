@@ -18,26 +18,26 @@
   "license": "SEE LICENSE IN ../LICENSE",
   "devDependencies": {
     "cross-env": "^7.0.3",
-    "eslint": "^7.30.0",
+    "eslint": "^8.2.0",
     "eslint-config-google": "^0.14.0",
-    "eslint-plugin-jest": "^24.3.6",
-    "eslint-plugin-jsdoc": "^35.4.1",
+    "eslint-plugin-jest": "^25.2.4",
+    "eslint-plugin-jsdoc": "^37.0.3",
     "eslint-plugin-node": "^11.1.0",
-    "jest": "^27.0.6",
-    "prettier": "^2.3.2",
-    "prettier-eslint": "^12.0.0"
+    "jest": "^27.3.1",
+    "prettier": "^2.4.1",
+    "prettier-eslint": "^13.0.0"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "http-status-codes": "^2.1.4",
-    "ioredis": "^4.27.6",
+    "ioredis": "^4.28.0",
     "jsonwebtoken": "^8.5.1",
-    "pino-pretty": "^5.1.0",
+    "pino-pretty": "^7.2.0",
     "prop-types": "^15.7.2",
     "superagent": "^6.1.0",
     "twitch-js": "^2.0.0-beta.42",
-    "yargs": "^17.0.1"
+    "yargs": "^17.2.1"
   }
 }
