@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Rnd } from 'react-rnd';
+import Image from 'next/image';
 import logo from '../../../assets/logo.png';
 import {
   StyledOverlayContainer,
   StyledButton,
   StyledButtonWrapper,
   StyledExit,
+  StyledImage,
 } from './Overlay.style';
 import App from '../App/App';
 
@@ -58,7 +60,7 @@ const Overlay = () => {
     <StyledButtonWrapper popup={popup}>
       <StyledButton type="button" onClick={() => setShowApp(true)}>
         Join the Queue!
-        <img src={logo} alt="King of the Hill" />
+        <Image src={logo} alt="King of the Hill" height={50} width={50} />
       </StyledButton>
     </StyledButtonWrapper>
   );
