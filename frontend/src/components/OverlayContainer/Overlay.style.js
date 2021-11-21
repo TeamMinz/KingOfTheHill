@@ -41,7 +41,7 @@ export const StyledButton = styled.div`
     cursor: pointer;
   }
   img {
-    height: 50px;
-    padding: 5px;
+    height: 50px !important;
+    padding: 5px !important;
   }
 `;
