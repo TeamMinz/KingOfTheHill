@@ -39,7 +39,7 @@ const MatchupView = () => {
             {' '}
           </MatchupChampion>
           <MatchupVersus>vs</MatchupVersus>
-          <MatchupChallenger>{ctx.currentMatchup.challenger.user.displayName}</MatchupChallenger>
+          <MatchupChallenger>{ctx.currentMatchup.challenger.displayName}</MatchupChallenger>
         </StyledMatchup>
       );
     }
