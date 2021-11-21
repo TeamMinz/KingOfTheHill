@@ -2,13 +2,14 @@
 const queue = require('express').Router();
 const {ReasonPhrases, StatusCodes} = require('http-status-codes');
 const {broadcast} = require('../util/pubsub');
-const {resolveDisplayName, getBroadcasterConfig} = require('../util/twitch');
+const {resolveDisplayName, getBroadcasterConfig, getLiveChannels} = require('../util/twitch');
 const {getQueue, getAllQueues} = require('../controller/queue');
 const {getWatchdog} = require('../controller/watchdog');
 const {getMatchup, setMatchup} = require('../controller/matchup');
 const {getChampion, setChampion} = require('../controller/champion');
 const {isBroadcaster, isQueueOpen} = require('../util/middleware');
 const queueUpdateIntervalMs = 1000;
+const clearQueueIntervalMs = 600_000;
 
 // Set up our routes.
 queue.get('/get', async function(req, res) {
@@ -215,3 +216,15 @@ setInterval(async function() {
     }
   }
 }, queueUpdateIntervalMs);
+
+setInterval(async function() {
+  const liveChannels = await getLiveChannels();
+  const channelQueues = getAllQueues();
+  for (const channelId in channelQueues) {
+    if (!(channelId in liveChannels)) {
+      console.log('channelId ' + channelId + ' queue closed due to offline channel');
+      await channelQueues[channelId].closeQueue();
+    }
+  }
+  return liveChannels;
+}, clearQueueIntervalMs);

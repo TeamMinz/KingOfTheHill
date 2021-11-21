@@ -1,6 +1,6 @@
 const superagent = require('superagent');
 const jwt = require('jsonwebtoken');
-const {OWNER_ID, SECRET, CLIENT_ID} = require('./options');
+const {OWNER_ID, SECRET, CLIENT_ID, CLIENT_SECRET} = require('./options');
 
 const serverTokenDurationSec = 30;
 
@@ -23,6 +23,35 @@ const buildChannelAuth = (channelId) => {
   };
 
   return jwt.sign(payload, SECRET, {algorithm: 'HS256'});
+};
+
+/**
+ * Builds an authenticaion payload, that authenticates
+ * requests to twitch's pubsub & configuration apis.
+ *
+ * @returns {object} a App Access Token.
+ */
+const buildExtensionAuth = async () => {
+  try {
+    const payload = {
+      client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET,
+      grant_type: 'client_credentials',
+    };
+    const resp = await superagent.post('https://id.twitch.tv/oauth2/token').query(payload);
+
+    if (resp.ok) {
+      console.log('generated');
+      return resp.body.access_token;
+    } else {
+      console.log(resp);
+    }
+
+    return null;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
 };
 
 /**
@@ -78,17 +107,13 @@ async function resolveChannelName(channelId) {
 const getBroadcasterConfig = async (channelId) => {
   try {
     const resp = await superagent
-        .get(
-            `https://api.twitch.tv/extensions/${CLIENT_ID}/configurations/segments/broadcaster`,
-        )
+        .get(`https://api.twitch.tv/extensions/${CLIENT_ID}/configurations/segments/broadcaster`)
         .query({channel_id: channelId})
         .set('client-id', CLIENT_ID)
         .set('Content-Type', 'application/json')
         .set('Authorization', 'Bearer ' + buildChannelAuth(channelId));
     if (resp.ok) {
-      const content = JSON.parse(
-          resp.body[`broadcaster:${channelId}`].record.content,
-      );
+      const content = JSON.parse(resp.body[`broadcaster:${channelId}`].record.content);
       const version = resp.body[`broadcaster:${channelId}`].record.verison;
       return {version, content};
     } else {
@@ -100,10 +125,36 @@ const getBroadcasterConfig = async (channelId) => {
   }
 };
 
-module.exports =
-  {
-    buildChannelAuth,
-    resolveDisplayName,
-    getBroadcasterConfig,
-    resolveChannelName,
-  };
+/**
+ * Gets all of the channels currently live with our extension.
+ *
+ * @returns {any} a list of channel ids
+ */
+const getLiveChannels = async () => {
+  try {
+    const resp = await superagent
+        .get(`https://api.twitch.tv/helix/extensions/live`)
+        .query({extension_id: CLIENT_ID})
+        .set('Client-Id', CLIENT_ID)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + (await buildExtensionAuth()));
+    if (resp.ok) {
+      const content = resp.body.data.map((x) => x.broadcaster_id);
+      return content;
+    } else {
+      return null;
+    }
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};
+
+module.exports = {
+  buildChannelAuth,
+  buildExtensionAuth,
+  resolveDisplayName,
+  getBroadcasterConfig,
+  resolveChannelName,
+  getLiveChannels,
+};

@@ -36,8 +36,9 @@ function getOption(option, envOption) {
 const SECRET = Buffer.from(getOption('secret', 'EXT_SECRET'), 'base64');
 const OWNER_ID = getOption('ownerid', 'EXT_OWNER_ID');
 const CLIENT_ID = getOption('clientid', 'EXT_CLIENT_ID');
+const CLIENT_SECRET = getOption('clientsecret', 'EXT_CLIENT_SECRET');
 const EXT_BOT_OAUTH = getOption('oauth', 'EXT_BOT_OAUTH');
-const REDIS_HOST = (() =>{
+const REDIS_HOST = (() => {
   if (process.env.NODE_ENV == 'production') {
     try {
       const uri = getOption('redis', 'REDIS_URI');
@@ -54,6 +55,7 @@ module.exports = {
   SECRET,
   OWNER_ID,
   CLIENT_ID,
+  CLIENT_SECRET,
   EXT_BOT_OAUTH,
   REDIS_HOST,
 };
