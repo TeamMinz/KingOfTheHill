@@ -18,30 +18,33 @@ const LeaderboardComponent = () => {
   const [LeaderboardState, setLeaderboardState] = useState('closed');
 
   useEffect(() => {
-    if (ctx.leaderboardState.leaderboardOpen && LeaderboardState == 'closed') {
+    if (ctx.leaderboardState.leaderboardOpen && LeaderboardState === 'closed') {
       setLeaderboardState('opening');
-    } else if (!ctx.leaderboardState.leaderboardOpen && LeaderboardState == 'open') {
+    } else if (!ctx.leaderboardState.leaderboardOpen && LeaderboardState === 'open') {
       setLeaderboardState('closing');
     }
-  });
+  }, [LeaderboardState, ctx.leaderboardState.leaderboardOpen]);
 
   useEffect(() => {
     const updateLeaderboardState = (e) => {
-      if (!(e.srcElement == overlayRef.current && e.propertyName == 'clip-path')) return;
+      if (!(e.srcElement === overlayRef.current && e.propertyName === 'clip-path')) return;
 
-      if (LeaderboardState == 'opening') {
+      if (LeaderboardState === 'opening') {
         setLeaderboardState('open');
-      } else if (LeaderboardState == 'closing') {
+      } else if (LeaderboardState === 'closing') {
         setLeaderboardState('closed');
       }
     };
 
     if (overlayRef && overlayRef.current) {
-      overlayRef.current.addEventListener('transitionend', updateLeaderboardState);
+      const overlayElem = overlayRef.current;
+      overlayElem.addEventListener('transitionend', updateLeaderboardState);
       return () => {
-        overlayRef.current.removeEventListener('transitionend', updateLeaderboardState);
+        overlayElem.removeEventListener('transitionend', updateLeaderboardState);
       };
     }
+
+    return null;
   }, [ctx.finishedLoading, LeaderboardState]);
 
   return (

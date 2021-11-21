@@ -37,11 +37,15 @@ const ShopComponent = () => {
     };
 
     if (overlayRef && overlayRef.current) {
-      overlayRef.current.addEventListener('transitionend', updateShopState);
+      const overlayElem = overlayRef.current;
+
+      overlayElem.addEventListener('transitionend', updateShopState);
       return () => {
-        overlayRef.current.removeEventListener('transitionend', updateShopState);
+        overlayElem.removeEventListener('transitionend', updateShopState);
       };
     }
+
+    return null;
   }, [ctx.finishedLoading, ShopState]);
 
   return (
