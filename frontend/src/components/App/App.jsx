@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Tab, Tabs, TabList, TabPanel,
-} from 'react-tabs';
 import PropTypes from 'prop-types';
 import QueueNotification from '@components/QueueNotification/QueueNotification';
 import QueueView from '@components/QueueView/QueueView';
 import Authentication from '@util/Authentication/Authentication';
-import { StyledQueuePanel, StyledApp } from './App.style';
+import { StyledApp } from './App.style';
 
 /**
  * Base class for the React App. Sets up the scene

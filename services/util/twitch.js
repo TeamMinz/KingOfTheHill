@@ -40,13 +40,11 @@ const buildExtensionAuth = async () => {
   }
 
   try {
-    const resp = await superagent
-        .post('https://id.twitch.tv/oauth2/token')
-        .query({
-          client_id: CLIENT_ID,
-          client_secret: CLIENT_SECRET,
-          grant_type: 'client_credentials',
-        });
+    const resp = await superagent.post('https://id.twitch.tv/oauth2/token').query({
+      client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET,
+      grant_type: 'client_credentials',
+    });
 
     if (!resp.ok) return null;
 
@@ -116,21 +114,24 @@ async function resolveChannelName(channelId) {
 const getBroadcasterConfig = async (channelId) => {
   try {
     const resp = await superagent
-        .get(`https://api.twitch.tv/extensions/${CLIENT_ID}/configurations/segments/broadcaster`)
-        .query({channel_id: channelId})
+        .get('https://api.twitch.tv/helix/extensions/configurations')
+        .query({broadcaster_id: channelId, extension_id: CLIENT_ID, segment: 'broadcaster'})
         .set('client-id', CLIENT_ID)
         .set('Content-Type', 'application/json')
-        .set('Authorization', 'Bearer ' + buildChannelAuth(channelId));
+        .set('Authorization', `Bearer ${buildChannelAuth(channelId)}`);
     if (resp.ok) {
-      const content = JSON.parse(resp.body[`broadcaster:${channelId}`].record.content);
-      const version = resp.body[`broadcaster:${channelId}`].record.verison;
-      return {version, content};
+      const body = resp.body.data;
+      if (body.length == 0) {
+        return {version: null, content: {}};
+      }
+      const {version, content} = body[0];
+      return {version, content: JSON.parse(content)};
     } else {
-      return {};
+      return {version: null, content: {}};
     }
   } catch (e) {
     console.error(e);
-    return {};
+    return {version: null, content: {}};
   }
 };
 
