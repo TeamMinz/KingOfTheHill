@@ -58,4 +58,5 @@ module.exports = {
   CLIENT_SECRET,
   EXT_BOT_OAUTH,
   REDIS_HOST,
+  NODE_ENV: process.env.NODE_ENV,
 };
