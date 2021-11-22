@@ -1,6 +1,7 @@
 const superagent = require('superagent');
 const jwt = require('jsonwebtoken');
-const {OWNER_ID, SECRET, CLIENT_ID} = require('./options');
+const {OWNER_ID, SECRET, CLIENT_ID, CLIENT_SECRET} = require('./options');
+const {getCacheValue, setCacheValue} = require('./cache');
 
 const serverTokenDurationSec = 30;
 
@@ -26,9 +27,44 @@ const buildChannelAuth = (channelId) => {
 };
 
 /**
+ * Builds an authenticaion payload, that authenticates
+ * requests to twitch's pubsub & configuration apis.
+ *
+ * @returns {null | string} an App Access Token. null if authentication fails.
+ */
+const buildExtensionAuth = async () => {
+  const keyExpiry = await getCacheValue('access_token_expiry');
+
+  if (keyExpiry && new Date(keyExpiry) > Date.now()) {
+    return await getCacheValue('access_token');
+  }
+
+  try {
+    const resp = await superagent.post('https://id.twitch.tv/oauth2/token').query({
+      client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET,
+      grant_type: 'client_credentials',
+    });
+
+    if (!resp.ok) return null;
+
+    const {access_token: accessToken, expires_in: expiresIn} = resp.body;
+
+    const accessExpiry = Date.now().valueOf() + expiresIn;
+
+    await setCacheValue('access_token_expiry', accessExpiry);
+    await setCacheValue('access_token', accessToken);
+
+    return accessToken;
+  } catch (e) {
+    return null;
+  }
+};
+
+/**
  * Resolves display name from a given user id.
  *
- * @param {*} userId the id of the users who's name to resolve.
+ * @param {string} userId the id of the users who's name to resolve.
  * @returns {string} The display name of the specified person.
  */
 async function resolveDisplayName(userId) {
@@ -99,9 +135,36 @@ const getBroadcasterConfig = async (channelId) => {
   }
 };
 
+/**
+ * Gets all of the channels currently live with our extension.
+ *
+ * @returns {any} a list of channel ids
+ */
+const getLiveChannels = async () => {
+  try {
+    const resp = await superagent
+        .get(`https://api.twitch.tv/helix/extensions/live`)
+        .query({extension_id: CLIENT_ID})
+        .set('Client-Id', CLIENT_ID)
+        .set('Content-Type', 'application/json')
+        .set('Authorization', 'Bearer ' + (await buildExtensionAuth()));
+    if (resp.ok) {
+      const content = resp.body.data.map((x) => x.broadcaster_id);
+      return content;
+    } else {
+      return null;
+    }
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};
+
 module.exports = {
   buildChannelAuth,
+  buildExtensionAuth,
   resolveDisplayName,
   getBroadcasterConfig,
   resolveChannelName,
+  getLiveChannels,
 };
