@@ -1,7 +1,7 @@
 const superagent = require('superagent');
 const jwt = require('jsonwebtoken');
 const {OWNER_ID, SECRET, CLIENT_ID, CLIENT_SECRET} = require('./options');
-const {getCachedValue, setCachedValue} = require('./cache');
+const {getCacheValue, setCacheValue} = require('./cache');
 
 const serverTokenDurationSec = 30;
 
@@ -33,10 +33,10 @@ const buildChannelAuth = (channelId) => {
  * @returns {null | string} an App Access Token. null if authentication fails.
  */
 const buildExtensionAuth = async () => {
-  const keyExpiry = await getCachedValue('access_token_expiry');
+  const keyExpiry = await getCacheValue('access_token_expiry');
 
   if (keyExpiry && new Date(keyExpiry) > Date.now()) {
-    return await getCachedValue('access_token');
+    return await getCacheValue('access_token');
   }
 
   try {
@@ -52,8 +52,8 @@ const buildExtensionAuth = async () => {
 
     const accessExpiry = Date.now().valueOf() + expiresIn;
 
-    await setCachedValue('access_token_expiry', accessExpiry);
-    await setCachedValue('access_token', accessToken);
+    await setCacheValue('access_token_expiry', accessExpiry);
+    await setCacheValue('access_token', accessToken);
 
     return accessToken;
   } catch (e) {
