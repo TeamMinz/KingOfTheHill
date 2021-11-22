@@ -1,6 +1,7 @@
 const superagent = require('superagent');
 const jwt = require('jsonwebtoken');
 const {OWNER_ID, SECRET, CLIENT_ID, CLIENT_SECRET} = require('./options');
+const {getCachedValue, setCachedValue} = require('./cache');
 
 const serverTokenDurationSec = 30;
 
@@ -29,27 +30,35 @@ const buildChannelAuth = (channelId) => {
  * Builds an authenticaion payload, that authenticates
  * requests to twitch's pubsub & configuration apis.
  *
- * @returns {object} a App Access Token.
+ * @returns {null | string} an App Access Token. null if authentication fails.
  */
 const buildExtensionAuth = async () => {
+  const keyExpiry = await getCachedValue('access_token_expiry');
+
+  if (keyExpiry && new Date(keyExpiry) > Date.now()) {
+    return await getCachedValue('access_token');
+  }
+
   try {
-    const payload = {
-      client_id: CLIENT_ID,
-      client_secret: CLIENT_SECRET,
-      grant_type: 'client_credentials',
-    };
-    const resp = await superagent.post('https://id.twitch.tv/oauth2/token').query(payload);
+    const resp = await superagent
+        .post('https://id.twitch.tv/oauth2/token')
+        .query({
+          client_id: CLIENT_ID,
+          client_secret: CLIENT_SECRET,
+          grant_type: 'client_credentials',
+        });
 
-    if (resp.ok) {
-      console.log('generated');
-      return resp.body.access_token;
-    } else {
-      console.log(resp);
-    }
+    if (!resp.ok) return null;
 
-    return null;
+    const {access_token: accessToken, expires_in: expiresIn} = resp.body;
+
+    const accessExpiry = Date.now().valueOf() + expiresIn;
+
+    await setCachedValue('access_token_expiry', accessExpiry);
+    await setCachedValue('access_token', accessToken);
+
+    return accessToken;
   } catch (e) {
-    console.log(e);
     return null;
   }
 };
@@ -57,7 +66,7 @@ const buildExtensionAuth = async () => {
 /**
  * Resolves display name from a given user id.
  *
- * @param {*} userId the id of the users who's name to resolve.
+ * @param {string} userId the id of the users who's name to resolve.
  * @returns {string} The display name of the specified person.
  */
 async function resolveDisplayName(userId) {
