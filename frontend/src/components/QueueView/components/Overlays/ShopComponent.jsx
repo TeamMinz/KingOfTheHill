@@ -18,32 +18,34 @@ const ShopComponent = () => {
   const [ShopState, setShopState] = useState('closed');
 
   useEffect(() => {
-    if (ctx.shopState.shopOpen && ShopState == 'closed') {
+    if (ctx.shopState.shopOpen && ShopState === 'closed') {
       setShopState('opening');
-    } else if (!ctx.shopState.shopOpen && ShopState == 'open') {
+    } else if (!ctx.shopState.shopOpen && ShopState === 'open') {
       setShopState('closing');
     }
-  });
+  }, [ctx.shopState.shopOpen, ShopState]);
 
   useEffect(() => {
     const updateShopState = (e) => {
-      if (!(e.srcElement == overlayRef.current && e.propertyName == 'clip-path')) return;
+      if (!(e.srcElement === overlayRef.current && e.propertyName === 'clip-path')) return;
 
-      if (ShopState == 'opening') {
+      if (ShopState === 'opening') {
         setShopState('open');
-      } else if (ShopState == 'closing') {
+      } else if (ShopState === 'closing') {
         setShopState('closed');
       }
     };
 
     if (overlayRef && overlayRef.current) {
-      overlayRef.current.addEventListener('transitionend', updateShopState);
+      const overlayElem = overlayRef.current;
+
+      overlayElem.addEventListener('transitionend', updateShopState);
       return () => {
-        if (overlayRef && overlayRef.current) {
-          overlayRef.current.removeEventListener('transitionend', updateShopState);
-        }
+        overlayElem.removeEventListener('transitionend', updateShopState);
       };
     }
+
+    return null;
   }, [ctx.finishedLoading, ShopState]);
 
   return (

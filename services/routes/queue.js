@@ -1,14 +1,16 @@
 // eslint-disable-next-line new-cap
 const queue = require('express').Router();
-const {ReasonPhrases, StatusCodes} = require('http-status-codes');
+const {StatusCodes} = require('http-status-codes');
 const {broadcast} = require('../util/pubsub');
-const {resolveDisplayName, getBroadcasterConfig} = require('../util/twitch');
+const {resolveDisplayName, getBroadcasterConfig, getLiveChannels} = require('../util/twitch');
 const {getQueue, getAllQueues} = require('../controller/queue');
 const {getWatchdog} = require('../controller/watchdog');
 const {getMatchup, setMatchup} = require('../controller/matchup');
 const {getChampion, setChampion} = require('../controller/champion');
 const {isBroadcaster, isQueueOpen} = require('../util/middleware');
+const {NODE_ENV} = require('../util/options');
 const queueUpdateIntervalMs = 1000;
+const clearQueueIntervalMs = 600_000;
 
 // Set up our routes.
 queue.get('/get', async function(req, res) {
@@ -193,8 +195,7 @@ queue.post('/close', isBroadcaster, async (req, res) => {
 module.exports = queue;
 
 // Check if each queue has changed, then if it has publish it.
-// TODO: we want to change this, so that instead of just sending out all
-// ... queues, we look for all live channels, then send out their queues.
+// Don't bother doing a live channel check.
 setInterval(async function() {
   const channelQueues = getAllQueues();
   for (const channelId in channelQueues) {
@@ -215,3 +216,19 @@ setInterval(async function() {
     }
   }
 }, queueUpdateIntervalMs);
+
+if (NODE_ENV != 'development') {
+  setInterval(async function() {
+    const liveChannels = await getLiveChannels();
+    const channelQueues = getAllQueues();
+    for (const channelId in channelQueues) {
+      if (!(channelId in liveChannels)) {
+        // console.log('channelId ' + channelId + ' queue closed due to offline channel');
+        await channelQueues[channelId].closeQueue();
+      }
+    }
+    return liveChannels;
+  }, clearQueueIntervalMs);
+}
+
+

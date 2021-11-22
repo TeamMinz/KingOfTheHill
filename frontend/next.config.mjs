@@ -1,15 +1,14 @@
 const isProduction = process.env.NODE_ENV === 'production';
-const withImages = require('next-images');
 
-module.exports = withImages({
-  exclude: /\.svg$/,
-  assetPrefix: './',
-  env: {
-    STATIC_PREFIX: isProduction ? './static' : '/static',
+export default {
+  images: {
+    exclude: /\.svg$/,
+    assetPrefix: './',
+    env: {
+      STATIC_PREFIX: isProduction ? './static' : '/static',
+    },
   },
-  exportPathMap: async (defaultPathMap, {
-    dev, dir, outDir, distDir, buildId,
-  }) => (!dev
+  exportPathMap: async (defaultPathMap, { dev }) => (!dev
     ? {
       '/video_component': { page: '/video_component' },
       '/mobile': { page: '/mobile' },
@@ -19,7 +18,8 @@ module.exports = withImages({
       '/video_overlay': { page: '/video_overlay' },
     }
     : defaultPathMap),
-  webpack(config, options) {
+  webpack(config) {
+    // eslint-disable-next-line no-param-reassign
     config.optimization.minimize = false;
     config.module.rules.push({
       test: /\.svg$/,
@@ -27,4 +27,4 @@ module.exports = withImages({
     });
     return config;
   },
-});
+};

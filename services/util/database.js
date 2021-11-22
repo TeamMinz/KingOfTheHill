@@ -26,7 +26,7 @@ const cleanupRedis = () => {
 };
 
 /**
- * @returns redis.
+ * @returns {Redis} redis.
  */
 const getRedis = () => {
   return redis;

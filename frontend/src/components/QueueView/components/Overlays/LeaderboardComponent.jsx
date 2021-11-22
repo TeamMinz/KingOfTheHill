@@ -24,7 +24,7 @@ const LeaderboardComponent = () => {
     } else if (!ctx.leaderboardState.leaderboardOpen && LeaderboardState === 'open') {
       setLeaderboardState('closing');
     }
-  });
+  }, [LeaderboardState, ctx.leaderboardState.leaderboardOpen]);
 
   useEffect(() => {
     const updateLeaderboardState = (e) => {
@@ -38,14 +38,14 @@ const LeaderboardComponent = () => {
     };
 
     if (overlayRef && overlayRef.current) {
-      overlayRef.current.addEventListener('transitionend', updateLeaderboardState);
+      const overlayElem = overlayRef.current;
+      overlayElem.addEventListener('transitionend', updateLeaderboardState);
       return () => {
-        if (overlayRef && overlayRef.current) {
-          overlayRef.current.removeEventListener('transitionend', updateLeaderboardState);
-        }
+        overlayElem.removeEventListener('transitionend', updateLeaderboardState);
       };
     }
-    return () => {};
+
+    return null;
   }, [ctx.finishedLoading, LeaderboardState]);
 
   return (
