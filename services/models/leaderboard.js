@@ -61,10 +61,9 @@ class LeaderboardModel {
   async getMaxSize() {
     if (production) {
       const resp = await redis.get(this._maxSizeKey);
-      
       if (resp) {
         return parseInt(resp);
-      } 
+      }
       return 10;
     } else {
       if (!(this._maxSizeKey in this._debugValue)) return 10;

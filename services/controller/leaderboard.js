@@ -49,7 +49,8 @@ class Leaderboard {
   }
 
   /**
-   * Adds an entry to the leaderboard, if it meets the threshold.
+   * Adds an entry to the leaderboard, if it meets the threshold
+   * and is better than any current records the user holds.
    *
    * @param {import('../models/leaderboard').LeaderboardEntry} entry entry to add to the leaderboard
    * @returns {boolean} whether the entry was added to the leaderboard or not.
@@ -57,13 +58,18 @@ class Leaderboard {
   async addEntry(entry) {
     const winThreshold = await this.getWinThreshold();
     const maxSize = await this._model.getMaxSize();
-    if (entry.score > winThreshold) {
-      let leaderboard = await this._model.getValue();
+    const leaderboard = await this._model.getValue();
 
+    const existing = leaderboard.find((e) => (e.userId == entry.userId));
+
+    if ((existing && existing.score < entry.score) || (entry.score > winThreshold)) {
       leaderboard.push(entry);
       leaderboard.sort((a, b) => b.score - a.score); // Sort descending by score
       await this._model.setValue(leaderboard.slice(0, maxSize));
+      return true;
     }
+
+    return false;
   }
 }
 
