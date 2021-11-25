@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import SelectedMessageForm from './components/SelectedMessageForm/SelectedMessageForm';
 import MatchupController from './components/MatchupController/MatchupController';
 import QueueController from './components/QueueController/QueueController';
@@ -25,6 +25,15 @@ const LiveConfigPage = () => {
   const [Queue, setQueue] = useState(null);
   const [CurrentMatchup, setCurrentMatchup] = useState(null);
   const [ConfigSettings, setConfigSettings] = useState({});
+
+  // Lets bundle some of these together to pass to our subelements.
+  const ctx = useMemo(() => ({
+    queue: Queue,
+    currentMatchup: CurrentMatchup,
+    finishedLoading: FinishedLoading,
+    auth: authentication,
+  }), [Queue, CurrentMatchup, FinishedLoading, authentication]);
+
   /**
    * Fetches a bunch of info from the backend,
    * and stores it for components to use.
@@ -51,12 +60,13 @@ const LiveConfigPage = () => {
     });
 
     // Pull our config settings from twitch config service.
+    twitch.rig.log(twitch.configuration.broadcaster);
     if (twitch.configuration.broadcaster && twitch.configuration.broadcaster.version === '1.0.0') {
       try {
         const config = JSON.parse(twitch.configuration.broadcaster.content);
         setConfigSettings(config);
       } catch (e) {
-        console.log(e);
+        twitch.rig.log(e);
       }
     }
   };
@@ -66,7 +76,7 @@ const LiveConfigPage = () => {
     const twitch = window.Twitch ? window.Twitch.ext : null;
     if (twitch) {
       twitch.onError((err) => {
-        console.log('Error', err);
+        twitch.rig.log('Error', err);
       });
 
       // Authentication setup
@@ -121,10 +131,18 @@ const LiveConfigPage = () => {
   // Updates the twitch configuration settings when our ConfigSettings change.
   useEffect(() => {
     const twitch = window.Twitch ? window.Twitch.ext : null;
-    if (FinishedLoading) {
-      twitch.configuration.set('broadcaster', '1.0.0', JSON.stringify(ConfigSettings));
+    // Checking if config settings is either falsy or an empty object.
+    if (FinishedLoading && ConfigSettings && Object.keys(ConfigSettings).length) {
+      twitch.rig.log('Saving live config');
+      twitch.rig.log(JSON.stringify(ConfigSettings));
+
+      twitch.configuration.set(
+        'broadcaster',
+        '1.0.0',
+        JSON.stringify(ConfigSettings),
+      );
     }
-  }, [ConfigSettings]);
+  }, [ConfigSettings, FinishedLoading]);
 
   /**
    * @param {object} rejoinSettings settings object for rejoin settings.
@@ -152,12 +170,7 @@ const LiveConfigPage = () => {
     return (
       <StyledLiveConfigPage theme={Theme}>
         <QueueContext.Provider
-          value={{
-            queue: Queue,
-            currentMatchup: CurrentMatchup,
-            finishedLoading: FinishedLoading,
-            auth: authentication,
-          }}
+          value={ctx}
         >
           <SelectedMessageForm />
           <MatchupController />
@@ -169,7 +182,7 @@ const LiveConfigPage = () => {
       </StyledLiveConfigPage>
     );
   }
-  return <StyledLiveConfigPage> Not authenticated yet</StyledLiveConfigPage>;
+  return <StyledLiveConfigPage>Not authenticated yet</StyledLiveConfigPage>;
 };
 
 export default LiveConfigPage;
