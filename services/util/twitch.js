@@ -115,7 +115,10 @@ const getBroadcasterConfig = async (channelId) => {
   try {
     const resp = await superagent
         .get('https://api.twitch.tv/helix/extensions/configurations')
-        .query({broadcaster_id: channelId, extension_id: CLIENT_ID, segment: 'broadcaster'})
+        .query({
+          broadcaster_id: channelId,
+          extension_id: CLIENT_ID,
+          segment: 'broadcaster'})
         .set('client-id', CLIENT_ID)
         .set('Content-Type', 'application/json')
         .set('Authorization', `Bearer ${buildChannelAuth(channelId)}`);
