@@ -49,6 +49,24 @@ class Leaderboard {
   }
 
   /**
+   * Gets the maximum size of the leaderboard
+   *
+   * @returns {number} The maximum leaderboard size.
+   */
+  async getMaxSize() {
+    return await this._model.getMaxSize();
+  }
+
+  /**
+   * Sets the maximum size of the leaderboard
+   *
+   * @param {number} size The new maximum size of the leaderboard must be 1 < x < 100
+   */
+  async setMaxSize(size) {
+    await this._model.setMaxSize(size);
+  }
+
+  /**
    * Adds an entry to the leaderboard, if it meets the threshold
    * and is better than any current records the user holds.
    *

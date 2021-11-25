@@ -60,7 +60,6 @@ const LiveConfigPage = () => {
     });
 
     // Pull our config settings from twitch config service.
-    twitch.rig.log(twitch.configuration.broadcaster);
     if (twitch.configuration.broadcaster && twitch.configuration.broadcaster.version === '1.0.0') {
       try {
         const config = JSON.parse(twitch.configuration.broadcaster.content);

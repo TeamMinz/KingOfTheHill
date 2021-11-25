@@ -62,7 +62,8 @@ class LeaderboardModel {
     if (production) {
       const resp = await redis.get(this._maxSizeKey);
       if (resp) {
-        return parseInt(resp);
+        const maxSize = parseInt(resp);
+        return maxSize || 10;
       }
       return 10;
     } else {
@@ -77,11 +78,12 @@ class LeaderboardModel {
    * @param {number} maxSize The max size of the leaderboard. Cannot be higher than 100.
    */
   async setMaxSize(maxSize) {
+    if (maxSize > 100) maxSize = 100;
+    if (maxSize < 1) maxSize = 1;
+
     if (production) {
-      if (maxSize > 100) maxSize = 100;
       await redis.set(this._maxSizeKey, maxSize);
     } else {
-      if (maxSize > 100) maxSize = 100;
       this._debugValue[this._maxSizeKey] = maxSize;
     }
   }
