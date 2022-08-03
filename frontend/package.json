@@ -1,11 +1,11 @@
 {
-  "name": "koth",
+  "name": "koth-frontend",
   "version": "1.0.0",
   "private": true,
-  "description": "The Frontend for the King of the Hill app.",
+  "description": "The Frontend for the KOTH twitch extension.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/TeamMinz/QueueExtension",
+    "url": "https://github.com/TeamMinz/KingOfTheHill",
     "directory": "frontend"
   },
   "scripts": {
