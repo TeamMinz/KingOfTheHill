@@ -124,7 +124,6 @@ const LiveConfigPage = () => {
         twitch.unlisten('broadcast', handleMessage);
       };
     }
-    return false;
   }, [FinishedLoading]);
 
   // Updates the twitch configuration settings when our ConfigSettings change.
