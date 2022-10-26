@@ -146,7 +146,6 @@ const QueueNotification = () => {
         twitch.unlisten('broadcast', handleMessage);
       };
     }
-    return false;
   };
   // called when the component mounts.
   useEffect(NotificationEffect, [FinishedLoading]);
