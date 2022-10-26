@@ -4317,6 +4317,33 @@ fsevents@^2.3.2:
   languageName: node
   linkType: hard
 
+"koth-services@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "koth-services@workspace:."
+  dependencies:
+    cors: ^2.8.5
+    cross-env: ^7.0.3
+    dotenv: ^10.0.0
+    eslint: ^8.2.0
+    eslint-config-google: ^0.14.0
+    eslint-plugin-jest: ^25.2.4
+    eslint-plugin-jsdoc: ^37.0.3
+    eslint-plugin-node: ^11.1.0
+    express: ^4.17.1
+    http-status-codes: ^2.1.4
+    ioredis: ^4.28.0
+    jest: ^27.3.1
+    jsonwebtoken: ^8.5.1
+    pino-pretty: ^7.2.0
+    prettier: ^2.4.1
+    prettier-eslint: ^13.0.0
+    prop-types: ^15.7.2
+    superagent: ^6.1.0
+    twitch-js: ^2.0.0-beta.42
+    yargs: ^17.2.1
+  languageName: unknown
+  linkType: soft
+
 "leven@npm:2.1.0":
   version: 2.1.0
   resolution: "leven@npm:2.1.0"
@@ -5675,33 +5702,6 @@ fsevents@^2.3.2:
   checksum: 97e8c94ec02950d019000ca12a8e0b4fdeaaabb7ae965c1c05557b55b48114716ae92688972a8d9f06a5e2d5957c305253a859ec223bb39a1e0732366d0e2768
   languageName: node
   linkType: hard
-
-"services@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "services@workspace:."
-  dependencies:
-    cors: ^2.8.5
-    cross-env: ^7.0.3
-    dotenv: ^10.0.0
-    eslint: ^8.2.0
-    eslint-config-google: ^0.14.0
-    eslint-plugin-jest: ^25.2.4
-    eslint-plugin-jsdoc: ^37.0.3
-    eslint-plugin-node: ^11.1.0
-    express: ^4.17.1
-    http-status-codes: ^2.1.4
-    ioredis: ^4.28.0
-    jest: ^27.3.1
-    jsonwebtoken: ^8.5.1
-    pino-pretty: ^7.2.0
-    prettier: ^2.4.1
-    prettier-eslint: ^13.0.0
-    prop-types: ^15.7.2
-    superagent: ^6.1.0
-    twitch-js: ^2.0.0-beta.42
-    yargs: ^17.2.1
-  languageName: unknown
-  linkType: soft
 
 "set-blocking@npm:~2.0.0":
   version: 2.0.0
