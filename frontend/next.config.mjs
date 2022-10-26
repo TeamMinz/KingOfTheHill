@@ -1,13 +1,4 @@
-const isProduction = process.env.NODE_ENV === 'production';
-
 export default {
-  images: {
-    exclude: /\.svg$/,
-    assetPrefix: './',
-    env: {
-      STATIC_PREFIX: isProduction ? './static' : '/static',
-    },
-  },
   exportPathMap: async (defaultPathMap, { dev }) => (!dev
     ? {
       '/video_component': { page: '/video_component' },

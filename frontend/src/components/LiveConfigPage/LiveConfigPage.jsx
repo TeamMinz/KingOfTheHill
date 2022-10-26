@@ -115,7 +115,6 @@ const LiveConfigPage = () => {
         twitch.unlisten('broadcast', handleMessage);
       };
     }
-    return false;
   }, [FinishedLoading]);
 
   // Updates the twitch configuration settings when our ConfigSettings change.
@@ -123,13 +122,9 @@ const LiveConfigPage = () => {
     const twitch = window.Twitch ? window.Twitch.ext : null;
     if (FinishedLoading) {
       console.log('Pushing updates!');
-      twitch.configuration.set(
-          'broadcaster',
-          '1.0.0',
-          JSON.stringify(ConfigSettings),
-      );
+      twitch.configuration.set('broadcaster', '1.0.0', JSON.stringify(ConfigSettings));
     }
-  }, [ConfigSettings]);
+  }, [ConfigSettings, FinishedLoading]);
 
   /**
    * @param {object} rejoinSettings settings object for rejoin settings.

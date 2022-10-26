@@ -125,7 +125,6 @@ const QueueView = () => {
         twitch.unlisten('broadcast', handleMessage);
       };
     }
-    return false;
   }, [FinishedLoading]);
 
   return (
