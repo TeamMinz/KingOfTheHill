@@ -6,6 +6,18 @@ const {getCacheValue, setCacheValue} = require('./cache');
 const serverTokenDurationSec = 30;
 
 /**
+ * Makes an API request to a twitch helix endpoint.
+ *
+ * @param {string} endpoint The endpoint to query.
+ * @returns {Promise<any>} The response from the twitch api.
+ */
+const _api = (endpoint) => {
+  return superagent.get(`https://api.twitch.tv/helix/${endpoint}`)
+      .set('Client-ID', CLIENT_ID)
+      .set('Accept', 'application/vnd.twitchtv.v5+json');
+};
+
+/**
  * Builds an authenticaion payload, that authenticates
  * requests to twitch's pubsub & configuration apis.
  *
@@ -69,15 +81,9 @@ const buildExtensionAuth = async () => {
  */
 async function resolveDisplayName(userId) {
   try {
-    const resp = await superagent
-        .get(`https://api.twitch.tv/kraken/users/${userId}`)
-        .set('Client-ID', CLIENT_ID)
-        .set('Accept', 'application/vnd.twitchtv.v5+json');
-    if (resp.ok) {
-      return resp.body.display_name;
-    } else {
-      return 'anonymous';
-    }
+    const {data} = await _api('users')
+        .query({id: userId});
+    return data.display_name;
   } catch (e) {
     return 'anonymous';
   }
@@ -86,21 +92,13 @@ async function resolveDisplayName(userId) {
 /**
  * Resolves a channelId into the streamers name.
  *
- * @param {string | number} channelId the channeid to resolve into a name.
+ * @param {string | number} channelId The twitch user_id of the broadcaster. 
  * @returns {null | string} Null if the resolution fails, otherwise the name.
  */
 async function resolveChannelName(channelId) {
   try {
-    const resp = await superagent
-        .get(`https://api.twitch.tv/kraken/channels/${channelId}`)
-        .set('Client-ID', CLIENT_ID)
-        .set('Accept', 'application/vnd.twitchtv.v5+json');
-
-    if (resp.ok) {
-      return resp.body.display_name;
-    } else {
-      return null;
-    }
+    const {broadcaster_name: name} = await _api(`channels/${channelId}`);
+    return name;
   } catch (e) {
     return null;
   }

@@ -1,12 +1,11 @@
 {
-  "name": "services",
+  "name": "koth-services",
   "version": "1.0.0",
   "private": true,
-  "description": "The Extension Backend Service (EBS) for the King of the Hill app.",
-  "main": "backend.js",
+  "description": "The backend service for the KOTH twitch extension.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/TeamMinz/QueueExtension",
+    "url": "https://github.com/TeamMinz/KingOfTheHill",
     "directory": "services"
   },
   "scripts": {
@@ -18,14 +17,11 @@
   "license": "SEE LICENSE IN ../LICENSE",
   "devDependencies": {
     "cross-env": "^7.0.3",
-    "eslint": "^8.2.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-jest": "^25.2.4",
     "eslint-plugin-jsdoc": "^37.0.3",
     "eslint-plugin-node": "^11.1.0",
-    "jest": "^27.3.1",
-    "prettier": "^2.4.1",
-    "prettier-eslint": "^13.0.0"
+    "jest": "^27.3.1"
   },
   "dependencies": {
     "cors": "^2.8.5",

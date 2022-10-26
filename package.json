@@ -1,0 +1,21 @@
+{
+  "name": "koth",
+  "description": "The KOTH twitch extension",
+  "homepage": "https://dashboard.twitch.tv/extensions/z1eskwyierovbt4gz8zbq1r45tne31-0.0.2",
+  "version": "1.0.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TeamMinz/KingOfTheHill"
+  },
+  "workspaces": [
+    "frontend",
+    "services"
+  ],
+  "packageManager": "yarn@3.2.4",
+  "devDependencies": {
+    "eslint": "^8.26.0",
+    "prettier": "^2.7.1",
+    "prettier-eslint": "^15.0.1"
+  }
+}

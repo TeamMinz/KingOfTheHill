@@ -7,7 +7,6 @@ import {
   StyledButton,
   StyledButtonWrapper,
   StyledExit,
-  StyledImage,
 } from './Overlay.style';
 import App from '../App/App';
 
