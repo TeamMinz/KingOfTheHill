@@ -33,7 +33,7 @@
     "express": "^4.18.2",
     "http-status-codes": "^2.2.0",
     "ioredis": "^5.2.3",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "prop-types": "^15.8.1",
     "superagent": "^8.0.3",
     "twitch-js": "^2.0.0-beta.45",
