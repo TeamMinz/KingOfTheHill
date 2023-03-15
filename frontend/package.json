@@ -30,7 +30,7 @@
     "react-tabs": "^5.1.0",
     "sass": "^1.55.0",
     "styled-components": "^5.3.6",
-    "webpack": "^5.74.0"
+    "webpack": "^5.76.0"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^13.0.0",
